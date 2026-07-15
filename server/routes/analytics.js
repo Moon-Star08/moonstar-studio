@@ -35,4 +35,11 @@ router.get('/admin/users', requireAuth, (req, res) => {
   res.json(rows);
 });
 
+router.delete('/admin/users/:id', requireAuth, (req, res) => {
+  const existing = db.prepare('SELECT id FROM users WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'User not found' });
+  db.prepare('DELETE FROM users WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
 module.exports = router;

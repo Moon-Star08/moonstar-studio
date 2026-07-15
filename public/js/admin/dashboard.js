@@ -10,6 +10,7 @@
   var securityAlert = document.getElementById('security-alert');
   var clearLogBtn = document.getElementById('clear-log-btn');
   var usersTbody = document.getElementById('users-tbody');
+  var usersAlert = document.getElementById('users-alert');
 
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, function (ch) {
@@ -238,22 +239,27 @@
     }
   }
 
+  function showUsersAlert(type, msg) {
+    usersAlert.innerHTML = '<div class="alert alert--' + type + '">' + escapeHtml(msg) + '</div>';
+  }
+
   function userRowHtml(u) {
     var joined = u.created_at ? u.created_at.slice(0, 16).replace('T', ' ') : '';
     var method = u.provider === 'local' ? 'Email' : escapeHtml(u.provider);
     return (
-      '<tr>' +
+      '<tr data-id="' + u.id + '">' +
         '<td>' + escapeHtml(joined) + '</td>' +
         '<td class="title-cell">' + escapeHtml(u.name || '—') + '</td>' +
         '<td>' + escapeHtml(u.email) + '</td>' +
         '<td>' + method + '</td>' +
+        '<td><button class="btn btn--sm user-delete-btn" type="button" data-id="' + u.id + '" data-email="' + escapeHtml(u.email) + '">Delete</button></td>' +
       '</tr>'
     );
   }
 
   async function loadUsers() {
     if (!usersTbody) return;
-    usersTbody.innerHTML = '<tr><td colspan="4">Loading…</td></tr>';
+    usersTbody.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
     try {
       var res = await fetch('/api/admin/users', { credentials: 'same-origin' });
       if (res.status === 401) {
@@ -262,13 +268,38 @@
       }
       var rows = await res.json();
       if (!rows.length) {
-        usersTbody.innerHTML = '<tr><td colspan="4">No visitor accounts yet.</td></tr>';
+        usersTbody.innerHTML = '<tr><td colspan="5">No visitor accounts yet.</td></tr>';
         return;
       }
       usersTbody.innerHTML = rows.map(userRowHtml).join('');
     } catch (err) {
-      usersTbody.innerHTML = '<tr><td colspan="4">Failed to load users.</td></tr>';
+      usersTbody.innerHTML = '<tr><td colspan="5">Failed to load users.</td></tr>';
     }
+  }
+
+  if (usersTbody) {
+    usersTbody.addEventListener('click', async function (e) {
+      var btn = e.target.closest('.user-delete-btn');
+      if (!btn) return;
+      var id = btn.getAttribute('data-id');
+      var email = btn.getAttribute('data-email');
+      if (!window.confirm('Delete the account for "' + email + '"? This cannot be undone.')) return;
+
+      btn.disabled = true;
+      try {
+        var res = await fetch('/api/admin/users/' + id, { method: 'DELETE', credentials: 'same-origin' });
+        if (res.status === 401) {
+          window.location.href = '/admin/login.html';
+          return;
+        }
+        if (!res.ok) throw new Error('Delete failed');
+        showUsersAlert('success', 'Account deleted.');
+        loadUsers();
+      } catch (err) {
+        showUsersAlert('error', 'Could not delete that account. Try again.');
+        btn.disabled = false;
+      }
+    });
   }
 
   loadProjects();
