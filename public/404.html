@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoonStar Studio — Page not found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="page-frame">
+  <nav class="site-nav">
+    <a class="site-nav__logo" href="/index.html"><span class="dot"></span>MOONSTAR STUDIO</a>
+  </nav>
+  <main style="display:flex; align-items:center; justify-content:center; flex:1; text-align:center; padding: 60px 20px;">
+    <div>
+      <h1>404</h1>
+      <p class="prose">This page wandered off into the snow.</p>
+      <a class="btn btn--primary" href="/index.html">Back home</a>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <span>&copy; <span id="year"></span> MoonStar Studio</span>
+  </footer>
+</div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
