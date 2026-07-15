@@ -58,6 +58,33 @@ db.exec(`
   );
 `);
 
+// Visitor accounts. Fully separate from admin auth — matching the admin
+// username here never grants anything by itself. Admin access is only
+// ever granted in routes/account.js by verifying the actual admin
+// password against ADMIN_PASSWORD, never through this table.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    password_hash TEXT NOT NULL DEFAULT '',
+    provider TEXT NOT NULL DEFAULT 'local',
+    provider_id TEXT NOT NULL DEFAULT '',
+    avatar_url TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS page_views (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    path TEXT NOT NULL,
+    visitor_id TEXT NOT NULL DEFAULT '',
+    user_id INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
 const settingsRow = db.prepare('SELECT id FROM settings WHERE id = 1').get();
 if (!settingsRow) {
   db.prepare('INSERT INTO settings (id, content) VALUES (1, ?)').run(JSON.stringify(defaultContent));

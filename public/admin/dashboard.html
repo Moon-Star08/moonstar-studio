@@ -25,6 +25,17 @@
 
   <main class="admin-main">
     <div class="admin-header-row">
+      <h1 style="margin:0;">Visitors</h1>
+    </div>
+    <div class="stats" id="visitor-stats" style="margin-bottom: 40px;">
+      <div class="stat"><div class="stat__value" id="stat-total-views">—</div><div class="stat__label">total page views</div></div>
+      <div class="stat"><div class="stat__value" id="stat-unique-visitors">—</div><div class="stat__label">unique visitors</div></div>
+      <div class="stat"><div class="stat__value" id="stat-views-today">—</div><div class="stat__label">views today</div></div>
+      <div class="stat"><div class="stat__value" id="stat-views-7d">—</div><div class="stat__label">views last 7 days</div></div>
+      <div class="stat"><div class="stat__value" id="stat-registered-users">—</div><div class="stat__label">registered accounts</div></div>
+    </div>
+
+    <div class="admin-header-row">
       <h1 style="margin:0;">Projects</h1>
       <a class="btn btn--primary" href="/admin/project-form.html">+ Add new project</a>
     </div>
@@ -94,6 +105,27 @@
         </thead>
         <tbody id="security-tbody">
           <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-header-row" style="margin-top: 40px;">
+      <h1 style="margin:0;">Site Users</h1>
+    </div>
+    <p class="hint" style="margin: -8px 0 16px;">Visitors who created an account (email/password or social login). Separate from admin access.</p>
+
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Joined</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Sign-in method</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr><td colspan="4">Loading…</td></tr>
         </tbody>
       </table>
     </div>

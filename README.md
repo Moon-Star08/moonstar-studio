@@ -114,6 +114,29 @@ first run — no migrations, no setup.
 - `helmet` sets baseline security headers with a locked-down CSP.
 - All form input is validated and length-limited server-side (this is the
   real boundary — client-side checks are just for UX).
+- Visitor accounts (`users` table) are completely separate from admin
+  access. The unified login box checks the submitted identifier against
+  `ADMIN_USERNAME` first — only a match there, verified against the real
+  `ADMIN_PASSWORD` hash, grants `req.session.isAdmin`. Nothing in the
+  visitor signup/login path can ever set that flag, so a compromised or
+  malicious visitor account can't escalate to admin.
+
+## Visitor accounts & analytics
+
+- Visitors can sign up / log in (email + password) from the login button
+  on any page. This only ever creates a normal account in the `users`
+  table — see the security note above for why it can't grant admin access.
+- Every page load is logged (path, timestamp, an anonymous visitor cookie,
+  and the logged-in user id if any) to `page_views`, viewable as simple
+  stats in `/admin/dashboard.html`. No third-party analytics, nothing
+  shared externally.
+- Google/Facebook login buttons exist in the UI but stay hidden until you
+  set `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` or
+  `FACEBOOK_APP_ID`/`FACEBOOK_APP_SECRET` env vars — those require
+  creating OAuth apps in Google Cloud Console / Meta for Developers
+  first, which isn't done yet.
+- There's no "forgot password" flow for visitor accounts (that needs an
+  email-sending service, not currently wired up).
 
 ## Deploying (Render or Railway)
 

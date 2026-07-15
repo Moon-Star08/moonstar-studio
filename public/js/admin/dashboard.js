@@ -9,6 +9,7 @@
   var securityTbody = document.getElementById('security-tbody');
   var securityAlert = document.getElementById('security-alert');
   var clearLogBtn = document.getElementById('clear-log-btn');
+  var usersTbody = document.getElementById('users-tbody');
 
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, function (ch) {
@@ -219,7 +220,60 @@
     });
   }
 
+  async function loadAnalytics() {
+    try {
+      var res = await fetch('/api/admin/analytics', { credentials: 'same-origin' });
+      if (res.status === 401) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+      var data = await res.json();
+      document.getElementById('stat-total-views').textContent = data.total_views;
+      document.getElementById('stat-unique-visitors').textContent = data.unique_visitors;
+      document.getElementById('stat-views-today').textContent = data.views_today;
+      document.getElementById('stat-views-7d').textContent = data.views_7d;
+      document.getElementById('stat-registered-users').textContent = data.registered_users;
+    } catch (err) {
+      // Stats are non-critical; leave the placeholders in place.
+    }
+  }
+
+  function userRowHtml(u) {
+    var joined = u.created_at ? u.created_at.slice(0, 16).replace('T', ' ') : '';
+    var method = u.provider === 'local' ? 'Email' : escapeHtml(u.provider);
+    return (
+      '<tr>' +
+        '<td>' + escapeHtml(joined) + '</td>' +
+        '<td class="title-cell">' + escapeHtml(u.name || '—') + '</td>' +
+        '<td>' + escapeHtml(u.email) + '</td>' +
+        '<td>' + method + '</td>' +
+      '</tr>'
+    );
+  }
+
+  async function loadUsers() {
+    if (!usersTbody) return;
+    usersTbody.innerHTML = '<tr><td colspan="4">Loading…</td></tr>';
+    try {
+      var res = await fetch('/api/admin/users', { credentials: 'same-origin' });
+      if (res.status === 401) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
+      var rows = await res.json();
+      if (!rows.length) {
+        usersTbody.innerHTML = '<tr><td colspan="4">No visitor accounts yet.</td></tr>';
+        return;
+      }
+      usersTbody.innerHTML = rows.map(userRowHtml).join('');
+    } catch (err) {
+      usersTbody.innerHTML = '<tr><td colspan="4">Failed to load users.</td></tr>';
+    }
+  }
+
   loadProjects();
   loadMessages();
   loadSecurityLog();
+  loadAnalytics();
+  loadUsers();
 })();

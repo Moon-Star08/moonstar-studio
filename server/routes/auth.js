@@ -86,4 +86,10 @@ router.get('/me', (req, res) => {
   res.json({ authenticated: false });
 });
 
+// Attached so routes/account.js can reuse the exact same admin-credential
+// check for the unified login box, instead of maintaining a second copy
+// that could drift out of sync.
+router.logAttempt = logAttempt;
+router.getPasswordHash = getPasswordHash;
+
 module.exports = router;
