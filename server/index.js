@@ -76,6 +76,10 @@ app.use('/api', contactRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', analyticsRoutes);
 
+// Canonicalize the homepage URL — internal links use "/", but redirect
+// anyone who still lands on "/index.html" (old bookmarks, external links).
+app.get('/index.html', (req, res) => res.redirect(301, '/'));
+
 // Protect admin HTML pages (everything except the login page itself).
 // These must be registered BEFORE express.static so auth is checked
 // before any file is served from public/admin.
