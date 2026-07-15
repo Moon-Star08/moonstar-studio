@@ -172,6 +172,44 @@
     return sectionKey + '__' + fieldKey;
   }
 
+  // Cover-crop the source image to a square, then clip it to a circle so
+  // the favicon is actually round in the browser tab (CSS can't reach
+  // into a <link rel="icon"> file — the shape has to be baked into the
+  // pixels themselves).
+  function cropToCircle(file) {
+    return new Promise(function (resolve, reject) {
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var size = 512;
+        var canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext('2d');
+
+        var srcSize = Math.min(img.naturalWidth, img.naturalHeight);
+        var sx = (img.naturalWidth - srcSize) / 2;
+        var sy = (img.naturalHeight - srcSize) / 2;
+
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, sx, sy, srcSize, srcSize, 0, 0, size, size);
+
+        URL.revokeObjectURL(url);
+        canvas.toBlob(function (blob) {
+          if (blob) resolve(blob); else reject(new Error('Could not process that image'));
+        }, 'image/png');
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(url);
+        reject(new Error('Could not read that image file'));
+      };
+      img.src = url;
+    });
+  }
+
   function renderForm(content) {
     var html = '';
     SCHEMA.forEach(function (section) {
@@ -357,12 +395,15 @@
         showAlert('error', 'Image must be under 5MB.');
         return;
       }
-      var formData = new FormData();
-      formData.append('image', file);
 
       faviconUploadBtn.disabled = true;
-      faviconUploadBtn.textContent = 'Uploading…';
+      faviconUploadBtn.textContent = 'Processing…';
       try {
+        var circularBlob = await cropToCircle(file);
+        var formData = new FormData();
+        formData.append('image', circularBlob, 'favicon.png');
+
+        faviconUploadBtn.textContent = 'Uploading…';
         var res = await fetch('/api/admin/settings/favicon', {
           method: 'POST',
           credentials: 'same-origin',

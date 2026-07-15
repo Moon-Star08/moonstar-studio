@@ -447,8 +447,8 @@ section {
 
 .card__image {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
   background: var(--gray-100);
   border-bottom: var(--border-width) solid var(--ink);
 }
