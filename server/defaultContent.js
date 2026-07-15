@@ -2,6 +2,7 @@
 // fallback merge target so the site never breaks if a field is missing.
 module.exports = {
   site: {
+    favicon: '',
     brand_name: 'MoonStar Studio',
     footer_tagline: "Web Designer & Developer. Modern websites and digital solutions for businesses, from concept to launch.",
     copyright_name: 'MoonStar Studio',

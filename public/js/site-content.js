@@ -16,19 +16,19 @@
 
     document.querySelectorAll('[data-sc-href]').forEach(function (el) {
       var val = get(content, el.getAttribute('data-sc-href'));
-      if (val == null) return;
+      if (!val) return;
       el.setAttribute('href', val);
     });
 
     document.querySelectorAll('[data-sc-mailto]').forEach(function (el) {
       var val = get(content, el.getAttribute('data-sc-mailto'));
-      if (val == null) return;
+      if (!val) return;
       el.setAttribute('href', 'mailto:' + val);
     });
 
     document.querySelectorAll('[data-sc-tel]').forEach(function (el) {
       var val = get(content, el.getAttribute('data-sc-tel'));
-      if (val == null) return;
+      if (!val) return;
       el.setAttribute('href', 'tel:' + String(val).replace(/[^+\d]/g, ''));
     });
 

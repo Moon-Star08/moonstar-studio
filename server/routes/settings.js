@@ -81,6 +81,7 @@ router.put('/admin/settings', requireAuth, (req, res) => {
 router.post('/admin/settings/reset', requireAuth, (req, res) => {
   const stored = getStoredContent();
   deleteUploadedFile((stored.home || {}).hero_image);
+  deleteUploadedFile((stored.site || {}).favicon);
   db.prepare('UPDATE settings SET content = ?, updated_at = datetime(\'now\') WHERE id = 1').run(
     JSON.stringify(defaultContent)
   );
@@ -107,6 +108,33 @@ router.delete('/admin/settings/hero-image', requireAuth, (req, res) => {
   const stored = mergeWithDefaults(getStoredContent());
   deleteUploadedFile(stored.home.hero_image);
   stored.home.hero_image = '';
+
+  db.prepare('UPDATE settings SET content = ?, updated_at = datetime(\'now\') WHERE id = 1').run(
+    JSON.stringify(stored)
+  );
+  res.json(stored);
+});
+
+router.post('/admin/settings/favicon', requireAuth, (req, res) => {
+  upload.single('image')(req, res, (uploadErr) => {
+    if (uploadErr) return res.status(400).json({ error: uploadErr.message });
+    if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
+
+    const stored = mergeWithDefaults(getStoredContent());
+    deleteUploadedFile(stored.site.favicon);
+    stored.site.favicon = `/uploads/${req.file.filename}`;
+
+    db.prepare('UPDATE settings SET content = ?, updated_at = datetime(\'now\') WHERE id = 1').run(
+      JSON.stringify(stored)
+    );
+    res.json(stored);
+  });
+});
+
+router.delete('/admin/settings/favicon', requireAuth, (req, res) => {
+  const stored = mergeWithDefaults(getStoredContent());
+  deleteUploadedFile(stored.site.favicon);
+  stored.site.favicon = '';
 
   db.prepare('UPDATE settings SET content = ?, updated_at = datetime(\'now\') WHERE id = 1').run(
     JSON.stringify(stored)

@@ -153,6 +153,11 @@
   var heroImageUploadBtn = document.getElementById('hero-image-upload-btn');
   var heroImageRemoveBtn = document.getElementById('hero-image-remove-btn');
 
+  var faviconCurrent = document.getElementById('favicon-current');
+  var faviconFile = document.getElementById('favicon-file');
+  var faviconUploadBtn = document.getElementById('favicon-upload-btn');
+  var faviconRemoveBtn = document.getElementById('favicon-remove-btn');
+
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, function (ch) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
@@ -188,6 +193,7 @@
     });
     container.innerHTML = html;
     renderHeroImage((content.home || {}).hero_image);
+    renderFavicon((content.site || {}).favicon);
   }
 
   function renderHeroImage(src) {
@@ -195,6 +201,13 @@
     heroImageCurrent.innerHTML = src
       ? '<img src="' + escapeHtml(src) + '" alt=""><span class="hint">Current hero image</span>'
       : '<span class="hint">No image uploaded yet — the placeholder shows on the live site.</span>';
+  }
+
+  function renderFavicon(src) {
+    if (!faviconCurrent) return;
+    faviconCurrent.innerHTML = src
+      ? '<img src="' + escapeHtml(src) + '" alt=""><span class="hint">Current favicon</span>'
+      : '<span class="hint">Using the default MoonStar icon.</span>';
   }
 
   function collectForm() {
@@ -329,6 +342,69 @@
         showAlert('error', 'Could not remove the image.');
       } finally {
         heroImageRemoveBtn.disabled = false;
+      }
+    });
+  }
+
+  if (faviconUploadBtn) {
+    faviconUploadBtn.addEventListener('click', async function () {
+      var file = faviconFile.files[0];
+      if (!file) {
+        showAlert('error', 'Choose an image file first.');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showAlert('error', 'Image must be under 5MB.');
+        return;
+      }
+      var formData = new FormData();
+      formData.append('image', file);
+
+      faviconUploadBtn.disabled = true;
+      faviconUploadBtn.textContent = 'Uploading…';
+      try {
+        var res = await fetch('/api/admin/settings/favicon', {
+          method: 'POST',
+          credentials: 'same-origin',
+          body: formData,
+        });
+        if (res.status === 401) {
+          window.location.href = '/admin/login.html';
+          return;
+        }
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        renderFavicon(data.site.favicon);
+        faviconFile.value = '';
+        showAlert('success', 'Favicon uploaded. It\'s live on the site now.');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        showAlert('error', err.message || 'Could not upload that image.');
+      } finally {
+        faviconUploadBtn.disabled = false;
+        faviconUploadBtn.textContent = 'Upload icon';
+      }
+    });
+  }
+
+  if (faviconRemoveBtn) {
+    faviconRemoveBtn.addEventListener('click', async function () {
+      if (!window.confirm('Reset the favicon to the default MoonStar icon?')) return;
+      faviconRemoveBtn.disabled = true;
+      try {
+        var res = await fetch('/api/admin/settings/favicon', { method: 'DELETE', credentials: 'same-origin' });
+        if (res.status === 401) {
+          window.location.href = '/admin/login.html';
+          return;
+        }
+        var data = await res.json();
+        if (!res.ok) throw new Error('Remove failed');
+        renderFavicon(data.site.favicon);
+        showAlert('success', 'Favicon reset to default.');
+      } catch (err) {
+        showAlert('error', 'Could not reset the favicon.');
+      } finally {
+        faviconRemoveBtn.disabled = false;
       }
     });
   }

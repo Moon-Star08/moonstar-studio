@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Site Content — Admin</title>
 <meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -37,6 +38,19 @@
       <div class="form-actions" style="margin-top: 0;">
         <button class="btn btn--sm" type="button" id="hero-image-upload-btn">Upload image</button>
         <button class="btn btn--sm" type="button" id="hero-image-remove-btn">Remove image</button>
+      </div>
+    </fieldset>
+
+    <fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 22px; margin-bottom: 22px;">
+      <legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">Favicon (browser tab icon)</legend>
+      <p class="hint" style="margin: 0 0 12px;">Shows in the browser tab and bookmarks. Square images work best. Images only, max 5MB.</p>
+      <div id="favicon-current" class="current-image"></div>
+      <div class="field" style="margin-top: 12px;">
+        <input type="file" id="favicon-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+      </div>
+      <div class="form-actions" style="margin-top: 0;">
+        <button class="btn btn--sm" type="button" id="favicon-upload-btn">Upload icon</button>
+        <button class="btn btn--sm" type="button" id="favicon-remove-btn">Reset to default</button>
       </div>
     </fieldset>
 
