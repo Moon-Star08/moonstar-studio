@@ -80,6 +80,9 @@ app.use('/api', analyticsRoutes);
 // anyone who still lands on "/index.html" (old bookmarks, external links).
 app.get('/index.html', (req, res) => res.redirect(301, '/'));
 
+// The old "Work" page was merged into "Websites" — same content, one page.
+app.get('/work.html', (req, res) => res.redirect(301, '/websites.html'));
+
 // Protect admin HTML pages (everything except the login page itself).
 // These must be registered BEFORE express.static so auth is checked
 // before any file is served from public/admin.

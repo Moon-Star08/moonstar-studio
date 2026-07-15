@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website Projects & Portfolio — MoonStar Studio</title>
-<meta name="description" content="Explore recent website projects, each designed with creativity, performance, and user experience in mind.">
+<title>Freelance Services — MoonStar Studio</title>
+<meta name="description" content="Photography, poster design, content marketing, video editing, and event photography — connected through MoonStar Studio's trusted freelance network.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" data-sc-href="site.favicon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,8 @@
     <ul class="site-nav__links">
       <li><a href="/">Home</a></li>
       <li><a href="/services.html">Services</a></li>
-      <li><a href="/work.html" aria-current="page">Work</a></li>
       <li><a href="/websites.html">Websites</a></li>
+      <li><a href="/freelance.html" aria-current="page">Freelance</a></li>
       <li><a href="/about.html">About</a></li>
       <li><a href="/contact.html">Contact</a></li>
     </ul>
@@ -33,16 +33,43 @@
     <section>
       <div class="section-title reveal">
         <div>
-          <span class="section-title__label">// portfolio</span>
-          <h1 data-sc="work.heading">Project Portfolio</h1>
+          <span class="section-title__label">// freelance network</span>
+          <h1 data-sc="freelance.heading">Need More Than a Website?</h1>
         </div>
       </div>
-      <p class="prose reveal" data-sc="work.intro">Explore some of my recent website projects, each designed with creativity, performance, and user experience in mind. Filter by tech to find what you're looking for.</p>
+      <p class="prose reveal" style="max-width: 60ch;" data-sc="freelance.intro">I work with a trusted network of freelancers for services outside my core focus — tell me what you need and I'll connect you with the right person. One point of contact, no hunting around.</p>
 
-      <div id="tag-filters" class="filters" role="group" aria-label="Filter by technology"></div>
+      <div class="services-grid reveal" style="margin-top: 8px;">
+        <div class="service-card">
+          <h3 class="service-card__title" data-sc="freelance.svc_1_title">Photography &amp; Photoshoots</h3>
+          <p class="service-card__desc" data-sc="freelance.svc_1_desc">Product shots, portraits, and branded photoshoots for your business.</p>
+        </div>
+        <div class="service-card">
+          <h3 class="service-card__title" data-sc="freelance.svc_2_title">Poster &amp; Graphic Design</h3>
+          <p class="service-card__desc" data-sc="freelance.svc_2_desc">Eye-catching posters, flyers, and print-ready graphic design.</p>
+        </div>
+        <div class="service-card">
+          <h3 class="service-card__title" data-sc="freelance.svc_3_title">Content Marketing</h3>
+          <p class="service-card__desc" data-sc="freelance.svc_3_desc">Social media content, copywriting, and marketing strategy.</p>
+        </div>
+        <div class="service-card">
+          <h3 class="service-card__title" data-sc="freelance.svc_4_title">Video Editing</h3>
+          <p class="service-card__desc" data-sc="freelance.svc_4_desc">Promo videos, social clips, and polished video edits.</p>
+        </div>
+        <div class="service-card">
+          <h3 class="service-card__title" data-sc="freelance.svc_5_title">Event Photography</h3>
+          <p class="service-card__desc" data-sc="freelance.svc_5_desc">Coverage for launches, grand openings, and company events.</p>
+        </div>
+      </div>
+    </section>
 
-      <div id="work-grid" class="grid">
-        <p class="state-msg">Loading projects…</p>
+    <hr class="section-divider">
+
+    <section>
+      <div class="prose reveal" style="text-align:center; max-width: 60ch; margin: 0 auto;">
+        <h2 data-sc="freelance.cta_heading">Have a project in mind?</h2>
+        <p data-sc="freelance.cta_text">Tell me what you need and I'll connect you with the right freelancer.</p>
+        <a class="btn btn--primary" href="/contact.html">Get In Touch</a>
       </div>
     </section>
   </main>
@@ -57,7 +84,8 @@
         <li><a href="/">Home</a></li>
         <li><a href="/about.html">About</a></li>
         <li><a href="/services.html">Services</a></li>
-        <li><a href="/work.html">Portfolio</a></li>
+        <li><a href="/websites.html">Websites</a></li>
+        <li><a href="/freelance.html">Freelance</a></li>
         <li><a href="/contact.html">Contact</a></li>
       </ul>
       <ul class="site-footer__contact">
@@ -85,10 +113,8 @@
 </div>
 
 <script src="/js/site-content.js"></script>
-<script src="/js/projects-api.js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/account.js"></script>
-<script src="/js/work.js"></script>
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>

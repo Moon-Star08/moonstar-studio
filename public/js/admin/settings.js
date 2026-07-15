@@ -126,18 +126,30 @@
     },
     {
       key: 'work',
-      label: 'Work page',
+      label: 'Websites page',
       fields: [
         { key: 'heading', label: 'Heading', type: 'text' },
         { key: 'intro', label: 'Intro text', type: 'textarea' },
       ],
     },
     {
-      key: 'websites',
-      label: 'Websites page',
+      key: 'freelance',
+      label: 'Freelance page',
       fields: [
         { key: 'heading', label: 'Heading', type: 'text' },
         { key: 'intro', label: 'Intro text', type: 'textarea' },
+        { key: 'svc_1_title', label: 'Service 1 — title', type: 'text' },
+        { key: 'svc_1_desc', label: 'Service 1 — description', type: 'text' },
+        { key: 'svc_2_title', label: 'Service 2 — title', type: 'text' },
+        { key: 'svc_2_desc', label: 'Service 2 — description', type: 'text' },
+        { key: 'svc_3_title', label: 'Service 3 — title', type: 'text' },
+        { key: 'svc_3_desc', label: 'Service 3 — description', type: 'text' },
+        { key: 'svc_4_title', label: 'Service 4 — title', type: 'text' },
+        { key: 'svc_4_desc', label: 'Service 4 — description', type: 'text' },
+        { key: 'svc_5_title', label: 'Service 5 — title', type: 'text' },
+        { key: 'svc_5_desc', label: 'Service 5 — description', type: 'text' },
+        { key: 'cta_heading', label: 'Bottom CTA heading', type: 'text' },
+        { key: 'cta_text', label: 'Bottom CTA text', type: 'text' },
       ],
     },
   ];

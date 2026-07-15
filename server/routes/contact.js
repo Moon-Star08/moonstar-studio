@@ -5,7 +5,17 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
-const PROJECT_TYPES = new Set(['Web Design', 'UI/UX', 'Development', 'Full Website']);
+const PROJECT_TYPES = new Set([
+  'Web Design',
+  'UI/UX',
+  'Development',
+  'Full Website',
+  'Photography',
+  'Poster Design',
+  'Content Marketing',
+  'Video Editing',
+  'Event Photography',
+]);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const contactLimiter = rateLimit({

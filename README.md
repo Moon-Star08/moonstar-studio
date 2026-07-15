@@ -90,8 +90,8 @@ first run — no migrations, no setup.
    (project/website), comma-separated tech tags, live URL, GitHub URL,
    upload a screenshot (jpg/png/webp/gif/svg, max 5MB), and optionally check
    "featured on homepage."
-4. Saving writes straight to the SQLite database — the public Home, Work,
-   and Websites pages fetch from the database on every page load, so the new
+4. Saving writes straight to the SQLite database — the public Home and
+   Websites pages fetch from the database on every page load, so the new
    project appears immediately.
 5. **Logout** clears the session. Sessions also expire automatically after
    30 minutes of inactivity (sliding expiration).
@@ -174,6 +174,7 @@ start command `npm start`.
 - Update the placeholder content in `public/contact.html`, `public/about.html`,
   and `public/index.html` (name, email, social links, bio, timeline) with
   your own details.
-- Add projects for both the **Work** page (category = `project`) and the
-  **Websites** page (category = `website`) — the Websites page only shows
-  entries with a live URL and a "Visit site" button.
+- All projects show on the **Websites** page (with tag filters) and, if
+  marked featured, on the homepage. The **Freelance** page is separate,
+  static content (not project-backed) for services outside web design
+  that get referred out to a trusted freelancer network.

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Websites — MoonStar Studio</title>
-<meta name="description" content="Client websites I've shipped and kept alive — screenshot, tech, and a button to go visit each one.">
+<title>Website Projects & Portfolio — MoonStar Studio</title>
+<meta name="description" content="Explore recent website projects, each designed with creativity, performance, and user experience in mind.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" data-sc-href="site.favicon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,8 +22,8 @@
     <ul class="site-nav__links">
       <li><a href="/">Home</a></li>
       <li><a href="/services.html">Services</a></li>
-      <li><a href="/work.html">Work</a></li>
       <li><a href="/websites.html" aria-current="page">Websites</a></li>
+      <li><a href="/freelance.html">Freelance</a></li>
       <li><a href="/about.html">About</a></li>
       <li><a href="/contact.html">Contact</a></li>
     </ul>
@@ -33,14 +33,16 @@
     <section>
       <div class="section-title reveal">
         <div>
-          <span class="section-title__label">// live</span>
-          <h1 data-sc="websites.heading">Websites</h1>
+          <span class="section-title__label">// portfolio</span>
+          <h1 data-sc="work.heading">Project Portfolio</h1>
         </div>
       </div>
-      <p class="prose reveal" data-sc="websites.intro">Every client website I've designed, built, and kept alive — screenshot, stack, and a button to go see it for yourself.</p>
+      <p class="prose reveal" data-sc="work.intro">Explore some of my recent website projects, each designed with creativity, performance, and user experience in mind. Filter by tech to find what you're looking for.</p>
 
-      <div id="websites-grid" class="grid">
-        <p class="state-msg">Loading websites…</p>
+      <div id="tag-filters" class="filters" role="group" aria-label="Filter by technology"></div>
+
+      <div id="work-grid" class="grid">
+        <p class="state-msg">Loading projects…</p>
       </div>
     </section>
   </main>
@@ -55,7 +57,8 @@
         <li><a href="/">Home</a></li>
         <li><a href="/about.html">About</a></li>
         <li><a href="/services.html">Services</a></li>
-        <li><a href="/work.html">Portfolio</a></li>
+        <li><a href="/websites.html">Websites</a></li>
+        <li><a href="/freelance.html">Freelance</a></li>
         <li><a href="/contact.html">Contact</a></li>
       </ul>
       <ul class="site-footer__contact">
