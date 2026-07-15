@@ -93,7 +93,7 @@
     try {
       await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
     } finally {
-      window.location.href = '/admin/login.html';
+      window.location.href = '/';
     }
   });
 
