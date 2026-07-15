@@ -76,12 +76,21 @@ app.use('/api', contactRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', analyticsRoutes);
 
-// Canonicalize the homepage URL — internal links use "/", but redirect
-// anyone who still lands on "/index.html" (old bookmarks, external links).
-app.get('/index.html', (req, res) => res.redirect(301, '/'));
-
-// The old "Work" page was merged into "Websites" — same content, one page.
-app.get('/work.html', (req, res) => res.redirect(301, '/websites.html'));
+// Clean URLs: every public page is linked internally without ".html".
+// Anyone landing on the old *.html path (bookmarks, external links,
+// search results) gets redirected to the canonical clean URL.
+const CLEAN_URL_REDIRECTS = {
+  '/index.html': '/',
+  '/work.html': '/websites',
+  '/about.html': '/about',
+  '/services.html': '/services',
+  '/websites.html': '/websites',
+  '/freelance.html': '/freelance',
+  '/contact.html': '/contact',
+};
+for (const [from, to] of Object.entries(CLEAN_URL_REDIRECTS)) {
+  app.get(from, (req, res) => res.redirect(301, to));
+}
 
 // Protect admin HTML pages (everything except the login page itself).
 // These must be registered BEFORE express.static so auth is checked
@@ -101,8 +110,10 @@ app.get('/admin/settings.html', requireAuth, (req, res) => {
 // public/ folder, so they survive redeploys alongside the database.
 app.use('/uploads', express.static(uploadDir));
 
-// Static assets (css/js/public html, including admin/login.html)
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Static assets (css/js/public html, including admin/login.html).
+// extensions: ['html'] lets a request for "/about" resolve to
+// "about.html" on disk, which is what makes the clean URLs above work.
+app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));
 
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '..', 'public', '404.html'), (err) => {
