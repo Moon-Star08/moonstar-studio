@@ -1069,6 +1069,16 @@ section {
   align-items: center;
 }
 
+@media (max-width: 760px) {
+  .profile-widget-li {
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 14px;
+    border-top: 1.5px solid var(--gray-200);
+  }
+}
+
 .profile-widget {
   position: relative;
 }
@@ -1145,7 +1155,12 @@ section {
 .profile-widget__link:hover { background: var(--gray-100); color: var(--red); }
 
 @media (max-width: 760px) {
-  .profile-widget__menu { right: auto; left: 0; }
+  .profile-widget__menu {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(240px, calc(100vw - 48px));
+  }
 }
 
 .login-fab-wrap {
