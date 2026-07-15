@@ -3,7 +3,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const multer = require('multer');
 
-const uploadDir = path.join(__dirname, '..', '..', 'public', 'uploads');
+const uploadDir = path.join(__dirname, '..', '..', 'data', 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']);

@@ -6,6 +6,7 @@ const session = require('express-session');
 const helmet = require('helmet');
 
 const { requireAuth } = require('./middleware/auth');
+const { uploadDir } = require('./middleware/upload');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const contactRoutes = require('./routes/contact');
@@ -80,7 +81,11 @@ app.get('/admin/settings.html', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'settings.html'));
 });
 
-// Static assets (css/js/uploads/public html, including admin/login.html)
+// Uploaded images live on the persistent disk (data/uploads), not in the
+// public/ folder, so they survive redeploys alongside the database.
+app.use('/uploads', express.static(uploadDir));
+
+// Static assets (css/js/public html, including admin/login.html)
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use((req, res) => {
