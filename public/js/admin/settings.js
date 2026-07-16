@@ -28,8 +28,6 @@
         { key: 'hero_btn_primary_href', label: 'Hero primary button link', type: 'text' },
         { key: 'hero_btn_secondary_text', label: 'Hero secondary button text', type: 'text' },
         { key: 'hero_btn_secondary_href', label: 'Hero secondary button link', type: 'text' },
-        { key: 'intro_heading', label: 'Intro heading', type: 'text' },
-        { key: 'intro_text', label: 'Intro text', type: 'textarea' },
         { key: 'service_1_title', label: 'Service 1 title', type: 'text' },
         { key: 'service_1_desc', label: 'Service 1 description', type: 'textarea' },
         { key: 'service_2_title', label: 'Service 2 title', type: 'text' },
@@ -52,6 +50,8 @@
       key: 'about',
       label: 'About page',
       fields: [
+        { key: 'intro_heading', label: 'Intro heading', type: 'text' },
+        { key: 'intro_text', label: 'Intro text', type: 'textarea' },
         { key: 'who_heading', label: '"Who I Am" heading', type: 'text' },
         { key: 'who_p1', label: '"Who I Am" paragraph 1', type: 'textarea' },
         { key: 'who_p2', label: '"Who I Am" paragraph 2', type: 'textarea' },
