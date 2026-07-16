@@ -17,8 +17,8 @@
   --gray-400: #a3a3a3;
   --gray-600: #6b6b6b;
 
-  --font-display: 'Press Start 2P', 'JetBrains Mono', monospace;
-  --font-body: 'JetBrains Mono', 'Courier New', monospace;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --radius-lg: 22px;
   --radius-md: 14px;
@@ -73,15 +73,15 @@ a {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  line-height: 1.5;
-  font-weight: 400;
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--ink);
   margin: 0 0 0.75em;
 }
 
-h1 { font-size: clamp(1.4rem, 3vw, 2.1rem); }
-h2 { font-size: clamp(1.15rem, 2.4vw, 1.5rem); }
-h3 { font-size: 1rem; }
+h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; }
 
 p { margin: 0 0 1em; }
 
@@ -133,6 +133,7 @@ p { margin: 0 0 1em; }
 
 .site-nav__logo {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.85rem;
   color: var(--ink);
   text-decoration: none;
@@ -159,7 +160,8 @@ p { margin: 0 0 1em; }
 
 .site-nav__links a {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   text-decoration: none;
   color: var(--ink);
   padding: 10px 14px;
@@ -218,7 +220,8 @@ p { margin: 0 0 1em; }
 
 .btn {
   font-family: var(--font-display);
-  font-size: 0.7rem;
+  font-weight: 600;
+  font-size: 0.875rem;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -255,7 +258,7 @@ p { margin: 0 0 1em; }
 
 .btn--sm {
   padding: 9px 16px;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
 }
 
 .btn--block { width: 100%; }
@@ -327,19 +330,22 @@ p { margin: 0 0 1em; }
 
 .hero__eyebrow {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
   color: var(--red);
   margin-bottom: 14px;
   display: inline-block;
 }
 
 .hero__name {
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  letter-spacing: -0.02em;
 }
 
 .hero__tagline {
   color: var(--ink-soft);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   max-width: 46ch;
 }
 
@@ -405,7 +411,9 @@ section {
 
 .section-title__label {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
   color: var(--red);
 }
 
@@ -467,7 +475,8 @@ section {
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-weight: 700;
+  font-size: 0.72rem;
   color: var(--gray-400);
 }
 
@@ -481,6 +490,7 @@ section {
 
 .card__title {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.85rem;
   margin: 0;
 }
@@ -509,7 +519,8 @@ section {
   position: absolute;
   margin: 10px;
   font-family: var(--font-display);
-  font-size: 0.55rem;
+  font-weight: 700;
+  font-size: 0.68rem;
   background: var(--red);
   color: var(--white);
   padding: 6px 10px;
@@ -541,6 +552,7 @@ section {
 
 .stat__value {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 1.6rem;
   color: var(--red);
 }
@@ -573,7 +585,8 @@ section {
 
 .skill__name {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-weight: 700;
+  font-size: 0.75rem;
 }
 
 .skill__bar {
@@ -635,7 +648,8 @@ section {
 
 .timeline__date {
   font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-weight: 700;
+  font-size: 0.72rem;
   color: var(--red);
   margin-bottom: 6px;
   display: block;
@@ -755,6 +769,7 @@ section {
 
 .site-footer__name {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.75rem;
   color: var(--white);
   display: flex;
@@ -861,6 +876,7 @@ section {
 
 .service-card__title {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.8rem;
   margin: 0;
 }
@@ -900,7 +916,8 @@ section {
 
 .journey-item__date {
   font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-weight: 700;
+  font-size: 0.72rem;
   color: var(--red);
   margin-bottom: 10px;
   display: inline-block;
@@ -936,6 +953,7 @@ section {
 
 .process-step__num {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.7rem;
   color: var(--white);
   background: var(--red);
@@ -973,7 +991,8 @@ section {
 
 .field label {
   font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-weight: 700;
+  font-size: 0.72rem;
   color: var(--ink-soft);
 }
 
@@ -1096,6 +1115,7 @@ section {
   cursor: pointer;
   padding: 0;
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.7rem;
   transition: background var(--transition-fast);
 }
@@ -1175,6 +1195,7 @@ section {
 
 .login-fab {
   font-family: var(--font-display);
+  font-weight: 700;
   font-size: 0.7rem;
   padding: 14px 22px;
   border-radius: var(--radius-pill);
