@@ -453,7 +453,12 @@ section {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-pixel-sm);
-  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  will-change: transform;
+  /* Only transform is animated — it's GPU-composited and stays smooth.
+     box-shadow forces a repaint on every frame, which is what made this
+     feel janky, especially on cards with large images; it just snaps
+     to the new shadow instantly instead, which reads fine at this size. */
+  transition: transform var(--transition-base);
 }
 
 .card:hover {
