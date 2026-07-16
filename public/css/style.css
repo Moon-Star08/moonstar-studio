@@ -457,13 +457,16 @@ section {
   /* Only transform is animated — it's GPU-composited and stays smooth.
      box-shadow forces a repaint on every frame, which is what made this
      feel janky, especially on cards with large images; it just snaps
-     to the new shadow instantly instead, which reads fine at this size. */
-  transition: transform var(--transition-base);
+     to the new shadow instantly instead, which reads fine at this size.
+     A snappy overshoot easing ("pop") on a real 8px lift is what actually
+     reads as the card popping up — the old 2px diagonal nudge was too
+     small to notice, so the shadow jump was the only thing visible. */
+  transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--ink);
+  transform: translateY(-8px);
+  box-shadow: 7px 9px 0 var(--ink);
 }
 
 .card__image {
