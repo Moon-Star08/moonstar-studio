@@ -53,9 +53,10 @@
 
   // ---- Count-up stats ----
   function animateCount(el) {
-    var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+    var raw = el.getAttribute('data-count') || '0';
+    var target = parseInt(raw, 10) || 0;
     if (reducedMotion) {
-      el.textContent = target;
+      el.textContent = raw;
       return;
     }
     var duration = 900;
@@ -63,11 +64,11 @@
     function step(ts) {
       if (start === null) start = ts;
       var progress = Math.min((ts - start) / duration, 1);
-      el.textContent = Math.floor(progress * target);
       if (progress < 1) {
+        el.textContent = Math.floor(progress * target);
         requestAnimationFrame(step);
       } else {
-        el.textContent = target;
+        el.textContent = raw;
       }
     }
     requestAnimationFrame(step);

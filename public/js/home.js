@@ -17,18 +17,6 @@
     });
   }
 
-  var statProjects = document.getElementById('stat-projects-count');
-  var statWebsites = document.getElementById('stat-websites-count');
-  if (statProjects && statWebsites) {
-    PortfolioAPI.fetchProjects()
-      .then(function (projects) {
-        statProjects.setAttribute('data-count', projects.length);
-        var websiteCount = projects.filter(function (p) { return p.category === 'website'; }).length;
-        statWebsites.setAttribute('data-count', websiteCount);
-      })
-      .catch(function () { /* leave the fallback counts in place */ });
-  }
-
   var grid = document.getElementById('featured-grid');
   if (!grid) return;
 
