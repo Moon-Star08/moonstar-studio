@@ -3,13 +3,26 @@ const db = require('../db');
 
 const VISITOR_COOKIE = 'msv_id';
 const SKIP_PREFIXES = ['/api/', '/css/', '/js/', '/uploads/', '/admin/'];
-const SKIP_EXACT = new Set(['/favicon.svg', '/favicon.ico']);
+// og-image.png/favicon.png are fetched by link-preview crawlers (Facebook,
+// WhatsApp, Slack, etc.) whenever someone shares a link, not by real visitors
+// browsing the site, so they'd otherwise inflate the view count.
+const SKIP_EXACT = new Set(['/favicon.svg', '/favicon.ico', '/favicon.png', '/og-image.png']);
+
+// Matches known crawlers/bots/link-preview fetchers and common HTTP client
+// libraries (curl, node-fetch, etc.) used for scripted/monitoring requests,
+// so automated traffic doesn't get counted as a real page view.
+const BOT_UA_RE = /bot|crawl|spider|slurp|facebookexternalhit|whatsapp|telegrambot|discordbot|slackbot|embedly|quora link preview|outbrain|pinterest|vkshare|w3c_validator|redditbot|applebot|petalbot|bytespider|ahrefsbot|semrushbot|mj12bot|dotbot|yandexbot|duckduckbot|curl|wget|python-requests|node-fetch|axios|postmanruntime|headlesschrome|lighthouse|pingdom|uptimerobot|monitor/i;
 
 function shouldTrack(req) {
   if (req.method !== 'GET') return false;
   const p = req.path;
   if (SKIP_EXACT.has(p)) return false;
-  return !SKIP_PREFIXES.some((prefix) => p.startsWith(prefix));
+  if (SKIP_PREFIXES.some((prefix) => p.startsWith(prefix))) return false;
+
+  const ua = req.get('user-agent') || '';
+  if (!ua || BOT_UA_RE.test(ua)) return false;
+
+  return true;
 }
 
 // Logs one row per page load. The visitor cookie is a random id with no
