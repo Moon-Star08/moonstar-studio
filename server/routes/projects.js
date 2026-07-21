@@ -53,6 +53,10 @@ function validateProjectInput(body) {
   const techTags = parseTechTags(body.tech_tags);
   const featured = body.featured === 'true' || body.featured === true || body.featured === 'on' || body.featured === '1';
 
+  const published = body.published === undefined
+    ? true
+    : (body.published === 'true' || body.published === true || body.published === 'on' || body.published === '1');
+
   return {
     errors,
     data: {
@@ -64,6 +68,7 @@ function validateProjectInput(body) {
       github_url: githubUrl,
       tech_tags: JSON.stringify(techTags),
       featured: featured ? 1 : 0,
+      published: published ? 1 : 0,
     },
   };
 }
@@ -79,7 +84,7 @@ function deleteImageFile(imagePath) {
 
 router.get('/projects', (req, res) => {
   const { category, tag, featured } = req.query;
-  let query = 'SELECT * FROM projects WHERE 1=1';
+  let query = 'SELECT * FROM projects WHERE published = 1';
   const params = [];
 
   if (category && CATEGORIES.has(category)) {
@@ -104,7 +109,7 @@ router.get('/projects', (req, res) => {
 
 router.get('/projects/:id', (req, res) => {
   const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Project not found' });
+  if (!row || !row.published) return res.status(404).json({ error: 'Project not found' });
   res.json(serializeProject(row));
 });
 
@@ -113,6 +118,12 @@ router.get('/projects/:id', (req, res) => {
 router.get('/admin/projects', requireAuth, (req, res) => {
   const rows = db.prepare('SELECT * FROM projects ORDER BY created_at DESC').all();
   res.json(rows.map(serializeProject));
+});
+
+router.get('/admin/projects/:id', requireAuth, (req, res) => {
+  const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Project not found' });
+  res.json(serializeProject(row));
 });
 
 router.post('/admin/projects', requireAuth, (req, res) => {
@@ -130,8 +141,8 @@ router.post('/admin/projects', requireAuth, (req, res) => {
     const result = db
       .prepare(
         `INSERT INTO projects
-          (title, short_description, long_description, category, tech_tags, live_url, github_url, image_path, featured, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
+          (title, short_description, long_description, category, tech_tags, live_url, github_url, image_path, featured, published, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`
       )
       .run(
         data.title,
@@ -142,7 +153,8 @@ router.post('/admin/projects', requireAuth, (req, res) => {
         data.live_url,
         data.github_url,
         imagePath,
-        data.featured
+        data.featured,
+        data.published
       );
 
     const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(result.lastInsertRowid);
@@ -186,6 +198,7 @@ router.put('/admin/projects/:id', requireAuth, (req, res) => {
         github_url = ?,
         image_path = ?,
         featured = ?,
+        published = ?,
         updated_at = datetime('now')
        WHERE id = ?`
     ).run(
@@ -198,12 +211,24 @@ router.put('/admin/projects/:id', requireAuth, (req, res) => {
       data.github_url,
       imagePath,
       data.featured,
+      data.published,
       req.params.id
     );
 
     const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
     res.json(serializeProject(row));
   });
+});
+
+router.patch('/admin/projects/:id/publish', requireAuth, (req, res) => {
+  const existing = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Project not found' });
+
+  const published = req.body && req.body.published ? 1 : 0;
+  db.prepare("UPDATE projects SET published = ?, updated_at = datetime('now') WHERE id = ?").run(published, req.params.id);
+
+  const row = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  res.json(serializeProject(row));
 });
 
 router.delete('/admin/projects/:id', requireAuth, (req, res) => {

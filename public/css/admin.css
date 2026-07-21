@@ -289,3 +289,15 @@ table.admin-table {
   border-radius: var(--radius-pill);
   border: 1.5px solid var(--ink);
 }
+
+.badge-hidden {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  background: var(--gray-100);
+  color: var(--ink);
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--ink);
+}

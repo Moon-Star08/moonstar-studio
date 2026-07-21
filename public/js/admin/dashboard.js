@@ -29,16 +29,23 @@
 
     var updated = p.updated_at ? p.updated_at.slice(0, 16).replace('T', ' ') : '';
 
+    var statusBadge = p.published
+      ? '<span class="badge-success">LIVE</span>'
+      : '<span class="badge-hidden">HIDDEN</span>';
+    var toggleLabel = p.published ? 'Hide' : 'Show';
+
     return (
       '<tr data-id="' + p.id + '">' +
         '<td>' + thumb + '</td>' +
         '<td class="title-cell">' + escapeHtml(p.title) + '</td>' +
         '<td><span class="badge-category">' + escapeHtml(p.category) + '</span></td>' +
         '<td>' + (p.featured ? '<span class="badge-featured">FEATURED</span>' : '—') + '</td>' +
+        '<td>' + statusBadge + '</td>' +
         '<td>' + escapeHtml(updated) + '</td>' +
         '<td>' +
           '<div class="row-actions">' +
             '<a class="btn btn--sm" href="/admin/project-form.html?id=' + p.id + '">Edit</a>' +
+            '<button class="btn btn--sm toggle-publish-btn" type="button" data-id="' + p.id + '" data-published="' + (p.published ? '1' : '0') + '" data-title="' + escapeHtml(p.title) + '">' + toggleLabel + '</button>' +
             '<button class="btn btn--sm delete-btn" type="button" data-id="' + p.id + '" data-title="' + escapeHtml(p.title) + '">Delete</button>' +
           '</div>' +
         '</td>' +
@@ -47,7 +54,7 @@
   }
 
   async function loadProjects() {
-    tbody.innerHTML = '<tr><td colspan="6">Loading…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7">Loading…</td></tr>';
     try {
       var res = await fetch('/api/admin/projects', { credentials: 'same-origin' });
       if (res.status === 401) {
@@ -56,35 +63,65 @@
       }
       var projects = await res.json();
       if (!projects.length) {
-        tbody.innerHTML = '<tr><td colspan="6">No projects yet. Add your first one above.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7">No projects yet. Add your first one above.</td></tr>';
         return;
       }
       tbody.innerHTML = projects.map(rowHtml).join('');
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="6">Failed to load projects.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7">Failed to load projects.</td></tr>';
     }
   }
 
   tbody.addEventListener('click', async function (e) {
-    var btn = e.target.closest('.delete-btn');
-    if (!btn) return;
-    var id = btn.getAttribute('data-id');
-    var title = btn.getAttribute('data-title');
-    if (!window.confirm('Delete "' + title + '"? This cannot be undone.')) return;
+    var deleteBtn = e.target.closest('.delete-btn');
+    if (deleteBtn) {
+      var id = deleteBtn.getAttribute('data-id');
+      var title = deleteBtn.getAttribute('data-title');
+      if (!window.confirm('Delete "' + title + '"? This cannot be undone.')) return;
 
-    btn.disabled = true;
-    try {
-      var res = await fetch('/api/admin/projects/' + id, { method: 'DELETE', credentials: 'same-origin' });
-      if (res.status === 401) {
-        window.location.href = '/admin/login.html';
-        return;
+      deleteBtn.disabled = true;
+      try {
+        var res = await fetch('/api/admin/projects/' + id, { method: 'DELETE', credentials: 'same-origin' });
+        if (res.status === 401) {
+          window.location.href = '/admin/login.html';
+          return;
+        }
+        if (!res.ok) throw new Error('Delete failed');
+        showAlert('success', 'Project "' + title + '" deleted.');
+        loadProjects();
+      } catch (err) {
+        showAlert('error', 'Could not delete that project. Try again.');
+        deleteBtn.disabled = false;
       }
-      if (!res.ok) throw new Error('Delete failed');
-      showAlert('success', 'Project "' + title + '" deleted.');
-      loadProjects();
-    } catch (err) {
-      showAlert('error', 'Could not delete that project. Try again.');
-      btn.disabled = false;
+      return;
+    }
+
+    var toggleBtn = e.target.closest('.toggle-publish-btn');
+    if (toggleBtn) {
+      var tId = toggleBtn.getAttribute('data-id');
+      var tTitle = toggleBtn.getAttribute('data-title');
+      var currentlyPublished = toggleBtn.getAttribute('data-published') === '1';
+      var nextPublished = !currentlyPublished;
+
+      toggleBtn.disabled = true;
+      try {
+        var tRes = await fetch('/api/admin/projects/' + tId + '/publish', {
+          method: 'PATCH',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ published: nextPublished }),
+        });
+        if (tRes.status === 401) {
+          window.location.href = '/admin/login.html';
+          return;
+        }
+        if (!tRes.ok) throw new Error('Update failed');
+        showAlert('success', 'Project "' + tTitle + '" is now ' + (nextPublished ? 'visible on the site.' : 'hidden from the site.'));
+        loadProjects();
+      } catch (err) {
+        showAlert('error', 'Could not update that project. Try again.');
+        toggleBtn.disabled = false;
+      }
     }
   });
 

@@ -22,10 +22,18 @@ db.exec(`
     github_url TEXT NOT NULL DEFAULT '',
     image_path TEXT NOT NULL DEFAULT '',
     featured INTEGER NOT NULL DEFAULT 0,
+    published INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
+
+// Migration: older databases created before the "published" column existed
+// won't have it — add it so existing rows default to visible.
+const projectColumns = db.prepare("PRAGMA table_info(projects)").all();
+if (!projectColumns.some((c) => c.name === 'published')) {
+  db.exec('ALTER TABLE projects ADD COLUMN published INTEGER NOT NULL DEFAULT 1');
+}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS messages (

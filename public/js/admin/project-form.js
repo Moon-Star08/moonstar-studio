@@ -43,7 +43,11 @@
 
   async function loadExistingProject() {
     try {
-      var res = await fetch('/api/projects/' + editId, { credentials: 'same-origin' });
+      var res = await fetch('/api/admin/projects/' + editId, { credentials: 'same-origin' });
+      if (res.status === 401) {
+        window.location.href = '/admin/login.html';
+        return;
+      }
       if (!res.ok) throw new Error('Not found');
       var p = await res.json();
 
@@ -55,6 +59,7 @@
       document.getElementById('live_url').value = p.live_url || '';
       document.getElementById('github_url').value = p.github_url || '';
       document.getElementById('featured').checked = !!p.featured;
+      document.getElementById('published').checked = p.published !== false;
 
       existingImagePath = p.image_path || '';
       renderCurrentImage();
@@ -100,6 +105,7 @@
     formData.append('live_url', document.getElementById('live_url').value.trim());
     formData.append('github_url', document.getElementById('github_url').value.trim());
     formData.append('featured', document.getElementById('featured').checked ? 'true' : 'false');
+    formData.append('published', document.getElementById('published').checked ? 'true' : 'false');
     if (file) formData.append('image', file);
     if (editId && removeImageFlag) formData.append('remove_image', 'true');
 
