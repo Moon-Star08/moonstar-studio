@@ -1007,6 +1007,8 @@ section {
 .field input[type="text"],
 .field input[type="email"],
 .field input[type="tel"],
+.field input[type="password"],
+.field input[type="url"],
 .field textarea,
 .field select {
   font-family: var(--font-body);
