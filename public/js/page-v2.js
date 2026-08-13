@@ -100,12 +100,15 @@
   // ---------- generic scroll reveals ----------
   window.v2Reveal = function (scope) {
     if (reduce) return;
-    var els = (scope || document).querySelectorAll('.reveal:not([data-revealed])');
+    var els = [].slice.call((scope || document).querySelectorAll('.reveal:not([data-revealed])'));
+    if (!els.length) return;
     els.forEach(function (el) { el.setAttribute('data-revealed', '1'); });
+    // pre-hide, then animate to visible (no snap/flash on fast scroll)
+    gsap.set(els, { autoAlpha: 0, y: 30 });
     ScrollTrigger.batch(els, {
-      start: 'top 88%',
+      start: 'top 90%',
       onEnter: function (batch) {
-        gsap.from(batch, { y: 30, autoAlpha: 0, duration: 0.7, ease: 'expo.out', stagger: 0.08, overwrite: true });
+        gsap.to(batch, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'expo.out', stagger: 0.08, overwrite: true });
       }
     });
   };

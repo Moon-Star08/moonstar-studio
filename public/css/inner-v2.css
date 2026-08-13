@@ -37,6 +37,11 @@
 .v2-card .n { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: rgba(22, 21, 19, .4); }
 .v2-card h3 { margin-top: 18px; font-weight: 800; font-size: clamp(18px, 2vw, 24px); letter-spacing: -.01em; }
 .v2-card p { margin-top: 10px; font-size: 13.5px; line-height: 1.6; color: rgba(22, 21, 19, .62); }
+/* cards on a dark section */
+.v2-sec--ink .v2-card { background: #1c1b18; border-color: var(--hair-bone); }
+.v2-sec--ink .v2-card::after { background: linear-gradient(135deg, rgba(244, 241, 234, .1), transparent 44%); }
+.v2-sec--ink .v2-card .n { color: rgba(244, 241, 234, .4); }
+.v2-sec--ink .v2-card p { color: rgba(244, 241, 234, .62); }
 
 /* numbered / dated row list (journey, work experience) */
 .v2-tl { margin-top: 7vh; }
