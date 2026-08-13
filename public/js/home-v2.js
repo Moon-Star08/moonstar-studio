@@ -1,6 +1,9 @@
 (function () {
   'use strict';
 
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   gsap.registerPlugin(ScrollTrigger);
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var touch = matchMedia('(pointer: coarse)').matches;
@@ -46,7 +49,7 @@
 
   // ---------- hero: cursor proximity drives per-glyph weight (bold thins, thin bolds) ----------
   var heroChs = $$('#v2HeroTitle .ch');
-  if (!touch && !reduce && heroChs.length) {
+  if (!reduce && heroChs.length) {
     var hx = -9999, hy = -9999, heroOn = false;
     var heroEl = $('#v2Hero');
     heroEl.addEventListener('pointermove', function (e) { hx = e.clientX; hy = e.clientY; heroOn = true; });
@@ -145,43 +148,6 @@
   document.addEventListener('sitecontent:ready', function (e) {
     var content = e.detail || {};
 
-    // hero title: wrap words in spans for the reveal + cursor-weight effect
-    var titleRow = $('#v2HeroTitle .row');
-    var titleTarget = $('#v2HeroTitleWords');
-    if (titleRow && titleTarget) {
-      var words = (titleTarget.textContent || '').trim().split(/\s+/);
-      titleTarget.innerHTML = words.map(function (w) {
-        return '<span class="v2-word" style="display:inline-block;">' + w.split('').map(function (c) {
-          return '<span class="ch" style="display:inline-block;">' + c + '</span>';
-        }).join('') + '&nbsp;</span>';
-      }).join('');
-      if (reduce) { titleRow.querySelectorAll('span').forEach(function (s) { s.style.transform = 'none'; }); }
-    }
-
-    // hero: cursor proximity drives per-glyph weight
-    var heroChs = $$('#v2HeroTitle .ch');
-    if (!touch && !reduce && heroChs.length) {
-      var hx = -9999, hy = -9999, heroOn = false;
-      var hero = $('#v2Hero');
-      hero.addEventListener('pointermove', function (e) { hx = e.clientX; hy = e.clientY; heroOn = true; });
-      hero.addEventListener('pointerleave', function () { heroOn = false; });
-      var states = heroChs.map(function (ch) { return { ch: ch, w: 900, base: 900 }; });
-      gsap.ticker.add(function () {
-        for (var i = 0; i < states.length; i++) {
-          var s = states[i];
-          var target = s.base;
-          if (heroOn) {
-            var r = s.ch.getBoundingClientRect();
-            var d = Math.hypot(hx - (r.left + r.width / 2), hy - (r.top + r.height / 2));
-            var f = Math.max(0, 1 - d / 260);
-            target = 900 - 750 * f;
-          }
-          s.w += (target - s.w) * 0.16;
-          s.ch.style.fontVariationSettings = "'wght' " + s.w.toFixed(0) + ", 'wdth' 100";
-        }
-      });
-    }
-
     // hero image bed
     var heroImg = $('#v2HeroImg');
     var heroBed = $('#v2HeroBed');
@@ -275,7 +241,7 @@
         return c === ' ' ? '&nbsp;' : '<span class="fch">' + c + '</span>';
       }).join('');
       var fchs = $$('#v2FootMark .fch');
-      if (!touch && !reduce && fchs.length) {
+      if (!reduce && fchs.length) {
         var footStates = fchs.map(function (ch, i) {
           return { ch: ch, w: 900, pos: fchs.length > 1 ? i / (fchs.length - 1) : 0 };
         });
