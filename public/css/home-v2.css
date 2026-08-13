@@ -172,7 +172,7 @@ section { position: relative; }
 #v2-portal { height: 300vh; background: var(--ink); }
 #v2-portal .v2-stage { display: flex; align-items: center; justify-content: center; background: var(--bone); }
 #v2-portal .v2-stage.inked { background: var(--ink); }
-.v2-o-wrap { position: relative; z-index: 2; line-height: 1; }
+.v2-o-wrap { position: relative; z-index: 2; line-height: 1; will-change: transform; transform-origin: 50% 50%; backface-visibility: hidden; }
 .v2-o-glyph { font-weight: 900; font-size: 64vmin; line-height: 1; display: block; font-variation-settings: 'wght' 900; color: var(--ink); }
 .v2-portal-line {
   position: absolute; z-index: 3; left: 50%; top: 42%; transform: translate(-50%, -50%);

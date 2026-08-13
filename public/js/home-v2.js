@@ -118,10 +118,14 @@
         var p = prox.p;
         var travel = Math.min(Math.max((p - 0.15) / 0.597, 0), 1);
         if (p < FLIP + 0.03) {
-          var fs = 64 * Math.pow(46, travel);
+          // Zoom with a GPU-composited transform instead of animating font-size.
+          // Scrubbing font-size forced the browser to re-layout and re-rasterize a
+          // giant glyph every frame, which stuttered more the bigger the O got.
+          // scale() stays on the compositor and reads smooth. scale 1 == the CSS
+          // base font-size of 64vmin, so the motion matches the old start size.
+          var scale = Math.pow(46, travel);
           var dx = 36 * gsap.parseEase('power2.inOut')(Math.min(Math.max((travel - 0.1) / 0.7, 0), 1));
-          oGlyph.style.fontSize = fs.toFixed(2) + 'vmin';
-          oWrap.style.transform = 'translate3d(' + dx.toFixed(2) + '%,0,0)';
+          oWrap.style.transform = 'translate3d(' + dx.toFixed(2) + '%,0,0) scale(' + scale.toFixed(3) + ')';
         }
         eyebrow.style.opacity = 1 - Math.min(Math.max((p - 0.42) / 0.16, 0), 1);
         stage.classList.toggle('inked', p >= FLIP);
