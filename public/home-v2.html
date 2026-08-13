@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homepage Redesign Preview — MoonStar Studio</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/home-v2.css">
+</head>
+<body>
+
+<div class="v2-cursor" id="v2Cursor"></div>
+<div class="v2-veil" id="v2Veil">
+  <div class="mono">est. 2026 &middot; web design &amp; development</div>
+  <div class="mark">MOONSTAR STUDIO</div>
+</div>
+
+<nav class="v2-nav">
+  <a class="wordmark" href="/">MOONSTAR STUDIO</a>
+  <div class="links">
+    <a href="/services">Services</a>
+    <a href="/websites">Work</a>
+    <a href="/about">About</a>
+    <a href="/contact" class="buy">Start a project</a>
+  </div>
+</nav>
+
+<main class="v2-main">
+
+  <!-- HERO -->
+  <header class="v2-hero" id="v2Hero">
+    <span class="v2-reg-v"></span><span class="v2-reg-h"></span><span class="v2-reg-cross"></span>
+    <div class="v2-hero-kicker mono">MoonStar Studio &middot; web design &amp; development</div>
+
+    <h1 class="v2-hero-title" id="v2HeroTitle" aria-label="Modern websites that help your business grow">
+      <span class="row"><span id="v2HeroTitleWords" data-sc="home.hero_headline">Modern Websites That Help Your Business Grow</span></span>
+    </h1>
+
+    <figure class="v2-hero-bed" id="v2HeroBed">
+      <img id="v2HeroImg" alt="" hidden>
+    </figure>
+
+    <p class="v2-hero-sub" id="v2HeroSub" data-sc="home.hero_tagline">I design and develop high-performing websites that build trust, attract customers, and turn ideas into engaging online experiences.</p>
+
+    <div class="v2-hero-actions" id="v2HeroActions">
+      <a class="v2-btn v2-btn--primary" href="/websites" data-sc="home.hero_btn_primary_text" data-sc-href="home.hero_btn_primary_href">View My Work</a>
+      <a class="v2-btn" href="/contact" data-sc="home.hero_btn_secondary_text" data-sc-href="home.hero_btn_secondary_href">Get In Touch</a>
+    </div>
+
+    <div class="v2-hero-meta">
+      <b data-sc="home.stat_1_value">17+</b> projects delivered<br>
+      <b data-sc="home.stat_2_value">12</b> live websites<br>
+      design &middot; development &middot; strategy<br>
+      based in Cambodia
+    </div>
+
+    <div class="v2-hero-cue mono">Scroll &darr;</div>
+  </header>
+
+  <!-- RIBBON -->
+  <div class="v2-ribbons" aria-hidden="true">
+    <div class="v2-ribbon r1" id="v2Ribbon1"></div>
+  </div>
+
+  <!-- MANIFESTO -->
+  <section id="v2-manifesto">
+    <div class="v2-stage v2-manifesto">
+      <span class="v2-mani-shard" style="right:-4vw;top:8%">M</span>
+      <span class="v2-mani-shard" style="left:-6vw;bottom:4%">&amp;</span>
+      <div class="inner">
+        <span class="mono">// how we build</span>
+        <p id="v2ManiText" data-sc="home.manifesto_text">Most business websites are built cheap, and it shows before a visitor can say why. A slow load, a cramped layout, a form that goes nowhere. MoonStar Studio is built the other way: every page loads fast, every layout holds its structure on any screen, and every detail is placed on purpose. That is what turns a visitor into a client.</p>
+      </div>
+      <div class="v2-scene-tag" style="color:var(--bone)">01 philosophy</div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="v2-process">
+    <div class="v2-stage">
+      <span class="v2-proc-rule" style="top:22%"><small>start</small></span>
+      <span class="v2-proc-rule" style="bottom:22%"><small>launch</small></span>
+      <div class="v2-proc-mask"><span id="v2ProcTitle">01</span></div>
+      <div class="v2-proc-hud" id="v2ProcHud">
+        <div class="v2-proc-rail" id="v2ProcRail"><span id="v2ProcTick"></span></div>
+        <div class="v2-proc-read"><span id="v2ProcNum">step 1</span><span id="v2ProcName">Discover</span></div>
+      </div>
+      <div class="v2-scene-tag" style="color:var(--bone)">02 how we work</div>
+    </div>
+  </section>
+
+  <!-- FEATURED WORK -->
+  <section id="v2-work">
+    <div class="v2-head">
+      <h2>Recent work.</h2>
+      <span class="mono" id="v2WorkMeta">drag or scroll</span>
+    </div>
+    <div id="v2WorkPin">
+      <div class="v2-track" id="v2Track">
+        <p class="v2-frame-empty">Loading projects&hellip;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS + SERVICES LEDGER -->
+  <section class="v2-ledger">
+    <div class="v2-grid2">
+      <div>
+        <h2>By the numbers.</h2>
+        <div class="v2-led-row"><span class="k">Projects delivered</span><span class="v" id="v2Stat1" data-sc-count="home.stat_1_value">0</span></div>
+        <div class="v2-led-row"><span class="k">Live websites</span><span class="v" id="v2Stat2" data-sc-count="home.stat_2_value">0</span></div>
+        <div class="v2-led-row"><span class="k">Cups of coffee</span><span class="v" id="v2Stat3" data-sc-count="home.stat_3_value">0</span></div>
+      </div>
+      <div>
+        <h2>What we do.</h2>
+        <div class="v2-svc-row">
+          <div class="t" data-sc="home.service_1_title">Web Design</div>
+          <div class="d" data-sc="home.service_1_desc">Designing clean, modern, and user-friendly websites that reflect your brand and connect with your audience.</div>
+        </div>
+        <div class="v2-svc-row">
+          <div class="t" data-sc="home.service_2_title">UI / UX Design</div>
+          <div class="d" data-sc="home.service_2_desc">Creating intuitive and engaging digital experiences that make it easy for visitors to explore, understand, and take action.</div>
+        </div>
+        <div class="v2-svc-row">
+          <div class="t" data-sc="home.service_3_title">Web Development</div>
+          <div class="d" data-sc="home.service_3_desc">Building fast, responsive, and fully functional websites optimized for performance on every device.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="v2-cta">
+    <div class="v2-cta-inner">
+      <h2 data-sc="home.cta_heading">Ready to build your online presence?</h2>
+      <div>
+        <p data-sc="home.cta_text">Let's create a website that works as hard as you do.</p>
+        <a class="v2-btn v2-btn--primary" style="margin-top:20px;display:inline-block;" href="/contact" data-sc="home.cta_btn_text">Start Your Project</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="v2-footer" id="v2Footer">
+  <span class="v2-foot-zero" aria-hidden="true">0</span>
+  <div>
+    <div class="mono" style="margin-bottom:3vh;opacity:.85">MoonStar Studio &middot; Est. 2026</div>
+    <div class="v2-foot-mark" id="v2FootMark" aria-label="MoonStar Studio"></div>
+    <a class="v2-foot-cta" href="/contact">Start your project <span>&rarr;</span></a>
+  </div>
+  <div class="v2-foot-cols">
+    <span data-sc="site.footer_tagline">Web Designer &amp; Developer. Modern websites and digital solutions for businesses, from concept to launch.</span>
+    <span>
+      <a href="/">Home</a><br>
+      <a href="/about">About</a><br>
+      <a href="/services">Services</a><br>
+      <a href="/websites">Websites</a><br>
+      <a href="/contact">Contact</a>
+    </span>
+    <span>
+      <a href="mailto:moonstarstudio.co@gmail.com" data-sc="site.email" data-sc-mailto="site.email">moonstarstudio.co@gmail.com</a><br>
+      <a href="tel:+85585887688" data-sc="site.phone" data-sc-tel="site.phone">+855 85 887 688</a><br>
+      <span data-sc="site.location">Cambodia</span>
+    </span>
+    <span>
+      <a href="https://www.tiktok.com/@moonstarstudio.co" target="_blank" rel="noopener noreferrer" data-sc-href="site.tiktok_url">TikTok</a><br>
+      <a href="https://www.facebook.com/share/17haycQPn3/" target="_blank" rel="noopener noreferrer" data-sc-href="site.facebook_url">Facebook</a><br>
+      <a href="https://www.instagram.com/moonstar.studio.co" target="_blank" rel="noopener noreferrer" data-sc-href="site.instagram_url">Instagram</a>
+    </span>
+  </div>
+</footer>
+
+<div class="v2-preview-banner">
+  <span>PREVIEW &mdash; homepage redesign, not live yet. Not linked from the site nav.</span>
+  <a href="/">&larr; Back to the live site</a>
+</div>
+
+<script src="/js/site-content.js"></script>
+<script src="/js/projects-api.js"></script>
+<script src="/vendor/gsap.min.js"></script>
+<script src="/vendor/ScrollTrigger.min.js"></script>
+<script src="/vendor/lenis.min.js"></script>
+<script src="/js/home-v2.js"></script>
+</body>
+</html>

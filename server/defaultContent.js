@@ -29,6 +29,7 @@ module.exports = {
     service_3_title: 'Web Development',
     service_3_desc: 'Building fast, responsive, and fully functional websites optimized for performance on every device.',
     featured_intro: 'Explore some of my recent website projects — each one designed with creativity, performance, and user experience in mind.',
+    manifesto_text: "Most business websites are built cheap, and it shows before a visitor can say why. A slow load, a cramped layout, a form that goes nowhere. MoonStar Studio is built the other way: every page loads fast, every layout holds its structure on any screen, and every detail is placed on purpose. That is what turns a visitor into a client.",
     stat_1_value: '17+',
     stat_1_label: 'projects delivered',
     stat_2_value: '12',

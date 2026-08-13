@@ -35,6 +35,7 @@
         { key: 'service_3_title', label: 'Service 3 title', type: 'text' },
         { key: 'service_3_desc', label: 'Service 3 description', type: 'textarea' },
         { key: 'featured_intro', label: 'Featured projects intro', type: 'textarea' },
+        { key: 'manifesto_text', label: 'Manifesto statement (new homepage design, "In Use" section)', type: 'textarea' },
         { key: 'stat_1_value', label: 'Stat 1 value', type: 'text' },
         { key: 'stat_1_label', label: 'Stat 1 label', type: 'text' },
         { key: 'stat_2_value', label: 'Stat 2 value', type: 'text' },
