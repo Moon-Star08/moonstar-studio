@@ -3,6 +3,12 @@
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
+  // Always land at the top — including back/forward restores from the bfcache
+  // (which don't re-run this script) and the Lenis smooth-scroll position.
+  addEventListener('pageshow', function () {
+    window.scrollTo(0, 0);
+    if (lenis) lenis.scrollTo(0, { immediate: true });
+  });
 
   gsap.registerPlugin(ScrollTrigger);
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -6,6 +6,9 @@
   // otherwise restore to a previously scrolled position).
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
+  // Also handle back/forward restores from the bfcache, which don't re-run
+  // this script, so the top-of-file scrollTo above wouldn't fire.
+  window.addEventListener('pageshow', function () { window.scrollTo(0, 0); });
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

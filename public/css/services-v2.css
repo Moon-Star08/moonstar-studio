@@ -3,6 +3,11 @@
 
 .v2-svcband .band-label { color: rgba(22, 21, 19, .5); display: block; margin-bottom: 2vh; }
 
+/* hero on a single line: WHAT I (heavy black) + DO (thin red) side by side */
+#svcHeroTitle { white-space: nowrap; }
+#svcHeroTitle .row { display: inline-block; overflow: hidden; vertical-align: bottom; }
+#svcHeroTitle .row.thin { margin-left: .3em; }
+
 /* service rows: description + capability chips in the third column */
 .v2-svcband-row .svc-copy { max-width: 60ch; }
 .v2-svcband-row .svc-copy p { font-size: 14px; line-height: 1.6; color: rgba(22, 21, 19, .65); }
@@ -11,28 +16,78 @@
 }
 .v2-svcband-row .tags li {
   font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(22, 21, 19, .6); border: 1px solid var(--hair-ink); padding: 6px 11px;
-  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+  color: var(--bone); background: var(--ink); border: 1px solid var(--ink); padding: 6px 11px;
+  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
 }
-.v2-svcband-row .tags li:hover { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+.v2-svcband-row .tags li:hover { background: var(--red); border-color: var(--red); color: var(--bone); transform: translateY(-2px); }
 
-/* process — dark band with four revealing steps (no pinning, so no scroll jank) */
+/* process — dark band with a 5-card bento (adapted from the reference layout) */
 .svc-process { background: var(--ink); color: var(--bone); padding: 16vh 3.2vw; }
 .svc-process .mono { color: rgba(244, 241, 234, .5); }
-.svc-process h2 {
-  font-weight: 900; font-size: clamp(26px, 3.4vw, 44px); letter-spacing: -.02em;
-  margin: 2vh 0 9vh; max-width: 18ch;
+.svc-process-head h2 {
+  font-weight: 900; font-size: clamp(26px, 3.4vw, 46px); letter-spacing: -.02em;
+  margin: 2vh 0 0; max-width: 20ch;
 }
-.svc-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vw; }
-@media (max-width: 900px) { .svc-steps { grid-template-columns: 1fr 1fr; gap: 6vh 3vw; } }
-@media (max-width: 560px) { .svc-steps { grid-template-columns: 1fr; } }
-.svc-step { border-top: 1px solid var(--hair-bone); padding-top: 22px; }
-.svc-step .n {
-  display: block; font-weight: 900; font-size: clamp(40px, 5vw, 74px); line-height: 1;
-  font-variation-settings: 'wght' 900, 'wdth' 100; color: var(--bone);
+.svc-process-sub { margin-top: 2.4vh; font-size: 14px; color: rgba(244, 241, 234, .55); max-width: 44ch; }
+
+.proc-bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 8vh; }
+.proc-a { grid-column: span 5; }
+.proc-b { grid-column: span 4; }
+.proc-c { grid-column: span 3; }
+.proc-d { grid-column: span 7; }
+.proc-e { grid-column: span 5; }
+@media (max-width: 1000px) {
+  .proc-a, .proc-b, .proc-c, .proc-d, .proc-e { grid-column: span 12; }
 }
-.svc-step h3 { margin-top: 20px; font-weight: 700; font-size: clamp(16px, 1.7vw, 21px); letter-spacing: -.01em; }
-.svc-step p { margin-top: 12px; font-size: 13px; line-height: 1.6; color: rgba(244, 241, 234, .6); }
+
+.proc-card {
+  position: relative; overflow: hidden; border-radius: 26px; padding: 30px;
+  border: 1px solid var(--hair-bone); min-height: 300px; display: flex; flex-direction: column;
+  transition: transform .55s var(--ease), border-color .55s var(--ease), background .55s var(--ease);
+}
+.proc-card:hover { transform: translateY(-8px); border-color: rgba(217, 51, 63, .5); }
+.proc-card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(135deg, rgba(244, 241, 234, .12), transparent 42%);
+  transition: opacity .5s var(--ease);
+}
+.proc-card:hover::after { opacity: 1; }
+
+.proc-card--light { background: var(--bone); color: var(--ink); border-color: transparent; }
+.proc-card--light::after { background: linear-gradient(135deg, rgba(22, 21, 19, .08), transparent 42%); }
+.proc-card--dark { background: #1c1b18; }
+.proc-card--outline { background: rgba(244, 241, 234, .035); }
+.proc-card--red { background: var(--red); color: var(--bone); border-color: transparent; }
+.proc-card--red::after { background: linear-gradient(135deg, rgba(0, 0, 0, .16), transparent 42%); }
+
+.proc-card-in { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+.proc-a .proc-card-in { justify-content: space-between; }
+.proc-bottom { justify-content: flex-end; }
+
+.proc-wm {
+  position: absolute; right: -4px; top: -26px; z-index: 0; pointer-events: none;
+  font-weight: 900; font-size: 150px; line-height: 1; font-variation-settings: 'wght' 900, 'wdth' 100;
+  color: rgba(244, 241, 234, .05);
+}
+.proc-card--light .proc-wm { color: rgba(22, 21, 19, .06); }
+.proc-wm--dark { color: rgba(0, 0, 0, .12); }
+
+.proc-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: rgba(244, 241, 234, .5); }
+.proc-card--light .proc-eyebrow { color: rgba(22, 21, 19, .45); }
+.proc-eyebrow--dark { color: rgba(0, 0, 0, .55); }
+
+.proc-card h3 { font-weight: 900; letter-spacing: -.03em; line-height: .92; margin-top: 16px; font-size: clamp(30px, 3.2vw, 50px); }
+.proc-a h3 { font-size: clamp(40px, 4.4vw, 64px); }
+.proc-d h3 { font-size: clamp(34px, 4vw, 58px); }
+
+.proc-desc { margin-top: 16px; font-size: 13.5px; line-height: 1.6; color: rgba(244, 241, 234, .58); max-width: 36ch; }
+.proc-card--light .proc-desc { color: rgba(22, 21, 19, .6); }
+.proc-desc--dark { color: rgba(0, 0, 0, .72); }
+
+.proc-d-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: start; margin-top: auto; }
+@media (max-width: 600px) { .proc-d-grid { grid-template-columns: 1fr; gap: 10px; } }
+.proc-ring { position: absolute; right: 28px; top: 28px; width: 92px; height: 92px; border: 1px solid rgba(244, 241, 234, .1); border-radius: 999px; z-index: 0; }
+.proc-ring--2 { right: 52px; top: 52px; width: 46px; height: 46px; }
 
 /* ---------- pricing packages ---------- */
 .v2-packages { background: var(--bone); padding: 15vh 3.2vw 6vh; }
@@ -44,9 +99,24 @@
 
 .pkg {
   display: grid; grid-template-columns: auto 1.15fr .75fr 1.35fr; gap: 2.6vw; align-items: start;
-  border-top: 1px solid var(--hair-ink); padding: 46px 0;
+  border-top: 1px solid var(--hair-ink); padding: 46px 0; position: relative;
+  transition: padding-left .45s var(--ease);
 }
 .v2-packages .pkg:last-of-type { border-bottom: 1px solid var(--hair-ink); }
+/* hover: a red line sweeps the top border, the card eases right, and the
+   number + price warm up — same language as the homepage tier rows. */
+.pkg::before {
+  content: ""; position: absolute; left: 0; top: -1px; height: 1px; width: 0;
+  background: var(--red); transition: width .55s var(--ease);
+}
+.pkg:hover::before { width: 100%; }
+.pkg:hover { padding-left: 20px; }
+.pkg-num, .pkg-price { transition: color .3s var(--ease), transform .4s var(--ease); }
+.pkg-price { transform-origin: left center; }
+.pkg:hover .pkg-num { color: var(--red); }
+.pkg:hover .pkg-price { transform: scale(1.05); }
+.pkg-bar { transition: transform .45s var(--ease); transform-origin: top; }
+.pkg:hover .pkg-bar { transform: scaleY(1.08); }
 .pkg-id { display: flex; gap: 16px; align-items: stretch; }
 .pkg-bar { width: 6px; background: var(--red); flex: none; }
 .pkg--ink .pkg-bar { background: var(--ink); }
