@@ -25,16 +25,51 @@
       cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)';
     });
     document.addEventListener('pointerover', function (e) {
-      var el = e.target.closest('a,button,.v2-frame,input');
+      var el = e.target.closest('a,button,.v2-frame,.v2-tier-row,.v2-glyph,input,[contenteditable]');
       if (el) cur.classList.add('is-link');
     });
     document.addEventListener('pointerout', function (e) {
-      var el = e.target.closest('a,button,.v2-frame,input');
+      var el = e.target.closest('a,button,.v2-frame,.v2-tier-row,.v2-glyph,input,[contenteditable]');
       if (el) cur.classList.remove('is-link');
     });
   } else {
     var curEl = $('#v2Cursor');
     if (curEl) curEl.style.display = 'none';
+  }
+
+  // ---------- hero title: build chars from the fixed wordmark ----------
+  $$('#v2HeroTitle [data-chars]').forEach(function (row) {
+    row.innerHTML = row.getAttribute('data-chars').split('').map(function (c) {
+      return c === ' ' ? '&nbsp;' : '<span class="ch">' + c + '</span>';
+    }).join('');
+  });
+
+  // ---------- hero: cursor proximity drives per-glyph weight (bold thins, thin bolds) ----------
+  var heroChs = $$('#v2HeroTitle .ch');
+  if (!touch && !reduce && heroChs.length) {
+    var hx = -9999, hy = -9999, heroOn = false;
+    var heroEl = $('#v2Hero');
+    heroEl.addEventListener('pointermove', function (e) { hx = e.clientX; hy = e.clientY; heroOn = true; });
+    heroEl.addEventListener('pointerleave', function () { heroOn = false; });
+    var heroStates = heroChs.map(function (ch) {
+      var isThin = !!ch.closest('.row.thin');
+      var base = isThin ? 100 : 900;
+      return { ch: ch, w: base, base: base };
+    });
+    gsap.ticker.add(function () {
+      for (var i = 0; i < heroStates.length; i++) {
+        var s = heroStates[i];
+        var target = s.base;
+        if (heroOn) {
+          var r = s.ch.getBoundingClientRect();
+          var d = Math.hypot(hx - (r.left + r.width / 2), hy - (r.top + r.height / 2));
+          var f = Math.max(0, 1 - d / 340);
+          target = s.base === 900 ? 900 - 800 * f : 100 + 800 * f;
+        }
+        s.w += (target - s.w) * 0.16;
+        s.ch.style.fontVariationSettings = "'wght' " + s.w.toFixed(0) + ", 'wdth' 100";
+      }
+    });
   }
 
   // ---------- veil intro ----------
@@ -164,19 +199,29 @@
     if (!svcTitles.length) svcTitles = ['Web Design', 'UI / UX Design', 'Web Development'];
     var line = svcTitles.join('  &middot;  ') + '  &middot;  ';
     var ribbon1 = $('#v2Ribbon1');
-    if (ribbon1) {
-      ribbon1.innerHTML = '<span>' + line.repeat(8) + '</span><span>' + line.repeat(8) + '</span>';
-      if (!reduce) {
-        var rx = { x: 0 };
-        var vel = 0;
-        ScrollTrigger.create({ onUpdate: function (self) { vel = self.getVelocity() / 4000; } });
-        gsap.ticker.add(function (t, dt) {
-          var base = dt * 0.0018;
-          rx.x -= base * (1 + Math.min(Math.abs(vel), 3));
-          if (rx.x <= -50) rx.x += 50;
-          ribbon1.style.transform = 'translate3d(' + rx.x + '%,0,0)';
-        });
-      }
+    var ribbon2 = $('#v2Ribbon2');
+    if (ribbon1) ribbon1.innerHTML = '<span>' + line.repeat(8) + '</span><span>' + line.repeat(8) + '</span>';
+    if (ribbon2) ribbon2.innerHTML = '<span>' + line.repeat(8) + '</span><span>' + line.repeat(8) + '</span>';
+    if ((ribbon1 || ribbon2) && !reduce) {
+      var r1 = { x: 0 }, r2 = { x: -50 };
+      var vel = 0;
+      ScrollTrigger.create({ onUpdate: function (self) { vel = self.getVelocity() / 4000; } });
+      gsap.ticker.add(function (t, dt) {
+        var base = dt * 0.0018;
+        r1.x -= base * (1 + Math.min(Math.abs(vel), 3));
+        if (r1.x <= -50) r1.x += 50;
+        r2.x += base * (1 + Math.min(Math.abs(vel), 3));
+        if (r2.x >= 0) r2.x -= 50;
+        if (ribbon1) ribbon1.style.transform = 'translate3d(' + r1.x + '%,0,0)';
+        if (ribbon2) ribbon2.style.transform = 'translate3d(' + r2.x + '%,0,0)';
+      });
+    }
+
+    // interlude photo: reuse the uploaded hero image if there is one
+    var interImg = $('#v2InterImg');
+    if (interImg) {
+      if (src) { interImg.src = src; interImg.hidden = false; }
+      else { interImg.hidden = true; }
     }
 
     // manifesto: word-breath reveal
@@ -361,6 +406,106 @@
       obs.observe(el);
     });
   }
+
+  // ---------- tester ----------
+  (function initTester() {
+    var line = $('#v2TesterLine'), read = $('#v2TesterRead');
+    var cW = $('#v2CWght'), cD = $('#v2CWdth'), cS = $('#v2CSize');
+    var rW = $('#v2RWght'), rD = $('#v2RWdth'), rS = $('#v2RSize');
+    if (!line || !cW) return;
+    var state = { w: 700, d: 100, s: 64 };
+    function render() {
+      line.style.fontVariationSettings = "'wght' " + state.w + ", 'wdth' " + state.d;
+      line.style.fontSize = state.s + 'px';
+      rW.textContent = state.w; rD.textContent = state.d; rS.textContent = state.s;
+      read.innerHTML = 'wght ' + state.w + ' &middot; wdth ' + state.d + ' &middot; ' + state.s + 'px';
+    }
+    var presets = $$('#v2Presets button');
+    function clearPreset() { presets.forEach(function (b) { b.classList.remove('on'); }); }
+    cW.addEventListener('input', function () { state.w = +cW.value; render(); clearPreset(); });
+    cD.addEventListener('input', function () { state.d = +cD.value; render(); clearPreset(); });
+    cS.addEventListener('input', function () { state.s = +cS.value; render(); });
+    presets.forEach(function (b) {
+      b.addEventListener('click', function () {
+        clearPreset(); b.classList.add('on');
+        gsap.to(state, {
+          w: +b.getAttribute('data-w'), d: +b.getAttribute('data-d'), duration: 0.6, ease: 'expo.out',
+          onUpdate: function () {
+            state.w = Math.round(state.w); state.d = Math.round(state.d);
+            cW.value = state.w; cD.value = state.d; render();
+          }
+        });
+      });
+    });
+    line.addEventListener('paste', function (e) {
+      e.preventDefault();
+      document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain'));
+    });
+    render();
+  })();
+
+  // ---------- features: hover demos ----------
+  (function initFeatures() {
+    var anims = {
+      count: function (el) {
+        var o = { n: 0 };
+        gsap.to(o, {
+          n: 1000000, duration: 0.9, ease: 'power2.out',
+          onUpdate: function () { el.textContent = '$' + o.n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        });
+      },
+      case: function (el) { gsap.fromTo(el, { letterSpacing: '0.2em', opacity: 0.4 }, { letterSpacing: '0em', opacity: 1, duration: 0.6, ease: 'expo.out' }); },
+      alt: function (el) { gsap.fromTo(el, { fontVariationSettings: "'wght' 100" }, { fontVariationSettings: "'wght' 800", duration: 0.7, ease: 'expo.out' }); },
+      arrows: function (el) { gsap.fromTo(el, { x: -16, opacity: 0.3 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }); },
+    };
+    $$('.v2-feat-row').forEach(function (row) {
+      var demo = row.querySelector('.demo');
+      var kind = demo.getAttribute('data-anim');
+      var orig = demo.innerHTML;
+      row.addEventListener('pointerenter', function () { if (!reduce && anims[kind]) anims[kind](demo); });
+      row.addEventListener('pointerleave', function () { if (kind === 'count') demo.innerHTML = orig; });
+    });
+  })();
+
+  // ---------- interlude parallax ----------
+  if (!reduce && $('#v2Interlude')) {
+    gsap.fromTo('#v2InterImg', { yPercent: -8 }, {
+      yPercent: 8, ease: 'none',
+      scrollTrigger: { trigger: '#v2Interlude', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+    gsap.from('.v2-interlude .knock span', {
+      yPercent: 70, opacity: 0, stagger: 0.16, duration: 1.5, ease: 'expo.out',
+      scrollTrigger: { trigger: '#v2Interlude', start: 'top 78%' }
+    });
+  }
+
+  // ---------- glyph grid ----------
+  (function initGlyphs() {
+    var chars = 'MOONSTARSTUDIOWEBDESIGN&0479#@?!';
+    var grid = $('#v2GlyphGrid');
+    if (!grid) return;
+    chars.split('').forEach(function (c) {
+      var d = document.createElement('span');
+      d.className = 'v2-glyph';
+      d.textContent = c;
+      grid.appendChild(d);
+    });
+    while (grid.children.length % 10) {
+      var d = document.createElement('span');
+      d.className = 'v2-glyph';
+      d.innerHTML = '&middot;';
+      grid.appendChild(d);
+    }
+    if (!reduce) {
+      gsap.to('.v2-glyph', {
+        opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.5)',
+        stagger: { each: 0.012, grid: 'auto', from: 'random' },
+        scrollTrigger: { trigger: '#v2GlyphGrid', start: 'top 82%' }
+      });
+    } else {
+      $$('.v2-glyph').forEach(function (g) { g.style.opacity = 1; g.style.transform = 'none'; });
+    }
+  })();
 
   // ---------- footer ghost zero parallax ----------
   if (!reduce) {
