@@ -1,6 +1,12 @@
 (function () {
   'use strict';
 
+  // Always land at the top of the page — on a fresh load, a refresh, or
+  // navigating here via browser back/forward (which some browsers would
+  // otherwise restore to a previously scrolled position).
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- Mobile nav toggle ----
