@@ -41,7 +41,9 @@
   // ---------- hero title: build chars ----------
   $$('#svcHeroTitle [data-chars]').forEach(function (row) {
     row.innerHTML = row.getAttribute('data-chars').split('').map(function (c) {
-      return c === ' ' ? '&nbsp;' : '<span class="ch">' + c + '</span>';
+      // Wrap spaces in a .ch too — the hero font-size lives on .ch, so a bare
+      // &nbsp; would inherit the default 16px and collapse the gap ("WHATI").
+      return c === ' ' ? '<span class="ch">&nbsp;</span>' : '<span class="ch">' + c + '</span>';
     }).join('');
   });
 
