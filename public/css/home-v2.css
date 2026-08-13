@@ -163,6 +163,24 @@ section { position: relative; }
   padding-right: 3vw; line-height: 1.25; font-variation-settings: 'wght' 800, 'wdth' 100;
 }
 
+/* portal (zoom-through-letter) */
+#v2-portal { height: 300vh; background: var(--ink); }
+#v2-portal .v2-stage { display: flex; align-items: center; justify-content: center; background: var(--bone); }
+#v2-portal .v2-stage.inked { background: var(--ink); }
+.v2-o-wrap { position: relative; z-index: 2; line-height: 1; }
+.v2-o-glyph { font-weight: 900; font-size: 64vmin; line-height: 1; display: block; font-variation-settings: 'wght' 900; color: var(--ink); }
+.v2-portal-line {
+  position: absolute; z-index: 3; left: 50%; top: 42%; transform: translate(-50%, -50%);
+  color: var(--bone); opacity: 0; font-family: var(--mono); font-size: 12px; letter-spacing: .22em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.v2-shards { position: absolute; inset: 0; z-index: 2; pointer-events: none; color: var(--bone); }
+.v2-shard { position: absolute; font-weight: 900; opacity: .16; will-change: transform; line-height: 1; }
+.v2-shard.s-deep { font-size: 9vmin; opacity: .10; }
+.v2-shard.s-mid { font-size: 16vmin; opacity: .14; }
+.v2-shard.s-near { font-size: 26vmin; opacity: .2; }
+.v2-portal-eyebrow { position: absolute; left: 3.2vw; top: 96px; z-index: 3; opacity: .55; }
+
 /* manifesto */
 #v2-manifesto { height: 220vh; background: var(--ink); }
 .v2-manifesto {

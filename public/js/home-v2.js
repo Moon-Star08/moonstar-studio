@@ -55,6 +55,56 @@
       .to('#v2HeroBed', { opacity: 1, duration: 1.4, ease: 'power2.out' }, '-=0.9');
   }
 
+  // ---------- portal: zoom through the letter O, palette flips on the stroke ----------
+  (function initPortal() {
+    var stage = $('#v2PortalStage'), oWrap = $('#v2OWrap'), line = $('#v2PortalLine');
+    if (!stage) return;
+    var oGlyph = stage.querySelector('.v2-o-glyph');
+    var shards = $$('#v2-portal .v2-shard');
+    var eyebrow = stage.querySelector('.v2-portal-eyebrow');
+    var FLIP = 0.69;
+
+    if (reduce) {
+      stage.classList.add('inked');
+      stage.style.backgroundColor = '#161513';
+      oWrap.style.display = 'none';
+      line.style.opacity = 1;
+      return;
+    }
+
+    var prox = { p: 0 };
+    gsap.to(prox, {
+      p: 1, ease: 'none',
+      scrollTrigger: { trigger: '#v2-portal', start: 'top bottom', end: 'bottom bottom', scrub: 0.6, invalidateOnRefresh: true },
+      onUpdate: function () {
+        var p = prox.p;
+        var travel = Math.min(Math.max((p - 0.15) / 0.597, 0), 1);
+        if (p < FLIP + 0.03) {
+          var fs = 64 * Math.pow(46, travel);
+          var dx = 36 * gsap.parseEase('power2.inOut')(Math.min(Math.max((travel - 0.1) / 0.7, 0), 1));
+          oGlyph.style.fontSize = fs.toFixed(2) + 'vmin';
+          oWrap.style.transform = 'translate3d(' + dx.toFixed(2) + '%,0,0)';
+        }
+        eyebrow.style.opacity = 1 - Math.min(Math.max((p - 0.42) / 0.16, 0), 1);
+        stage.classList.toggle('inked', p >= FLIP);
+
+        var ip = Math.min(Math.max((p - 0.40) / 0.60, 0), 1);
+        var lk = Math.min(Math.max((p - 0.66) / 0.10, 0), 1);
+        line.style.opacity = lk;
+        line.style.transform = 'translate(-50%,-50%) translateY(' + ((1 - lk) * 22) + 'px)';
+        shards.forEach(function (sh, i) {
+          var depth = sh.classList.contains('s-near') ? 190 : sh.classList.contains('s-mid') ? 130 : 85;
+          var drift = (i % 2 ? 1 : -1) * ip * 7;
+          sh.style.transform = 'translate3d(' + drift.toFixed(2) + 'vw,' + (-ip * depth).toFixed(2) + 'vh,0)';
+        });
+
+        stage.style.backgroundColor = gsap.utils.interpolate('#f4f1ea', '#161513')(
+          Math.min(Math.max((p - 0.613) / 0.077, 0), 1));
+        oWrap.style.opacity = p >= FLIP ? 0 : 1;
+      }
+    });
+  })();
+
   // ---------- once real content has loaded, wire up text-dependent bits ----------
   document.addEventListener('sitecontent:ready', function (e) {
     var content = e.detail || {};
