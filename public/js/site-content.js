@@ -57,6 +57,9 @@
     .then(function (res) { return res.json(); })
     .then(apply)
     .catch(function () {
-      document.dispatchEvent(new CustomEvent('sitecontent:ready', { detail: {} }));
+      // Expose empty content so late-loading listeners can still detect that
+      // content resolution finished (see the __siteContent guard in home-v2.js).
+      window.__siteContent = window.__siteContent || {};
+      document.dispatchEvent(new CustomEvent('sitecontent:ready', { detail: window.__siteContent }));
     });
 })();

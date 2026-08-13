@@ -145,8 +145,8 @@
   })();
 
   // ---------- once real content has loaded, wire up text-dependent bits ----------
-  document.addEventListener('sitecontent:ready', function (e) {
-    var content = e.detail || {};
+  function onSiteContent(content) {
+    content = content || {};
 
     // hero image bed
     var heroImg = $('#v2HeroImg');
@@ -260,7 +260,20 @@
     }
 
     if (!reduce) ScrollTrigger.refresh();
-  });
+  }
+
+  // Run as soon as the site content is available. site-content.js dispatches a
+  // one-shot 'sitecontent:ready' event, but on a cold load /api/settings can
+  // resolve before the vendor JS + this file finish downloading — so the event
+  // may fire before this listener is registered. Guard against that race by
+  // checking for content that already landed on window.__siteContent.
+  if (window.__siteContent) {
+    onSiteContent(window.__siteContent);
+  } else {
+    document.addEventListener('sitecontent:ready', function (e) {
+      onSiteContent(e.detail || {});
+    }, { once: true });
+  }
 
   // ---------- process (replaces the reference's weight-axis section) ----------
   function initProcess(steps) {
