@@ -188,11 +188,20 @@
       });
     }
 
-    // interlude photo: reuse the uploaded hero image if there is one
+    // interlude photo: reuse the uploaded hero image if there is one, and let the
+    // full-colour photo show through the headline letters (background-clip:text).
     var interImg = $('#v2InterImg');
+    var interlude = $('#v2Interlude');
+    var interFills = $$('#v2Interlude .knock .fill span');
     if (interImg) {
-      if (src) { interImg.src = src; interImg.hidden = false; }
-      else { interImg.hidden = true; }
+      if (src) {
+        interImg.src = src; interImg.hidden = false;
+        interFills.forEach(function (sp) { sp.style.backgroundImage = 'url("' + src + '")'; });
+        if (interlude) interlude.classList.add('has-fill');
+      } else {
+        interImg.hidden = true;
+        if (interlude) interlude.classList.remove('has-fill');
+      }
     }
 
     // manifesto: word-breath reveal

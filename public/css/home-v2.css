@@ -311,8 +311,25 @@ section { position: relative; }
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   z-index: 2; mix-blend-mode: difference; color: #fff; text-align: center; line-height: .92;
 }
+.v2-interlude .knock .fill { line-height: .92; }
 .v2-interlude .knock span { display: block; font-weight: 900; font-size: clamp(40px, 8.5vw, 130px); letter-spacing: -.03em; }
 .v2-interlude .credit { position: absolute; right: 3.2vw; bottom: 16px; z-index: 3; color: rgba(255, 255, 255, .5); }
+
+/* Photo shows through the headline in full colour, while the surrounding image
+   stays dimmed grayscale. Only applied when an image is actually loaded
+   (.has-fill), otherwise the transparent text would be invisible. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .v2-interlude.has-fill .knock { mix-blend-mode: normal; }
+  .v2-interlude.has-fill .knock .fill span {
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .v2-interlude.has-fill .knock .fill span:nth-child(1) { background-position: 50% 40%; }
+  .v2-interlude.has-fill .knock .fill span:nth-child(2) { background-position: 50% 60%; }
+}
 
 /* featured work (horizontal scroll) */
 #v2-work { background: var(--bone); }
