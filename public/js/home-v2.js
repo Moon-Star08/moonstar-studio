@@ -135,7 +135,8 @@
 
         stage.style.backgroundColor = gsap.utils.interpolate('#f4f1ea', '#161513')(
           Math.min(Math.max((p - 0.613) / 0.077, 0), 1));
-        oWrap.style.opacity = p >= FLIP ? 0 : 1;
+        var fadeOut = Math.min(Math.max((p - (FLIP - 0.025)) / 0.05, 0), 1);
+        oWrap.style.opacity = 1 - fadeOut;
       }
     });
   })();
@@ -274,15 +275,20 @@
         return c === ' ' ? '&nbsp;' : '<span class="fch">' + c + '</span>';
       }).join('');
       var fchs = $$('#v2FootMark .fch');
-      if (!touch && !reduce) {
-        addEventListener('pointermove', function (e) {
-          var t = e.clientX / innerWidth;
-          fchs.forEach(function (ch, i) {
-            var pos = fchs.length > 1 ? i / (fchs.length - 1) : 0;
-            var d = Math.abs(pos - t);
-            var w = 900 - Math.min(d * 2.2, 1) * 750;
-            ch.style.fontVariationSettings = "'wght' " + w.toFixed(0);
-          });
+      if (!touch && !reduce && fchs.length) {
+        var footStates = fchs.map(function (ch, i) {
+          return { ch: ch, w: 900, pos: fchs.length > 1 ? i / (fchs.length - 1) : 0 };
+        });
+        var footT = 0.5;
+        addEventListener('pointermove', function (e) { footT = e.clientX / innerWidth; });
+        gsap.ticker.add(function () {
+          for (var i = 0; i < footStates.length; i++) {
+            var s = footStates[i];
+            var d = Math.abs(s.pos - footT);
+            var target = 900 - Math.min(d * 2.2, 1) * 750;
+            s.w += (target - s.w) * 0.16;
+            s.ch.style.fontVariationSettings = "'wght' " + s.w.toFixed(0);
+          }
         });
       }
     }
@@ -322,10 +328,12 @@
           var wp = Math.min(Math.max((p - 0.44) / 0.52, 0), 1);
           apply(Math.min(steps.length - 1, Math.round(wp * (steps.length - 1))));
           tick.style.left = (wp * 100) + '%';
+          title.style.fontVariationSettings = "'wght' " + Math.round(100 + wp * 800);
         }
       });
     } else {
       title.style.transform = 'none';
+      title.style.fontVariationSettings = "'wght' 700";
       hud.style.opacity = 1;
       apply(0);
     }
@@ -455,7 +463,13 @@
         });
       },
       case: function (el) { gsap.fromTo(el, { letterSpacing: '0.2em', opacity: 0.4 }, { letterSpacing: '0em', opacity: 1, duration: 0.6, ease: 'expo.out' }); },
-      alt: function (el) { gsap.fromTo(el, { fontVariationSettings: "'wght' 100" }, { fontVariationSettings: "'wght' 800", duration: 0.7, ease: 'expo.out' }); },
+      alt: function (el) {
+        var o = { w: 100 };
+        gsap.to(o, {
+          w: 800, duration: 0.7, ease: 'expo.out',
+          onUpdate: function () { el.style.fontVariationSettings = "'wght' " + Math.round(o.w); }
+        });
+      },
       arrows: function (el) { gsap.fromTo(el, { x: -16, opacity: 0.3 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.6)' }); },
     };
     $$('.v2-feat-row').forEach(function (row) {

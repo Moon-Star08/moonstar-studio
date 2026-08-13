@@ -111,7 +111,7 @@ section { position: relative; }
   font-size: clamp(48px, 11vw, 170px); letter-spacing: -.03em;
   font-variation-settings: 'wght' 900, 'wdth' 100;
 }
-.v2-hero-title .row.thin .ch { font-variation-settings: 'wght' 100, 'wdth' 100; }
+.v2-hero-title .row.thin .ch { font-weight: 100; font-variation-settings: 'wght' 100, 'wdth' 100; color: var(--red); }
 .v2-hero-meta {
   position: absolute; right: 3.2vw; bottom: 30vh; z-index: 2; text-align: right;
   font-family: var(--mono); font-size: 11px; letter-spacing: .14em; line-height: 2.1;
@@ -217,7 +217,7 @@ section { position: relative; }
 .v2-proc-mask { overflow: hidden; line-height: .92; text-align: center; }
 #v2ProcTitle {
   display: block; font-size: clamp(64px, 15vw, 220px); letter-spacing: -.02em;
-  font-variation-settings: 'wght' 900; will-change: transform; transform: translateY(115%);
+  font-variation-settings: 'wght' 100; will-change: transform; transform: translateY(115%);
 }
 .v2-proc-hud { position: absolute; left: 6vw; bottom: 9vh; opacity: 0; max-width: 60vw; }
 .v2-proc-rail { position: relative; width: min(300px, 40vw); height: 1px; background: var(--hair-bone); margin-bottom: 14px; }
@@ -229,6 +229,19 @@ section { position: relative; }
 #v2ProcName.stamped { animation: v2-stamp .4s var(--ease); }
 @keyframes v2-stamp { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: none; } }
 
+/* what we do band */
+.v2-svcband { background: var(--bone); padding: 12vh 3.2vw; }
+.v2-svcband h2 { font-weight: 900; font-size: clamp(26px, 3.4vw, 44px); letter-spacing: -.02em; margin-bottom: 6vh; }
+.v2-svcband-row {
+  display: grid; grid-template-columns: 60px 1fr 2fr; gap: 3vw; align-items: baseline;
+  border-top: 1px solid var(--hair-ink); padding: 28px 0;
+}
+.v2-svcband-row:last-child { border-bottom: 1px solid var(--hair-ink); }
+.v2-svcband-row .idx { font-family: var(--mono); font-size: 11px; color: rgba(22, 21, 19, .45); letter-spacing: .14em; }
+.v2-svcband-row h3 { font-weight: 700; font-size: clamp(18px, 2.2vw, 26px); letter-spacing: -.01em; }
+.v2-svcband-row p { font-size: 14px; line-height: 1.55; color: rgba(22, 21, 19, .65); max-width: 56ch; }
+@media (max-width: 760px) { .v2-svcband-row { grid-template-columns: 32px 1fr; } .v2-svcband-row p { grid-column: 1 / -1; margin-top: 6px; } }
+
 /* tester */
 .v2-tester { background: var(--bone); padding: 16vh 3.2vw; position: relative; }
 .v2-tester .v2-head {
@@ -238,9 +251,10 @@ section { position: relative; }
 .v2-tester h2 { font-weight: 900; font-size: clamp(26px, 3.4vw, 44px); letter-spacing: -.02em; }
 #v2TesterLine {
   display: block; width: 100%; border: 0; outline: none; background: transparent; color: var(--ink);
-  font-family: var(--arch); font-weight: 700; line-height: 1.06; min-height: 1.2em;
+  font-family: var(--arch); line-height: 1.06; min-height: 1.2em;
   white-space: pre-wrap; word-break: break-word; caret-color: var(--red);
   font-size: clamp(28px, 5vw, 72px);
+  font-variation-settings: 'wght' 700, 'wdth' 100;
 }
 #v2TesterLine:empty::before { content: "Type something true"; color: rgba(22, 21, 19, .25); }
 .v2-tester-controls {
@@ -333,14 +347,12 @@ section { position: relative; }
 .v2-svc-row .t { font-weight: 700; font-size: clamp(16px, 1.6vw, 20px); margin-bottom: 6px; }
 .v2-svc-row .d { font-size: 13px; line-height: 1.5; color: rgba(244, 241, 234, .6); max-width: 46ch; }
 
-/* glyph grid */
-.v2-glyphwrap { background: var(--ink); color: var(--bone); padding: 0 3.2vw 18vh; }
-.v2-glyphwrap h2 { font-weight: 900; font-size: clamp(24px, 3.2vw, 40px); letter-spacing: -.02em; margin-bottom: 6vh; max-width: 1400px; margin-left: auto; margin-right: auto; }
-.v2-glyphs { display: grid; grid-template-columns: repeat(10, 1fr); border: 1px solid var(--hair-bone); max-width: 1400px; margin: 0 auto; }
+/* glyph grid (sits side-by-side with stats inside .v2-ledger) */
+.v2-glyphs { display: grid; grid-template-columns: repeat(8, 1fr); border: 1px solid var(--hair-bone); }
 @media (max-width: 760px) { .v2-glyphs { grid-template-columns: repeat(5, 1fr); } }
 .v2-glyph {
   aspect-ratio: 1; display: grid; place-items: center; border-right: 1px solid var(--hair-bone);
-  border-bottom: 1px solid var(--hair-bone); font-size: clamp(18px, 2.2vw, 30px); font-weight: 500;
+  border-bottom: 1px solid var(--hair-bone); font-size: clamp(16px, 1.8vw, 26px); font-weight: 500;
   font-variation-settings: 'wght' 500;
   transition: background .25s var(--ease), color .25s var(--ease), font-variation-settings .35s var(--ease);
   opacity: 0; transform: scale(.8);
