@@ -94,15 +94,20 @@
       .to('.v2-reg-cross', { opacity: 0.5, duration: 0.6 }, '<0.3')
       .to('#svcHeroTitle .row > span', { y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.08 }, '-=0.7')
       .to('#svcHeroSub', { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, '-=0.5')
-      .to('#svcHeroActions', { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, '-=0.6');
+      .to('#svcHeroActions', { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' }, '-=0.6')
+      .to('#svcHeroBed', { opacity: 1, duration: 1.4, ease: 'power2.out' }, '-=0.9');
   }
 
   // ---------- generic scroll reveals ----------
   if (!reduce) {
+    // Pre-hide, then animate TO the visible state. (gsap.from would snap each
+    // element to hidden at the moment it triggers, which flashed/glitched when
+    // scrolling into the packages section quickly.)
+    gsap.set('.reveal', { autoAlpha: 0, y: 30 });
     ScrollTrigger.batch('.reveal', {
-      start: 'top 88%',
+      start: 'top 90%',
       onEnter: function (els) {
-        gsap.from(els, { y: 30, autoAlpha: 0, duration: 0.7, ease: 'expo.out', stagger: 0.08, overwrite: true });
+        gsap.to(els, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'expo.out', stagger: 0.08, overwrite: true });
       }
     });
   }
@@ -137,6 +142,14 @@
     content = content || {};
     var brand = (content.site && content.site.brand_name) || 'MoonStar Studio';
     initFooterMark(brand);
+    // hero photo on the right — reuse the uploaded hero image if there is one
+    var heroImg = $('#svcHeroImg');
+    var heroBed = $('#svcHeroBed');
+    var src = content.home && content.home.hero_image;
+    if (heroImg) {
+      if (src) { heroImg.src = src; heroImg.hidden = false; }
+      else if (heroBed) { heroBed.style.display = 'none'; }
+    }
     if (!reduce) ScrollTrigger.refresh();
   }
 

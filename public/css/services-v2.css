@@ -3,6 +3,25 @@
 
 .v2-svcband .band-label { color: rgba(22, 21, 19, .5); display: block; margin-bottom: 2vh; }
 
+/* hero photo on the right, faded into the bone (echoes the homepage bed) */
+.svc-hero-bed {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 46%; z-index: 1; margin: 0; overflow: hidden; opacity: 0;
+}
+.svc-hero-bed img {
+  width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%;
+  filter: grayscale(1) contrast(1.05) brightness(1.05); mix-blend-mode: multiply;
+}
+.svc-hero-bed::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--bone) 0, rgba(244, 241, 234, .72) 20%, rgba(244, 241, 234, 0) 62%),
+    linear-gradient(180deg, var(--bone) 0, rgba(244, 241, 234, 0) 20%, rgba(244, 241, 234, 0) 78%, var(--bone) 100%);
+}
+@media (max-width: 760px) { .svc-hero-bed { display: none; } }
+/* the hero photo now fills the right side, so drop the meta list that used to
+   live there (the disciplines are covered in the section just below). */
+#svcHero .v2-hero-meta { display: none; }
+
 /* hero on a single line: WHAT I (heavy black) + DO (thin red) side by side */
 #svcHeroTitle { white-space: nowrap; }
 #svcHeroTitle .row { display: inline-block; overflow: hidden; vertical-align: bottom; }
@@ -19,6 +38,8 @@
   color: var(--bone); background: var(--ink); border: 1px solid var(--ink); padding: 6px 11px;
   transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
 }
+/* mix in a few red chips by default (scattered), on top of the red-on-hover */
+.v2-svcband-row .tags li:nth-child(3n + 2) { background: var(--red); border-color: var(--red); }
 .v2-svcband-row .tags li:hover { background: var(--red); border-color: var(--red); color: var(--bone); transform: translateY(-2px); }
 
 /* process — dark band with a 5-card bento (adapted from the reference layout) */
@@ -30,7 +51,7 @@
 }
 .svc-process-sub { margin-top: 2.4vh; font-size: 14px; color: rgba(244, 241, 234, .55); max-width: 44ch; }
 
-.proc-bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 8vh; }
+.proc-bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 32px 16px; margin-top: 8vh; }
 .proc-a { grid-column: span 5; }
 .proc-b { grid-column: span 4; }
 .proc-c { grid-column: span 3; }
@@ -135,6 +156,18 @@
   .pkg-price { grid-column: 2; }
   .pkg-feats { grid-column: 1 / -1; }
 }
+
+/* dark variant (Care & maintenance packages) */
+.v2-packages--ink { background: var(--ink); color: var(--bone); }
+.v2-packages--ink .pkg-head .pkg-motto { color: rgba(244, 241, 234, .5); }
+.v2-packages--ink .pkg-sub { color: rgba(244, 241, 234, .6); }
+.v2-packages--ink .pkg { border-top-color: var(--hair-bone); }
+.v2-packages--ink .pkg:last-of-type { border-bottom-color: var(--hair-bone); }
+.v2-packages--ink .pkg-desc { color: rgba(244, 241, 234, .58); }
+.v2-packages--ink .pkg-price small { color: rgba(244, 241, 234, .5); }
+.v2-packages--ink .pkg-feats li:not(.plus) { color: rgba(244, 241, 234, .82); }
+.v2-packages--ink .pkg-feats .plus { color: rgba(244, 241, 234, .5); }
+.v2-packages--ink .pkg--ink .pkg-bar { background: var(--bone); }
 @media (max-width: 520px) { .pkg { grid-template-columns: 1fr; } .pkg-price, .pkg-feats { grid-column: 1; } }
 
 /* ---------- extra services ---------- */
