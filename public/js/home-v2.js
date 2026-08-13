@@ -369,7 +369,7 @@
       x: function () { return -dist(); }, ease: 'none',
       scrollTrigger: {
         trigger: '#v2WorkPin', start: 'top 12%', end: function () { return '+=' + dist(); },
-        pin: true, scrub: 0.6, invalidateOnRefresh: true,
+        pin: true, anticipatePin: 1, scrub: 0.6, invalidateOnRefresh: true,
       }
     });
   }
