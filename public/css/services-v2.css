@@ -1,0 +1,79 @@
+/* Services page — additions on top of home-v2.css (same tokens/components).
+   Only holds what the shared system doesn't already provide. */
+
+.v2-svcband .band-label { color: rgba(22, 21, 19, .5); display: block; margin-bottom: 2vh; }
+
+/* service rows: description + capability chips in the third column */
+.v2-svcband-row .svc-copy { max-width: 60ch; }
+.v2-svcband-row .svc-copy p { font-size: 14px; line-height: 1.6; color: rgba(22, 21, 19, .65); }
+.v2-svcband-row .tags {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+}
+.v2-svcband-row .tags li {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(22, 21, 19, .6); border: 1px solid var(--hair-ink); padding: 6px 11px;
+  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+}
+.v2-svcband-row .tags li:hover { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+
+/* process — dark band with four revealing steps (no pinning, so no scroll jank) */
+.svc-process { background: var(--ink); color: var(--bone); padding: 16vh 3.2vw; }
+.svc-process .mono { color: rgba(244, 241, 234, .5); }
+.svc-process h2 {
+  font-weight: 900; font-size: clamp(26px, 3.4vw, 44px); letter-spacing: -.02em;
+  margin: 2vh 0 9vh; max-width: 18ch;
+}
+.svc-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vw; }
+@media (max-width: 900px) { .svc-steps { grid-template-columns: 1fr 1fr; gap: 6vh 3vw; } }
+@media (max-width: 560px) { .svc-steps { grid-template-columns: 1fr; } }
+.svc-step { border-top: 1px solid var(--hair-bone); padding-top: 22px; }
+.svc-step .n {
+  display: block; font-weight: 900; font-size: clamp(40px, 5vw, 74px); line-height: 1;
+  font-variation-settings: 'wght' 900, 'wdth' 100; color: var(--bone);
+}
+.svc-step h3 { margin-top: 20px; font-weight: 700; font-size: clamp(16px, 1.7vw, 21px); letter-spacing: -.01em; }
+.svc-step p { margin-top: 12px; font-size: 13px; line-height: 1.6; color: rgba(244, 241, 234, .6); }
+
+/* ---------- pricing packages ---------- */
+.v2-packages { background: var(--bone); padding: 15vh 3.2vw 6vh; }
+.v2-packages + .v2-packages { padding-top: 4vh; }
+.pkg-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 1vh; }
+.pkg-head h2 { font-weight: 900; font-size: clamp(28px, 4vw, 52px); letter-spacing: -.02em; }
+.pkg-head .pkg-motto { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(22, 21, 19, .5); }
+.pkg-sub { font-size: 14px; color: rgba(22, 21, 19, .6); margin-bottom: 6vh; max-width: 46ch; }
+
+.pkg {
+  display: grid; grid-template-columns: auto 1.15fr .75fr 1.35fr; gap: 2.6vw; align-items: start;
+  border-top: 1px solid var(--hair-ink); padding: 46px 0;
+}
+.v2-packages .pkg:last-of-type { border-bottom: 1px solid var(--hair-ink); }
+.pkg-id { display: flex; gap: 16px; align-items: stretch; }
+.pkg-bar { width: 6px; background: var(--red); flex: none; }
+.pkg--ink .pkg-bar { background: var(--ink); }
+.pkg-num { font-weight: 900; font-size: clamp(40px, 5vw, 76px); line-height: .82; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.pkg-name { font-weight: 900; font-size: clamp(20px, 2.4vw, 30px); letter-spacing: -.01em; }
+.pkg-desc { margin-top: 12px; font-size: 13.5px; line-height: 1.55; color: rgba(22, 21, 19, .6); max-width: 34ch; }
+.pkg-delivery { margin-top: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.pkg-price { font-weight: 900; font-size: clamp(42px, 6vw, 82px); color: var(--red); line-height: .85; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.pkg-price small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; color: rgba(22, 21, 19, .5); font-weight: 400; margin-top: 10px; text-transform: uppercase; }
+.pkg-feats { list-style: none; display: grid; gap: 10px; }
+.pkg-feats .plus { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: rgba(22, 21, 19, .5); margin-bottom: 2px; }
+.pkg-feats li:not(.plus) { position: relative; padding-left: 18px; font-size: 13.5px; line-height: 1.4; color: rgba(22, 21, 19, .82); }
+.pkg-feats li:not(.plus)::before { content: ""; position: absolute; left: 0; top: .5em; width: 6px; height: 6px; background: var(--red); }
+@media (max-width: 900px) {
+  .pkg { grid-template-columns: auto 1fr; gap: 20px 20px; }
+  .pkg-price { grid-column: 2; }
+  .pkg-feats { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) { .pkg { grid-template-columns: 1fr; } .pkg-price, .pkg-feats { grid-column: 1; } }
+
+/* ---------- extra services ---------- */
+.v2-extras { background: var(--bone); padding: 8vh 3.2vw 16vh; }
+.v2-extras h2 { font-weight: 900; font-size: clamp(24px, 3vw, 40px); letter-spacing: -.02em; margin-bottom: 5vh; }
+.v2-extras h2 span { color: var(--red); }
+.extras-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 6vw; }
+@media (max-width: 760px) { .extras-grid { grid-template-columns: 1fr; } }
+.extra { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; border-bottom: 1px solid var(--hair-ink); padding: 15px 0; }
+.extra .name { font-size: 14px; color: rgba(22, 21, 19, .82); }
+.extra .price { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--red); white-space: nowrap; font-weight: 500; }
+.extras-note { margin-top: 5vh; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(22, 21, 19, .45); line-height: 1.9; }
