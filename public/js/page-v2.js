@@ -144,11 +144,15 @@
     initFooterMark(brand);
 
     var src = content.home && content.home.hero_image;
-    // optional hero photo bed (id v2HeroBed / v2HeroImg)
+    // optional hero photo bed (id v2HeroBed / v2HeroImg). A page may hardcode the
+    // <img src> for a page-specific photo; otherwise fall back to the uploaded
+    // home hero image.
     var bed = $('#v2HeroBed'), bedImg = $('#v2HeroImg');
     if (bed && bedImg) {
-      if (src) {
-        bedImg.src = src; bedImg.hidden = false;
+      var hasStatic = bedImg.getAttribute('src');
+      if (hasStatic || src) {
+        if (!hasStatic) bedImg.src = src;
+        bedImg.hidden = false;
         if (reduce) bed.style.opacity = 1;
         else gsap.to(bed, { opacity: 1, duration: 1.4, ease: 'power2.out', delay: 0.7 });
       } else { bed.style.display = 'none'; }
