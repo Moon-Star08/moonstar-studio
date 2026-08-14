@@ -50,6 +50,30 @@
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
+  // Per-project scroll motion (same language as the reference design): the media
+  // frame scales up as it passes through, the image parallaxes inside it, the
+  // title rises out of a mask, and the copy fades in.
+  var builtTriggers = [];
+  function animateRows() {
+    builtTriggers.forEach(function (t) { t.kill(); });
+    builtTriggers = [];
+    if (reduce || !window.gsap || !window.ScrollTrigger) return;
+    function reg(tw) { if (tw && tw.scrollTrigger) builtTriggers.push(tw.scrollTrigger); }
+    gsap.utils.toArray('.wk-proj').forEach(function (proj) {
+      var media = proj.querySelector('.wk-proj__media');
+      var img = proj.querySelector('.wk-proj__media img');
+      var titleSpan = proj.querySelector('.wk-proj__title span');
+      var idx = proj.querySelector('.wk-proj__idx');
+      var rest = [proj.querySelector('.wk-proj__desc'), proj.querySelector('.wk-proj__tags')].filter(Boolean);
+      if (media) reg(gsap.fromTo(media, { scale: .9 }, { scale: 1.02, ease: 'none', scrollTrigger: { trigger: proj, start: 'top bottom', end: 'bottom top', scrub: true } }));
+      if (img) reg(gsap.fromTo(img, { yPercent: -6, scale: 1.1 }, { yPercent: 6, scale: 1, ease: 'none', scrollTrigger: { trigger: proj, start: 'top bottom', end: 'bottom top', scrub: true } }));
+      if (titleSpan) reg(gsap.from(titleSpan, { yPercent: 115, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: proj, start: 'top 74%' } }));
+      if (idx) reg(gsap.from(idx, { y: 18, opacity: 0, duration: .7, scrollTrigger: { trigger: proj, start: 'top 72%' } }));
+      if (rest.length) reg(gsap.from(rest, { y: 20, opacity: 0, stagger: .1, duration: .7, delay: .1, scrollTrigger: { trigger: proj, start: 'top 68%' } }));
+    });
+    ScrollTrigger.refresh();
+  }
+
   function rowHtml(p, i, total) {
     var media = p.image_path
       ? '<img src="' + esc(p.image_path) + '" alt="' + esc(p.title) + '" loading="lazy">'
@@ -58,10 +82,10 @@
       ? '<a class="wk-proj__go" href="' + esc(p.live_url) + '" target="_blank" rel="noopener noreferrer">Visit site &#8599;</a>'
       : '';
     var tags = (p.tech_tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
-    return '<article class="wk-proj reveal">' +
+    return '<article class="wk-proj">' +
       '<div class="wk-proj__copy">' +
         '<div class="wk-proj__idx">' + pad(i + 1) + ' / ' + pad(total) + '</div>' +
-        '<h3 class="wk-proj__title">' + esc(p.title) + '</h3>' +
+        '<h3 class="wk-proj__title"><span>' + esc(p.title) + '</span></h3>' +
         (p.short_description ? '<p class="wk-proj__desc">' + esc(p.short_description) + '</p>' : '') +
         (tags ? '<div class="wk-proj__tags">' + tags + '</div>' : '') +
       '</div>' +
@@ -75,8 +99,7 @@
     });
     if (!projects.length) { gallery.innerHTML = '<p class="v2-state" style="padding:6vh 0">No projects match that filter yet.</p>'; return; }
     gallery.innerHTML = projects.map(function (p, i) { return rowHtml(p, i, projects.length); }).join('');
-    if (window.v2Reveal) window.v2Reveal(gallery);
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    animateRows();
   }
 
   PortfolioAPI.fetchProjects()

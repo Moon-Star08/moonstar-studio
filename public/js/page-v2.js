@@ -142,6 +142,24 @@
     content = content || {};
     var brand = (content.site && content.site.brand_name) || 'MoonStar Studio';
     initFooterMark(brand);
+
+    var src = content.home && content.home.hero_image;
+    // optional hero photo bed (id v2HeroBed / v2HeroImg)
+    var bed = $('#v2HeroBed'), bedImg = $('#v2HeroImg');
+    if (bed && bedImg) {
+      if (src) {
+        bedImg.src = src; bedImg.hidden = false;
+        if (reduce) bed.style.opacity = 1;
+        else gsap.to(bed, { opacity: 1, duration: 1.4, ease: 'power2.out', delay: 0.7 });
+      } else { bed.style.display = 'none'; }
+    }
+    // optional "who I am" photo (id v2WhoImg)
+    var who = $('#v2WhoImg');
+    if (who) {
+      if (src) { who.src = src; who.hidden = false; }
+      else if (who.closest('.whoami-media')) who.closest('.whoami-media').style.display = 'none';
+    }
+
     if (!reduce) ScrollTrigger.refresh();
   }
   if (window.__siteContent) {
