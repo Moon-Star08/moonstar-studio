@@ -2,6 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { sendContactNotification } = require('../mailer');
 
 const router = express.Router();
 
@@ -50,6 +51,11 @@ router.post('/contact', contactLimiter, (req, res) => {
   db.prepare(
     'INSERT INTO messages (name, email, phone, project_type, message) VALUES (?, ?, ?, ?, ?)'
   ).run(data.name, data.email, data.phone, data.project_type, data.message);
+
+  // Email me a notification (non-blocking — never fails the visitor's request).
+  sendContactNotification(data).catch(function (err) {
+    console.error('Contact email failed:', err && err.message);
+  });
 
   res.status(201).json({ success: true });
 });

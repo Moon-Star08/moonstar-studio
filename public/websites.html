@@ -24,6 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/home-v2.css">
 <link rel="stylesheet" href="/css/inner-v2.css">
+<link rel="stylesheet" href="/css/work-v2.css">
 </head>
 <body>
 
@@ -36,8 +37,10 @@
 <nav class="v2-nav">
   <a class="wordmark" href="/">MOONSTAR STUDIO</a>
   <div class="links">
+    <a href="/">Home</a>
     <a href="/services">Services</a>
     <a href="/websites" aria-current="page">Work</a>
+    <a href="/freelance">Network</a>
     <a href="/about">About</a>
     <a href="/contact" class="buy">Start a project</a>
   </div>
@@ -64,14 +67,79 @@
     <div class="v2-hero-cue mono">Scroll &darr;</div>
   </header>
 
-  <!-- PORTFOLIO -->
-  <section class="v2-sec">
-    <span class="mono v2-sec__label">// portfolio</span>
-    <h2 data-sc="work.heading">Project portfolio.</h2>
-    <div id="v2Filters" class="v2-filters" role="group" aria-label="Filter by technology"></div>
-    <div id="v2WorkGrid" class="v2-work-grid">
-      <p class="v2-state">Loading projects…</p>
+  <!-- PROJECT GALLERY -->
+  <section class="wk-gallery">
+    <div class="wk-gallery__head">
+      <span class="mono v2-sec__label">// selected work</span>
+      <h2 data-sc="work.heading">Recent projects.</h2>
+      <div id="v2Filters" class="v2-filters" role="group" aria-label="Filter by technology"></div>
     </div>
+    <div id="v2WorkGallery">
+      <p class="v2-state" style="padding:8vh 0">Loading projects…</p>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES / DETAIL (dark) -->
+  <section class="wk-caps">
+    <span class="mono">// what goes into every build</span>
+    <div class="wk-caps-statement" id="wkStatement">
+      <span>An idea becomes a design.</span>
+      <span>A design becomes a site.</span>
+      <span>A site becomes your growth.</span>
+    </div>
+    <div class="wk-cap-row"><div class="num">01</div><h3>Web Design</h3><p>Clean, modern layouts that reflect your brand and guide visitors naturally through your content.</p></div>
+    <div class="wk-cap-row"><div class="num">02</div><h3>UI / UX Design</h3><p>Intuitive interfaces and smooth journeys, so visitors trust what they see and take action easily.</p></div>
+    <div class="wk-cap-row"><div class="num">03</div><h3>Web Development</h3><p>Fast, responsive, fully functional builds — optimized for performance and tested across every device.</p></div>
+  </section>
+
+  <!-- PRICING PLANS -->
+  <section class="wk-plans-sec">
+    <div class="v2-head">
+      <h2>Ways to work together.</h2>
+      <span class="mono">one project &middot; no subscriptions</span>
+    </div>
+    <div class="wk-plans">
+      <div class="wk-plan reveal">
+        <small>01 / Launch</small>
+        <h3>LaunchPad</h3>
+        <div class="price">$299 &middot; one-time</div>
+        <ul>
+          <li>Full landing page design</li>
+          <li>Responsive (all devices)</li>
+          <li>Contact form + basic SEO</li>
+          <li>Social media links</li>
+          <li>Smooth scroll animations</li>
+        </ul>
+        <a href="/contact"><span>Start project</span><i>&#8599;</i></a>
+      </div>
+      <div class="wk-plan reveal">
+        <small>02 / Growth</small>
+        <h3>GrowthSite</h3>
+        <div class="price">$499 &middot; one-time</div>
+        <ul>
+          <li>5&ndash;8 pages</li>
+          <li>Custom design + brand colors</li>
+          <li>SEO setup</li>
+          <li>Animations &amp; interactions</li>
+          <li>CMS for easy updates</li>
+        </ul>
+        <a href="/contact"><span>Start project</span><i>&#8599;</i></a>
+      </div>
+      <div class="wk-plan wk-plan--dark reveal">
+        <small>03 / Empire</small>
+        <h3>EmpireSite</h3>
+        <div class="price">$949 &middot; one-time</div>
+        <ul>
+          <li>10+ pages</li>
+          <li>Advanced custom UI/UX</li>
+          <li>Wix store setup</li>
+          <li>Analytics integration</li>
+          <li>Performance optimization</li>
+        </ul>
+        <a href="/contact"><span>Start project</span><i>&#8599;</i></a>
+      </div>
+    </div>
+    <p class="v2-tier-note" style="margin-top:5vh">Full package details &amp; care plans live on the <a href="/services" style="text-decoration:underline">Services page</a>.</p>
   </section>
 
   <!-- CTA -->

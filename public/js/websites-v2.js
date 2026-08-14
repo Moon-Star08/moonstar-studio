@@ -1,12 +1,30 @@
-/* Websites/Work page — loads real projects into the v2 grid + tag filters.
-   Reuses PortfolioAPI (fetchProjects/escapeHtml); reveals via page-v2.js. */
+/* Work page — editorial project gallery (real projects) + tag filters, plus the
+   scroll-highlighted capabilities statement. Reveals via page-v2.js. */
 (function () {
   'use strict';
 
-  var grid = document.getElementById('v2WorkGrid');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var gallery = document.getElementById('v2WorkGallery');
   var filterBar = document.getElementById('v2Filters');
-  if (!grid || !window.PortfolioAPI) return;
-  var esc = PortfolioAPI.escapeHtml;
+  var esc = window.PortfolioAPI && PortfolioAPI.escapeHtml;
+
+  // ---- capabilities statement: highlight lines on scroll ----
+  (function initStatement() {
+    var stmt = document.getElementById('wkStatement');
+    if (!stmt) return;
+    var spans = [].slice.call(stmt.querySelectorAll('span'));
+    if (reduce || !window.ScrollTrigger) { spans.forEach(function (s) { s.classList.add('on'); }); return; }
+    ScrollTrigger.create({
+      trigger: stmt, start: 'top 78%', end: 'bottom 60%', scrub: true,
+      onUpdate: function (self) {
+        var n = Math.round(self.progress * spans.length);
+        spans.forEach(function (s, i) { s.classList.toggle('on', i < n); });
+      }
+    });
+  })();
+
+  if (!gallery || !window.PortfolioAPI) return;
+
   var allProjects = [];
   var activeTag = 'all';
 
@@ -26,45 +44,49 @@
       if (!btn) return;
       activeTag = btn.getAttribute('data-tag');
       [].slice.call(filterBar.children).forEach(function (b) { b.classList.toggle('is-active', b === btn); });
-      renderGrid();
+      renderGallery();
     });
   }
 
-  function cardHtml(p) {
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function rowHtml(p, i, total) {
     var media = p.image_path
-      ? (p.featured ? '<span class="v2-proj__badge">Featured</span>' : '') +
-        '<img src="' + esc(p.image_path) + '" alt="' + esc(p.title) + '" loading="lazy">'
-      : '<div class="v2-proj__ph">No image</div>';
-    var tags = (p.tech_tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
-    var action = p.live_url
-      ? '<a class="v2-btn v2-btn--primary" href="' + esc(p.live_url) + '" target="_blank" rel="noopener noreferrer">Visit site</a>'
+      ? '<img src="' + esc(p.image_path) + '" alt="' + esc(p.title) + '" loading="lazy">'
+      : '<div class="wk-proj__ph">No image</div>';
+    var go = p.live_url
+      ? '<a class="wk-proj__go" href="' + esc(p.live_url) + '" target="_blank" rel="noopener noreferrer">Visit site &#8599;</a>'
       : '';
-    return '<article class="v2-proj reveal">' +
-      '<div class="v2-proj__media">' + media + '</div>' +
-      '<div class="v2-proj__body"><h3>' + esc(p.title) + '</h3>' +
-      '<p>' + esc(p.short_description) + '</p>' +
-      (tags ? '<div class="v2-proj__tags">' + tags + '</div>' : '') +
-      (action ? '<div class="v2-proj__actions">' + action + '</div>' : '') +
-      '</div></article>';
+    var tags = (p.tech_tags || []).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
+    return '<article class="wk-proj reveal">' +
+      '<div class="wk-proj__copy">' +
+        '<div class="wk-proj__idx">' + pad(i + 1) + ' / ' + pad(total) + '</div>' +
+        '<h3 class="wk-proj__title">' + esc(p.title) + '</h3>' +
+        (p.short_description ? '<p class="wk-proj__desc">' + esc(p.short_description) + '</p>' : '') +
+        (tags ? '<div class="wk-proj__tags">' + tags + '</div>' : '') +
+      '</div>' +
+      '<div class="wk-proj__media">' + media + go + '</div>' +
+    '</article>';
   }
 
-  function renderGrid() {
+  function renderGallery() {
     var projects = activeTag === 'all' ? allProjects : allProjects.filter(function (p) {
       return (p.tech_tags || []).some(function (t) { return t === activeTag; });
     });
-    if (!projects.length) { grid.innerHTML = '<p class="v2-state">No projects match that filter yet.</p>'; return; }
-    grid.innerHTML = projects.map(cardHtml).join('');
-    if (window.v2Reveal) window.v2Reveal(grid);
+    if (!projects.length) { gallery.innerHTML = '<p class="v2-state" style="padding:6vh 0">No projects match that filter yet.</p>'; return; }
+    gallery.innerHTML = projects.map(function (p, i) { return rowHtml(p, i, projects.length); }).join('');
+    if (window.v2Reveal) window.v2Reveal(gallery);
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
   }
 
   PortfolioAPI.fetchProjects()
     .then(function (projects) {
       allProjects = projects || [];
-      if (!allProjects.length) { grid.innerHTML = '<p class="v2-state">No projects yet — check back soon.</p>'; return; }
+      if (!allProjects.length) { gallery.innerHTML = '<p class="v2-state" style="padding:6vh 0">No projects yet — check back soon.</p>'; return; }
       renderFilters(uniqueTags(allProjects));
-      renderGrid();
+      renderGallery();
     })
     .catch(function () {
-      grid.innerHTML = '<p class="v2-state">Couldn\'t load projects right now.</p>';
+      gallery.innerHTML = '<p class="v2-state" style="padding:6vh 0">Couldn\'t load projects right now.</p>';
     });
 })();
