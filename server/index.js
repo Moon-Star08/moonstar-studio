@@ -11,6 +11,7 @@ const { uploadDir } = require('./middleware/upload');
 const { trackPageView } = require('./middleware/track');
 const authRoutes = require('./routes/auth');
 const accountRoutes = require('./routes/account');
+const oauthRoutes = require('./routes/oauth');
 const analyticsRoutes = require('./routes/analytics');
 const projectRoutes = require('./routes/projects');
 const contactRoutes = require('./routes/contact');
@@ -38,7 +39,7 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         scriptSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'blob:'],
+        imgSrc: ["'self'", 'data:', 'blob:', 'https://lh3.googleusercontent.com'],
         connectSrc: ["'self'"],
       },
     },
@@ -59,7 +60,7 @@ app.use(
     rolling: true, // sliding expiration: inactivity logs the admin/visitor out
     cookie: {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       secure: isProduction,
       maxAge: THIRTY_MIN_MS,
     },
@@ -71,6 +72,7 @@ app.use(trackPageView);
 // API routes
 app.use('/api/admin', authRoutes);
 app.use('/api/account', accountRoutes);
+app.use('/api/account', oauthRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', contactRoutes);
 app.use('/api', settingsRoutes);
