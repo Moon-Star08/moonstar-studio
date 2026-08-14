@@ -18,6 +18,7 @@
 
   // ---------- styles ----------
   var css =
+    '.sa-cookie[hidden],.sa-overlay[hidden],.sa-fab[hidden]{display:none!important}' +
     '.sa-cookie{position:fixed;left:0;right:0;bottom:0;z-index:120;background:var(--red,#d9333f);color:#fff;' +
     'font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.06em;padding:14px 3.2vw;' +
     'display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}' +
