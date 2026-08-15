@@ -6,33 +6,74 @@
 <title>Admin Login — MoonStar Studio</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/admin.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/home-v2.css">
+<link rel="stylesheet" href="/css/inner-v2.css">
+<style>
+  .adm-login {
+    min-height: 100svh; display: grid; place-items: center; padding: 8vh 5vw;
+    background: var(--bone); color: var(--ink); position: relative; overflow: hidden;
+  }
+  /* faint oversized wordmark in the background */
+  .adm-login::before {
+    content: "MOONSTAR"; position: absolute; left: -2vw; bottom: -4vh; z-index: 0;
+    font-family: var(--arch); font-weight: 900; font-size: 28vw; line-height: .8;
+    letter-spacing: -.04em; color: rgba(22, 21, 19, .04); pointer-events: none; user-select: none;
+  }
+  .adm-card {
+    position: relative; z-index: 1; width: 100%; max-width: 400px;
+    background: var(--bone); border: 1px solid var(--ink); padding: 40px 34px 34px;
+  }
+  .adm-brand {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--ink); display: flex; align-items: center; gap: 9px; margin-bottom: 26px;
+  }
+  .adm-brand .dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; }
+  .adm-card h1 {
+    font-family: var(--arch); font-weight: 900; font-size: clamp(30px, 6vw, 40px);
+    letter-spacing: -.03em; line-height: .95; margin: 0;
+  }
+  .adm-card__sub {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(22, 21, 19, .45); margin: 10px 0 28px;
+  }
+  #form-alert { margin-bottom: 16px; }
+  .adm-card .v2-field { margin-bottom: 18px; }
+  .adm-card .v2-btn { width: 100%; justify-content: center; margin-top: 6px; cursor: pointer; }
+  .adm-foot {
+    margin-top: 22px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; color: rgba(22, 21, 19, .4);
+  }
+  .adm-foot a { color: var(--red); }
+</style>
 </head>
 <body>
-<div class="login-wrap">
-  <div class="login-card">
+<main class="adm-login">
+  <div class="adm-card">
+    <div class="adm-brand"><span class="dot"></span> MoonStar Studio</div>
     <h1>Admin Login</h1>
-    <p class="login-card__sub">// authorized access only</p>
+    <p class="adm-card__sub">// authorized access only</p>
 
     <div id="form-alert"></div>
 
-    <form id="login-form" novalidate>
-      <div class="field">
+    <form id="login-form" class="v2-form" novalidate>
+      <div class="v2-field">
         <label for="username">Username</label>
         <input type="text" id="username" name="username" autocomplete="username" required>
       </div>
-      <div class="field">
+      <div class="v2-field">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" autocomplete="current-password" required>
       </div>
-      <button class="btn btn--primary btn--block" type="submit" id="login-btn">Log in</button>
+      <button class="v2-btn v2-btn--primary" type="submit" id="login-btn">Log in</button>
     </form>
+
+    <p class="adm-foot">Restricted area &middot; <a href="/">&larr; Back to site</a></p>
   </div>
-</div>
+</main>
 
 <script src="/js/admin/login.js"></script>
 </body>

@@ -30,8 +30,14 @@
         return;
       }
 
-      // Generic message regardless of whether it was the username or password.
-      showError('Incorrect username or password.');
+      // Surface the server's real reason (e.g. rate-limited vs. bad credentials)
+      // so failures are debuggable instead of always looking like a wrong password.
+      var data = await res.json().catch(function () { return {}; });
+      if (res.status === 429) {
+        showError(data.error || 'Too many attempts. Please wait a few minutes and try again.');
+      } else {
+        showError(data.error || 'Incorrect username or password.');
+      }
     } catch (err) {
       showError('Something went wrong. Please try again.');
     } finally {
