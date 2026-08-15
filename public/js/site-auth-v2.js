@@ -20,9 +20,9 @@
   var css =
     '.sa-cookie[hidden],.sa-overlay[hidden],.sa-fab[hidden]{display:none!important}' +
     '.sa-cookie{position:fixed;left:0;right:0;bottom:0;z-index:120;background:var(--red,#d9333f);color:#fff;' +
-    'font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.06em;padding:14px 3.2vw;' +
+    'font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.06em;padding:11px 3.2vw;' +
     'display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}' +
-    '.sa-cookie p{margin:0;max-width:82ch;line-height:1.5}' +
+    '.sa-cookie p{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}' +
     '.sa-cookie button{background:#fff;color:#161513;border:0;padding:9px 18px;font-family:inherit;font-size:10px;' +
     'letter-spacing:.14em;text-transform:uppercase;cursor:pointer}' +
     '.sa-fab{position:fixed;right:24px;bottom:24px;z-index:110;transition:bottom .3s}' +
@@ -66,13 +66,13 @@
     '.sa-alert{padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:14px}' +
     '.sa-alert--error{background:rgba(217,51,63,.1);border:1px solid var(--red,#d9333f)}' +
     '.sa-alert--success{background:rgba(22,21,19,.05);border:1px solid rgba(22,21,19,.15)}' +
-    '@media(max-width:520px){.sa-fab{right:14px}.sa-cookie{font-size:10px}}';
+    '@media(max-width:640px){.sa-fab{right:14px}.sa-cookie{font-size:10px}.sa-cookie p{white-space:normal;overflow:visible}}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   // ---------- markup ----------
   var wrap = document.createElement('div');
   wrap.innerHTML =
-    '<div class="sa-cookie" id="saCookie" hidden><p>This site uses a small first-party cookie to keep you signed in and count visits. Nothing is shared with third parties.</p><button id="saCookieOk" type="button">Accept</button></div>' +
+    '<div class="sa-cookie" id="saCookie" hidden><p>We use a small first-party cookie to keep you signed in and count visits &mdash; nothing is shared.</p><button id="saCookieOk" type="button">Accept</button></div>' +
     '<div class="sa-fab" id="saFab" hidden></div>' +
     '<div class="sa-overlay" id="saOverlay" hidden><div class="sa-panel" role="dialog" aria-modal="true">' +
       '<button class="sa-panel__close" id="saClose" aria-label="Close">&times;</button>' +

@@ -164,6 +164,24 @@
       else if (who.closest('.whoami-media')) who.closest('.whoami-media').style.display = 'none';
     }
 
+    // manifesto: wrap words and brighten them as the section scrolls through
+    var maniPs = $$('.v2-mani-p');
+    if (maniPs.length && !reduce) {
+      var allW = [];
+      maniPs.forEach(function (p) {
+        p.innerHTML = p.textContent.trim().split(/\s+/).map(function (w) { return '<span class="w">' + w + '</span>'; }).join(' ');
+        [].slice.call(p.querySelectorAll('.w')).forEach(function (w) { allW.push(w); });
+      });
+      var maniSec = maniPs[0].closest('section') || maniPs[0];
+      ScrollTrigger.create({
+        trigger: maniSec, start: 'top 78%', end: 'bottom 55%', scrub: 0.4,
+        onUpdate: function (self) {
+          var n = Math.floor(Math.min(Math.max((self.progress - 0.03) / 0.8, 0), 1) * allW.length);
+          allW.forEach(function (w, i) { w.classList.toggle('on', i < n); });
+        },
+      });
+    }
+
     if (!reduce) ScrollTrigger.refresh();
   }
   if (window.__siteContent) {

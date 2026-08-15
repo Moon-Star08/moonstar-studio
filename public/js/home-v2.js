@@ -159,7 +159,9 @@
     var heroBed = $('#v2HeroBed');
     var src = content.home && content.home.hero_image;
     if (heroImg) {
-      if (src) { heroImg.src = src; heroImg.hidden = false; }
+      // a hardcoded <img src> wins; otherwise use the uploaded home hero image
+      var heroSrc = heroImg.getAttribute('src') || src;
+      if (heroSrc) { heroImg.src = heroSrc; heroImg.hidden = false; }
       else if (heroBed) { heroBed.style.display = 'none'; }
     }
 
