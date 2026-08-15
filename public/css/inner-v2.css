@@ -119,6 +119,24 @@
 .alert--success { background: rgba(22, 21, 19, .05); border: 1px solid var(--hair-ink); color: var(--ink); }
 .alert--error { background: rgba(217, 51, 63, .1); border: 1px solid var(--red); color: var(--ink); }
 
+/* contact — project inquiry: form on the left, photo on the right (dark section) */
+.contact-inquiry { display: grid; grid-template-columns: 1.1fr .9fr; gap: 5vw; align-items: stretch; }
+@media (max-width: 900px) { .contact-inquiry { grid-template-columns: 1fr; } .contact-inquiry__media { display: none; } }
+.contact-inquiry__form { min-width: 0; }
+.contact-inquiry .v2-form { grid-template-columns: 1fr; max-width: none; }
+.contact-inquiry__media { margin: 0; border-radius: 14px; overflow: hidden; background: #111; min-height: 62vh; }
+.contact-inquiry__media img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.25) contrast(1.03); }
+
+/* form fields need light colours on a dark section, otherwise they're invisible */
+.v2-sec--ink .v2-field label { color: rgba(244, 241, 234, .55); }
+.v2-sec--ink .v2-field input, .v2-sec--ink .v2-field select, .v2-sec--ink .v2-field textarea { color: var(--bone); border-bottom-color: var(--hair-bone); }
+.v2-sec--ink .v2-field input:focus, .v2-sec--ink .v2-field select:focus, .v2-sec--ink .v2-field textarea:focus { border-color: var(--red); }
+.v2-sec--ink .v2-field select option { color: #161513; }
+.v2-sec--ink .v2-form .v2-btn--primary { background: var(--bone); color: var(--ink); }
+.v2-sec--ink .v2-form .v2-btn--primary:hover { background: var(--red); color: var(--bone); }
+.v2-sec--ink .alert--success { background: rgba(244, 241, 234, .06); border-color: var(--hair-bone); color: var(--bone); }
+.v2-sec--ink .alert--error { color: var(--bone); }
+
 /* websites: filters + project grid */
 .v2-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5vh; }
 .v2-filters button {
