@@ -132,11 +132,20 @@ section { position: relative; }
 .v2-hero-actions { margin-top: 4vh; display: flex; gap: 14px; z-index: 2; position: relative; opacity: 0; transform: translateY(20px); }
 .v2-btn {
   font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
-  padding: 14px 22px; border: 1px solid var(--ink); transition: background .3s var(--ease), color .3s var(--ease);
+  padding: 14px 22px; border: 1px solid var(--ink); color: var(--ink); background: transparent;
+  position: relative; overflow: hidden; isolation: isolate;
+  transition: color .45s var(--ease), border-color .45s var(--ease), transform .2s var(--ease);
 }
+.v2-btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ink);
+  transform: scaleX(0); transform-origin: right; transition: transform .55s var(--ease);
+}
+.v2-btn:hover { color: var(--bone); }
+.v2-btn:hover::before { transform: scaleX(1); transform-origin: left; }
+.v2-btn:active { transform: translateY(1px); }
 .v2-btn--primary { background: var(--ink); color: var(--bone); }
-.v2-btn--primary:hover { background: var(--red); border-color: var(--red); }
-.v2-btn:not(.v2-btn--primary):hover { background: var(--ink); color: var(--bone); }
+.v2-btn--primary::before { background: var(--red); }
+.v2-btn--primary:hover { color: var(--bone); border-color: var(--red); }
 .v2-hero-bed {
   position: absolute; left: 0; right: 0; bottom: 0; height: 40vh; z-index: 1; margin: 0;
   overflow: hidden; opacity: 0;
@@ -433,9 +442,17 @@ main.v2-main { position: relative; z-index: 2; background: var(--bone); }
   margin: 5vh 0 0; display: inline-flex; align-items: center; gap: 16px;
   font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase;
   border: 1px solid rgba(244, 241, 234, .4); padding: 16px 26px; width: max-content;
-  transition: background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+  position: relative; overflow: hidden; isolation: isolate; color: var(--bone);
+  transition: color .45s var(--ease), border-color .45s var(--ease);
 }
-.v2-foot-cta:hover { background: var(--red); border-color: var(--red); color: var(--bone); }
+.v2-foot-cta::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--red);
+  transform: scaleX(0); transform-origin: right; transition: transform .55s var(--ease);
+}
+.v2-foot-cta:hover { color: var(--bone); border-color: var(--red); }
+.v2-foot-cta:hover::before { transform: scaleX(1); transform-origin: left; }
+.v2-foot-cta span { transition: transform .4s var(--ease); }
+.v2-foot-cta:hover span { transform: translateX(5px); }
 .v2-foot-cols {
   display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
   border-top: 1px solid rgba(244, 241, 234, .18); padding-top: 22px;

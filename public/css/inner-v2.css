@@ -38,6 +38,34 @@
 .v2-mani-p .w.on { opacity: 1; }
 .v2-sec--ink .v2-mani-p { color: var(--bone); }
 
+/* how I work — four moves that assemble on scroll (adapted from the cinema "ritual") */
+.moves-sec { min-height: 300svh; background: var(--ink); color: var(--bone); overflow: clip; isolation: isolate; }
+.moves-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; padding: 96px 3.2vw 52px; isolation: isolate; }
+.moves-pin::after { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--red); clip-path: inset(calc(100% - var(--moves-final, 0%)) 0 0); will-change: clip-path; }
+.moves-head { position: absolute; left: 3.2vw; right: 3.2vw; top: 96px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--bone); }
+.moves-head b { font-weight: 500; }
+.moves-head span { opacity: .55; }
+.moves-stack { position: relative; width: 100%; height: min(56vh, 540px); }
+.move { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; opacity: 0; transform: translate3d(0, 62%, 0) scale(.82); filter: blur(9px); will-change: transform, opacity, filter; }
+.move .n { position: absolute; left: 1%; top: 50%; font-family: var(--mono); font-size: 11px; letter-spacing: .18em; opacity: .5; }
+.move-word { font-weight: 900; text-transform: uppercase; font-size: clamp(84px, 17vw, 280px); line-height: .82; letter-spacing: -.03em; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.move-value { margin-top: 26px; font-family: var(--mono); font-size: clamp(10px, 1.2vw, 14px); letter-spacing: .22em; text-transform: uppercase; color: rgba(244, 241, 234, .7); }
+.moves-track { position: absolute; left: 3.2vw; right: 3.2vw; bottom: 38px; height: 1px; background: rgba(244, 241, 234, .2); }
+.moves-track i { display: block; height: 100%; width: 100%; background: var(--bone); transform: scaleX(var(--moves-progress, 0)); transform-origin: left; }
+.moves-markers { position: absolute; left: 3.2vw; right: 3.2vw; bottom: 50px; display: grid; grid-template-columns: repeat(4, 1fr); font-family: var(--mono); font-size: 9px; letter-spacing: .17em; text-transform: uppercase; color: var(--bone); }
+.moves-markers span { text-align: center; opacity: .28; }
+.moves-markers span.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .moves-sec { min-height: auto; }
+  .moves-pin { position: static; height: auto; display: block; padding: 14vh 3.2vw; }
+  .moves-pin::after { display: none; }
+  .moves-stack { height: auto; display: grid; gap: 6vh; }
+  .move { position: relative; inset: auto; opacity: 1; transform: none; filter: none; place-items: start; text-align: left; }
+  .move .n { position: static; display: block; margin-bottom: 8px; }
+  .move-word { font-size: clamp(48px, 10vw, 110px); }
+  .moves-track, .moves-markers, .moves-head span { display: none; }
+}
+
 /* section shell */
 .v2-sec { padding: 13vh 3.2vw; background: var(--bone); position: relative; }
 .v2-sec--ink { background: var(--ink); color: var(--bone); }

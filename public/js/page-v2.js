@@ -182,6 +182,36 @@
       });
     }
 
+    // "four moves" that assemble on scroll (About): each big word fades/rises in
+    // turn, a progress track fills, and a red curtain wipes up near the end.
+    var movesSec = document.querySelector('.moves-sec');
+    if (movesSec && !reduce) {
+      var moveEls = $$('.moves-sec .move');
+      var moveMarkers = $$('.moves-sec .moves-markers span');
+      var last = moveEls.length - 1;
+      var applyMoves = function (p) {
+        var active = Math.min(last, Math.round(p * last));
+        movesSec.style.setProperty('--moves-progress', p.toFixed(4));
+        var fin = Math.max(0, Math.min(1, (p - 0.72) / 0.24));
+        movesSec.style.setProperty('--moves-final', (fin * 100).toFixed(2) + '%');
+        moveEls.forEach(function (step, i) {
+          var d = (p - i / last) * last;
+          var opacity = Math.max(0, Math.min(1, 1 - Math.abs(d) * 1.15));
+          var y = Math.max(-72, Math.min(72, -d * 62));
+          var scale = d > 0 ? 1 + Math.min(0.13, d * 0.1) : 1 - Math.min(0.16, -d * 0.12);
+          step.style.opacity = opacity.toFixed(3);
+          step.style.transform = 'translate3d(0,' + y.toFixed(2) + '%,0) scale(' + scale.toFixed(4) + ')';
+          step.style.filter = 'blur(' + (Math.abs(d) * 7).toFixed(2) + 'px)';
+        });
+        moveMarkers.forEach(function (m, i) { m.classList.toggle('on', i === active); });
+      };
+      ScrollTrigger.create({
+        trigger: movesSec, start: 'top top', end: 'bottom bottom', scrub: true,
+        onUpdate: function (self) { applyMoves(self.progress); },
+      });
+      applyMoves(0);
+    }
+
     if (!reduce) ScrollTrigger.refresh();
   }
   if (window.__siteContent) {
