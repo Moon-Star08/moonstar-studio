@@ -6,7 +6,7 @@ module.exports = {
     brand_name: 'MoonStar Studio',
     footer_tagline: "Web Designer & Developer. Modern websites and digital solutions for businesses, from concept to launch.",
     copyright_name: 'MoonStar Studio',
-    email: 'hello@moonstarstudio.site',
+    email: 'moonstarstudio.co@gmail.com',
     phone: '+855 85 887 688',
     location: 'Cambodia',
     tiktok_url: 'https://www.tiktok.com/@moonstarstudio.co',
