@@ -225,3 +225,34 @@
 .legal-toc a { color: rgba(22, 21, 19, .55); text-decoration: none; }
 .legal-toc a:hover { color: var(--red); }
 @media (max-width: 640px) { .legal-hero { padding: 120px 5vw 5vh; } .legal-doc { padding: 2vh 5vw 12vh; } }
+
+/* ── beyond-websites: scroll-driven 3D cylinder of services (Network page) ── */
+.cyl-sec { position: relative; background: var(--bone); }
+.cyl-pin { position: sticky; top: 0; height: 100svh; display: grid; grid-template-rows: auto 1fr auto; align-items: center; overflow: hidden; }
+.cyl-intro { padding-top: 14vh; text-align: center; }
+.cyl-eyebrow { display: inline-block; color: var(--red); margin-bottom: 14px; }
+.cyl-lead { max-width: 46ch; margin: 0 auto; font-size: clamp(14px, 1.5vw, 17px); line-height: 1.6; color: rgba(22, 21, 19, .62); }
+.cyl-wrap { position: relative; display: grid; place-items: center; width: 100%; height: clamp(260px, 34vw, 400px); overflow: hidden; perspective: 1150px; perspective-origin: 50% 50%; }
+.cyl { position: relative; width: min(1000px, 90vw); height: clamp(230px, 30vw, 340px); transform-style: preserve-3d; will-change: transform; }
+.cyl-row { position: absolute; top: 50%; left: 50%; width: 100%; display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.2vw, 20px); transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; }
+.cyl-row h3 { font-family: var(--arch); font-weight: 900; font-size: clamp(1.7rem, 5.4vw, 4.6rem); line-height: 1; letter-spacing: -.038em; text-transform: uppercase; color: var(--red); white-space: nowrap; transition: color .3s linear; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.cyl-row.mid h3 { color: var(--ink); }
+.cyl-thumb { width: clamp(30px, 3.6vw, 54px); aspect-ratio: 1/1; border-radius: 11px; overflow: hidden; flex: none; display: grid; place-items: center; background: var(--ink); color: var(--bone); font-family: var(--mono); font-size: 12px; box-shadow: 0 10px 24px -12px rgba(22, 21, 19, .5); transition: background .3s linear; }
+.cyl-row.mid .cyl-thumb { background: var(--red); }
+.cyl-wrap::before, .cyl-wrap::after { content: ""; position: absolute; left: 0; right: 0; height: 34%; z-index: 4; pointer-events: none; }
+.cyl-wrap::before { top: 0; background: linear-gradient(180deg, var(--bone) 22%, rgba(244, 241, 234, .55) 62%, transparent); }
+.cyl-wrap::after { bottom: 0; background: linear-gradient(0deg, var(--bone) 22%, rgba(244, 241, 234, .55) 62%, transparent); }
+.cyl-side { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(22, 21, 19, .5); }
+.cyl-side.l { left: 3.2vw; color: var(--red); text-decoration: line-through; }
+.cyl-side.r { right: 3.2vw; }
+.cyl-foot { padding-bottom: 12vh; text-align: center; font-size: 11px; letter-spacing: .1em; color: rgba(22, 21, 19, .5); }
+@media (max-width: 860px) { .cyl-side { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .cyl-sec { height: auto !important; }
+  .cyl-pin { position: static; height: auto; display: block; padding: 12vh 0; }
+  .cyl-wrap { height: auto; perspective: none; overflow: visible; }
+  .cyl { width: 100%; height: auto; transform: none !important; display: flex; flex-direction: column; gap: 3vh; align-items: center; }
+  .cyl-row { position: static; transform: none !important; opacity: 1 !important; }
+  .cyl-row h3 { color: var(--ink); }
+  .cyl-wrap::before, .cyl-wrap::after { display: none; }
+}
