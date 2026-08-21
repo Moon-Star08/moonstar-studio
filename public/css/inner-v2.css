@@ -293,3 +293,24 @@
 .faq .body__in strong { color: var(--ink); font-weight: 700; }
 .faq .body__in .legal-callout { background: var(--ink); color: rgba(244, 241, 234, .92); padding: 15px 18px; margin: 10px 0 2px; line-height: 1.7; }
 .faq .body__in .legal-callout strong { color: #fff; }
+
+/* ── CTA ghost-field (bottom of legal pages) ──────────────────────────── */
+.v2-cta-ghost { position: relative; background: var(--bone); color: var(--ink); min-height: 90vh; display: grid; place-items: center; overflow: hidden; padding: 12vh 3.2vw; isolation: isolate; }
+.v2-cta-ghost .ghosts { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.v2-cta-ghost .ghosts span { position: absolute; font-family: var(--arch); font-weight: 900; text-transform: uppercase; letter-spacing: -.03em; color: var(--red); white-space: nowrap; opacity: .07; will-change: transform; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.cta-core { position: relative; z-index: 2; text-align: center; display: grid; justify-items: center; gap: 16px; max-width: 900px; }
+.v2-cta-ghost .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); text-decoration: line-through; }
+.cta-head { position: relative; }
+.cta-head h2 { font-family: var(--arch); font-weight: 900; text-transform: uppercase; letter-spacing: -.04em; line-height: .9; font-size: clamp(46px, 12vw, 150px); color: var(--ink); font-variation-settings: 'wght' 900, 'wdth' 100; }
+.cta-underline { position: absolute; left: 2%; bottom: -4px; width: 96%; height: 22px; }
+.cta-underline path { fill: none; stroke: var(--red); stroke-width: 5; stroke-linecap: round; }
+.cta-dock { display: inline-flex; align-items: center; gap: 12px; margin-top: 26px; background: var(--bone); border: 1px solid var(--hair-ink); border-radius: 16px; padding: 11px 18px 11px 12px; box-shadow: 0 24px 46px -26px rgba(22, 21, 19, .45); position: relative; transition: transform .5s var(--ease); }
+.cta-dock:hover { transform: translateY(-3px); }
+.cta-dock .bub { position: absolute; top: -20px; left: 10px; background: var(--red); color: #fff; font-family: var(--mono); font-size: 10px; line-height: 1.3; padding: 6px 10px; border-radius: 10px 10px 10px 2px; white-space: nowrap; }
+.cta-dock .dock-av { width: 44px; height: 44px; border-radius: 12px; overflow: hidden; flex: none; background: var(--ink); }
+.cta-dock .dock-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cta-dock p { font-family: var(--mono); font-size: 11px; line-height: 1.4; color: rgba(22, 21, 19, .7); text-align: left; margin: 0; }
+.cta-actions { display: grid; justify-items: center; gap: 14px; margin-top: 26px; }
+.cta-mail { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: rgba(22, 21, 19, .5); text-decoration: none; }
+.cta-mail:hover { color: var(--red); }
+@media (prefers-reduced-motion: reduce) { .v2-cta-ghost .ghosts span { transform: none !important; } }
