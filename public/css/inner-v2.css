@@ -235,8 +235,8 @@
 .cyl-wrap { position: relative; display: grid; place-items: center; width: 100%; height: clamp(260px, 34vw, 400px); overflow: hidden; perspective: 1150px; perspective-origin: 50% 50%; }
 .cyl { position: relative; width: min(1000px, 90vw); height: clamp(230px, 30vw, 340px); transform-style: preserve-3d; will-change: transform; }
 .cyl-row { position: absolute; top: 50%; left: 50%; width: 100%; display: flex; align-items: center; justify-content: center; gap: clamp(10px, 1.2vw, 20px); transform-style: preserve-3d; backface-visibility: hidden; will-change: transform, opacity; }
-.cyl-row h3 { font-family: var(--arch); font-weight: 900; font-size: clamp(1.7rem, 5.4vw, 4.6rem); line-height: 1; letter-spacing: -.038em; text-transform: uppercase; color: var(--red); white-space: nowrap; transition: color .3s linear; font-variation-settings: 'wght' 900, 'wdth' 100; }
-.cyl-row.mid h3 { color: var(--ink); }
+.cyl-row h3 { font-family: var(--arch); font-weight: 900; font-size: clamp(1.7rem, 5.4vw, 4.6rem); line-height: 1; letter-spacing: -.038em; text-transform: uppercase; color: var(--ink); white-space: nowrap; transition: color .3s linear; font-variation-settings: 'wght' 900, 'wdth' 100; }
+.cyl-row.mid h3 { color: var(--red); }
 .cyl-thumb { width: clamp(30px, 3.6vw, 54px); aspect-ratio: 1/1; border-radius: 11px; overflow: hidden; flex: none; display: grid; place-items: center; background: var(--ink); color: var(--bone); font-family: var(--mono); font-size: 12px; box-shadow: 0 10px 24px -12px rgba(22, 21, 19, .5); transition: background .3s linear; }
 .cyl-row.mid .cyl-thumb { background: var(--red); }
 .cyl-wrap::before, .cyl-wrap::after { content: ""; position: absolute; left: 0; right: 0; height: 34%; z-index: 4; pointer-events: none; }
