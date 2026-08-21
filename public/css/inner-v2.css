@@ -256,3 +256,40 @@
   .cyl-row h3 { color: var(--ink); }
   .cyl-wrap::before, .cyl-wrap::after { display: none; }
 }
+
+/* ── legal accordion (privacy / terms) ────────────────────────────────── */
+.legal-faq-sec { background: var(--bone); padding: 6vh 3.2vw 16vh; }
+.legal-faq { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 5vh; }
+@media (min-width: 900px) { .legal-faq { grid-template-columns: .82fr 1.4fr; gap: clamp(32px, 5vw, 84px); align-items: start; } }
+.legal-faq__intro { align-self: start; }
+@media (min-width: 900px) { .legal-faq__intro { position: sticky; top: 14vh; } }
+.legal-faq__intro .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); text-decoration: line-through; }
+.legal-faq__intro h2 { font-family: var(--arch); font-weight: 900; letter-spacing: -.03em; line-height: .95; font-size: clamp(30px, 4.4vw, 54px); margin: 16px 0 0; }
+.legal-faq__intro > p { margin-top: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.75; color: rgba(22, 21, 19, .55); max-width: 34ch; }
+.legal-faq__intro .v2-btn { margin-top: 26px; }
+
+.faq { border-top: 1px solid var(--hair-ink); }
+.faq:last-child { border-bottom: 1px solid var(--hair-ink); }
+.faq button { width: 100%; display: flex; align-items: center; gap: clamp(12px, 2vw, 26px); padding: clamp(18px, 2vw, 27px) 0; text-align: left; cursor: pointer; background: none; border: 0; }
+.faq .n { font-family: var(--mono); font-size: 10.5px; letter-spacing: .13em; color: rgba(22, 21, 19, .4); flex: none; width: 2.4em; transition: color .35s; }
+.faq h4 { flex: 1; font-family: var(--arch); font-weight: 800; font-size: clamp(1rem, 1.8vw, 1.4rem); line-height: 1.25; letter-spacing: -.015em; color: var(--ink); transition: color .35s, transform .5s var(--ease); margin: 0; }
+.faq .pm { position: relative; flex: none; width: 16px; height: 16px; }
+.faq .pm i { position: absolute; left: 0; top: 50%; width: 100%; height: 1.5px; background: var(--ink); transition: transform .5s var(--ease), background .35s; }
+.faq .pm i:last-child { transform: rotate(90deg); }
+.faq.open .pm i:last-child { transform: rotate(0); }
+.faq.open .n, .faq.open h4 { color: var(--red); }
+.faq.open .pm i { background: var(--red); }
+.faq button:hover h4 { transform: translateX(6px); }
+.faq .body { overflow: hidden; }
+.legal-faq.js .faq .body { height: 0; transition: height .55s var(--ease); } /* collapse only when JS is on */
+.faq .body__in { padding: 0 0 clamp(20px, 2.2vw, 28px) calc(2.4em + clamp(12px, 2vw, 26px)); max-width: 78ch; }
+.faq .body__in p, .faq .body__in li { font-family: var(--mono); font-size: 12.5px; line-height: 1.9; color: rgba(22, 21, 19, .7); }
+.faq .body__in p + p { margin-top: 12px; }
+.faq .body__in h3 { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); margin: 16px 0 6px; }
+.faq .body__in ul { list-style: none; margin: 10px 0 0; padding: 0; }
+.faq .body__in li { position: relative; padding-left: 18px; margin-bottom: 7px; }
+.faq .body__in li::before { content: "—"; position: absolute; left: 0; color: var(--red); }
+.faq .body__in a { color: var(--red); text-decoration: underline; text-underline-offset: 2px; }
+.faq .body__in strong { color: var(--ink); font-weight: 700; }
+.faq .body__in .legal-callout { background: var(--ink); color: rgba(244, 241, 234, .92); padding: 15px 18px; margin: 10px 0 2px; line-height: 1.7; }
+.faq .body__in .legal-callout strong { color: #fff; }
