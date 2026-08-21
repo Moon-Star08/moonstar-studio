@@ -1,0 +1,129 @@
+/* Admin panel — v2 brutalist skin. Reuses home-v2.css tokens (--bone/--ink/
+   --red/--mono/--arch/--hair-ink/--ease). Styles the existing admin markup so
+   every id / JS hook stays intact. */
+
+:root {
+  --radius-md: 0;
+  --font-display: var(--arch);
+  --font-body: var(--arch);
+  --admin-muted: rgba(22, 21, 19, .55);
+  --admin-hair: rgba(22, 21, 19, .14);
+  --admin-ok: #1c7c54;
+}
+
+body { background: var(--bone); color: var(--ink); font-family: var(--arch); }
+body::after { display: none; } /* drop the front-end grain overlay in admin */
+
+.admin-shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── top bar ──────────────────────────────────────────────────────────── */
+.admin-topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 16px 3.2vw; background: var(--ink); color: var(--bone);
+  border-bottom: 1px solid var(--ink);
+}
+.admin-topbar__title {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.admin-topbar__title .dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+.admin-topbar .btn { color: var(--bone); border-color: rgba(244, 241, 234, .35); }
+.admin-topbar .btn::before { background: var(--bone); }
+.admin-topbar .btn:hover { color: var(--ink); border-color: var(--bone); }
+
+/* ── layout ───────────────────────────────────────────────────────────── */
+.admin-main { width: 100%; max-width: 1120px; margin: 0 auto; padding: 5vh 3.2vw 12vh; }
+.admin-main h1 {
+  font-family: var(--arch); font-weight: 900; letter-spacing: -.02em; line-height: 1;
+  font-size: clamp(26px, 4vw, 40px);
+}
+.admin-header-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin: 0 0 22px; }
+.admin-header-row + .admin-header-row { margin-top: 40px; }
+.hint { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--admin-muted); line-height: 1.5; }
+.login-card__sub { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--admin-muted); }
+
+/* ── buttons (v2 expansion-fill) ──────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 12px 20px; border: 1px solid var(--ink); color: var(--ink); background: transparent;
+  cursor: pointer; position: relative; overflow: hidden; isolation: isolate; text-decoration: none;
+  transition: color .45s var(--ease), border-color .45s var(--ease), transform .2s var(--ease);
+}
+.btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+.btn:hover { color: var(--bone); }
+.btn:hover::before { transform: scaleX(1); transform-origin: left; }
+.btn:active { transform: translateY(1px); }
+.btn--sm { padding: 8px 14px; font-size: 10px; }
+.btn--primary { background: var(--ink); color: var(--bone); }
+.btn--primary::before { background: var(--red); }
+.btn--primary:hover { color: var(--bone); border-color: var(--red); }
+.btn.delete-btn, .btn.message-delete-btn, .btn.user-delete-btn { border-color: var(--red); color: var(--red); }
+.btn.delete-btn::before, .btn.message-delete-btn::before, .btn.user-delete-btn::before { background: var(--red); }
+.btn.delete-btn:hover, .btn.message-delete-btn:hover, .btn.user-delete-btn:hover { color: var(--bone); }
+
+/* ── stat cards ───────────────────────────────────────────────────────── */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border: 1px solid var(--ink); }
+.stat { padding: 22px 20px; border-right: 1px solid var(--admin-hair); border-bottom: 1px solid var(--admin-hair); }
+.stat__value { font-family: var(--arch); font-weight: 900; font-size: clamp(30px, 4vw, 44px); line-height: 1; color: var(--red); font-variation-settings: 'wght' 900, 'wdth' 100; }
+.stat__label { margin-top: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--admin-muted); }
+
+/* ── tables ───────────────────────────────────────────────────────────── */
+.table-wrap { border: 1px solid var(--ink); overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.admin-table thead th {
+  text-align: left; padding: 14px 16px; background: var(--ink); color: var(--bone);
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; white-space: nowrap;
+}
+.admin-table td { padding: 14px 16px; border-top: 1px solid var(--admin-hair); vertical-align: middle; }
+.admin-table tbody tr:hover { background: rgba(22, 21, 19, .03); }
+.admin-table__thumb { width: 52px; height: 36px; object-fit: cover; border: 1px solid var(--admin-hair); display: block; }
+.title-cell { font-weight: 700; }
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.state-msg { color: var(--admin-muted); font-family: var(--mono); font-size: 12px; }
+
+/* ── badges ───────────────────────────────────────────────────────────── */
+[class^="badge-"] { display: inline-block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 9px; border: 1px solid currentColor; white-space: nowrap; }
+.badge-category { color: var(--admin-muted); }
+.badge-featured { color: var(--red); }
+.badge-hidden { color: var(--admin-muted); opacity: .8; }
+.badge-success { color: var(--admin-ok); }
+.badge-fail { color: var(--red); }
+
+/* ── forms ────────────────────────────────────────────────────────────── */
+form { max-width: 760px; }
+.field { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+.field label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.field input[type="text"], .field input[type="email"], .field input[type="url"], .field input[type="tel"],
+.field input[type="password"], .field select, .field textarea,
+#settings-sections input, #settings-sections textarea, #settings-sections select {
+  width: 100%; padding: 12px 14px; background: var(--bone); color: var(--ink);
+  border: 1px solid var(--ink); border-radius: 0; font-family: var(--arch); font-size: 15px;
+}
+.field textarea, #settings-sections textarea { min-height: 110px; resize: vertical; line-height: 1.6; }
+.field input:focus, .field select:focus, .field textarea:focus,
+#settings-sections input:focus, #settings-sections textarea:focus, #settings-sections select:focus {
+  outline: none; border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red);
+}
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.field-checkbox { flex-direction: row; align-items: flex-start; gap: 12px; }
+.field-checkbox input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--red); flex: none; }
+.form-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+fieldset { border: 1px solid var(--ink) !important; border-radius: 0 !important; }
+legend { font-family: var(--mono) !important; font-size: 10px !important; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.current-image img { max-width: 160px; max-height: 120px; border: 1px solid var(--admin-hair); display: block; margin-top: 6px; }
+
+/* settings sections (JS-rendered) */
+#settings-sections { display: grid; gap: 16px; }
+#settings-sections fieldset { padding: 18px 18px 20px; margin: 0; }
+
+/* ── alerts ───────────────────────────────────────────────────────────── */
+.alert { padding: 14px 16px; border: 1px solid var(--ink); border-left-width: 4px; font-size: 14px; margin-bottom: 16px; background: rgba(22, 21, 19, .03); }
+.alert--error { border-color: var(--red); border-left-color: var(--red); color: #7f1620; background: rgba(217, 51, 63, .07); }
+.alert--success { border-color: var(--admin-ok); border-left-color: var(--admin-ok); color: #145c3d; background: rgba(28, 124, 84, .08); }
+
+@media (max-width: 620px) {
+  .field-row { grid-template-columns: 1fr; }
+  .admin-topbar { flex-direction: column; align-items: flex-start; }
+}
