@@ -7,6 +7,34 @@
   var alertBox = document.getElementById('contact-form-alert');
   var submitBtn = document.getElementById('contact-submit');
 
+  // Prefill when arriving from a package/care-plan button (?plan= or ?build=).
+  // These are the Subscribe / Get started CTAs on the Services page.
+  (function prefillFromQuery() {
+    var params = new URLSearchParams(location.search);
+    var plan = params.get('plan');
+    var build = params.get('build');
+    var PLANS = {
+      'essential-care': 'Essential Care ($50/mo)',
+      'business-care': 'Business Care ($85/mo)',
+      'premium-care': 'Premium Care ($120/mo)',
+    };
+    var BUILDS = {
+      'launchpad': 'LaunchPad ($299)',
+      'growthsite': 'GrowthSite ($499)',
+      'empiresite': 'EmpireSite ($949)',
+    };
+    var msgEl = document.getElementById('cf-message');
+    var typeEl = document.getElementById('cf-project-type');
+    var pre = '';
+    if (plan && PLANS[plan]) {
+      pre = "Hi! I'd like to subscribe to the " + PLANS[plan] + " care plan. ";
+    } else if (build && BUILDS[build]) {
+      pre = "Hi! I'd like to start a " + BUILDS[build] + " website build. ";
+      if (typeEl) typeEl.value = 'Full Website';
+    }
+    if (pre && msgEl && !msgEl.value) msgEl.value = pre;
+  })();
+
   function showAlert(type, msg) {
     alertBox.innerHTML = '<div class="alert alert--' + type + '">' + msg + '</div>';
   }

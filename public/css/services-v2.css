@@ -180,3 +180,25 @@
 .extra .name { font-size: 14px; color: rgba(22, 21, 19, .82); }
 .extra .price { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--red); white-space: nowrap; font-weight: 500; }
 .extras-note { margin-top: 5vh; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(22, 21, 19, .45); line-height: 1.9; }
+
+/* ── package CTA buttons (build + care tiers) ──────────────────────────── */
+.pkg-cta {
+  grid-column: 4; align-self: start; justify-self: start;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; max-width: 360px; margin-top: 6px; padding: 14px 22px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; text-align: center;
+  background: var(--ink); color: var(--bone); border: 1px solid var(--ink);
+  position: relative; overflow: hidden; isolation: isolate;
+  transition: color .45s var(--ease), border-color .45s var(--ease);
+}
+.pkg-cta::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--red);
+  transform: scaleX(0); transform-origin: right; transition: transform .55s var(--ease);
+}
+.pkg-cta:hover { color: var(--bone); border-color: var(--red); }
+.pkg-cta:hover::before { transform: scaleX(1); transform-origin: left; }
+/* on the dark care-plan section, invert to a light button */
+.v2-packages--ink .pkg-cta { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+.v2-packages--ink .pkg-cta:hover { color: var(--bone); border-color: var(--red); }
+@media (max-width: 900px) { .pkg-cta { grid-column: 1 / -1; } }
+@media (max-width: 520px) { .pkg-cta { grid-column: 1; max-width: none; } }

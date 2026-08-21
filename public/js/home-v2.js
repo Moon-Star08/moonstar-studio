@@ -292,6 +292,15 @@
     }, { once: true });
   }
 
+  // Featured work loads independently of site settings — so even if
+  // /api/settings is slow or fails (and onSiteContent never runs), the work
+  // section still resolves instead of getting stuck on "Loading projects…".
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadWork);
+  } else {
+    loadWork();
+  }
+
   // ---------- process (replaces the reference's weight-axis section) ----------
   function initProcess(steps) {
     var title = $('#v2ProcTitle'), hud = $('#v2ProcHud'), tick = $('#v2ProcTick'),
@@ -337,9 +346,14 @@
 
   // ---------- featured work: pinned horizontal scroll of real projects ----------
   function loadWork() {
+    if (window.__v2WorkLoaded) return;
     var track = $('#v2Track');
+    if (!track) return;
+    // PortfolioAPI is loaded by a separate script; if it hasn't arrived yet,
+    // retry shortly rather than silently leaving the "Loading…" placeholder.
+    if (!window.PortfolioAPI) { setTimeout(loadWork, 250); return; }
+    window.__v2WorkLoaded = true;
     var meta = $('#v2WorkMeta');
-    if (!track || !window.PortfolioAPI) return;
 
     PortfolioAPI.fetchProjects({ featured: '1' })
       .then(function (projects) {
