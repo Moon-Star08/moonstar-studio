@@ -243,7 +243,7 @@
 .cyl-wrap::before { top: 0; background: linear-gradient(180deg, var(--bone) 22%, rgba(244, 241, 234, .55) 62%, transparent); }
 .cyl-wrap::after { bottom: 0; background: linear-gradient(0deg, var(--bone) 22%, rgba(244, 241, 234, .55) 62%, transparent); }
 .cyl-side { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(22, 21, 19, .5); }
-.cyl-side.l { left: 3.2vw; color: var(--red); text-decoration: line-through; }
+.cyl-side.l { left: 3.2vw; color: var(--red); }
 .cyl-side.r { right: 3.2vw; }
 .cyl-foot { padding-bottom: 12vh; text-align: center; font-size: 11px; letter-spacing: .1em; color: rgba(22, 21, 19, .5); }
 @media (max-width: 860px) { .cyl-side { display: none; } }
@@ -263,10 +263,10 @@
 @media (min-width: 900px) { .legal-faq { grid-template-columns: .82fr 1.4fr; gap: clamp(32px, 5vw, 84px); align-items: start; } }
 .legal-faq__intro { align-self: start; }
 @media (min-width: 900px) { .legal-faq__intro { position: sticky; top: 14vh; } }
-.legal-faq__intro .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); text-decoration: line-through; }
+.legal-faq__intro .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
 .legal-faq__intro h2 { font-family: var(--arch); font-weight: 900; letter-spacing: -.03em; line-height: .95; font-size: clamp(30px, 4.4vw, 54px); margin: 16px 0 0; }
 .legal-faq__intro > p { margin-top: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.75; color: rgba(22, 21, 19, .55); max-width: 34ch; }
-.legal-faq__intro .v2-btn { margin-top: 26px; }
+.legal-faq__intro .v2-btn { display: inline-flex; align-items: center; margin-top: 38px; }
 
 .faq { border-top: 1px solid var(--hair-ink); }
 .faq:last-child { border-bottom: 1px solid var(--hair-ink); }
@@ -299,7 +299,7 @@
 .v2-cta-ghost .ghosts { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .v2-cta-ghost .ghosts span { position: absolute; font-family: var(--arch); font-weight: 900; text-transform: uppercase; letter-spacing: -.03em; color: var(--red); white-space: nowrap; opacity: .07; will-change: transform; font-variation-settings: 'wght' 900, 'wdth' 100; }
 .cta-core { position: relative; z-index: 2; text-align: center; display: grid; justify-items: center; gap: 16px; max-width: 900px; }
-.v2-cta-ghost .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); text-decoration: line-through; }
+.v2-cta-ghost .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
 .cta-head { position: relative; }
 .cta-head h2 { font-family: var(--arch); font-weight: 900; text-transform: uppercase; letter-spacing: -.04em; line-height: .9; font-size: clamp(46px, 12vw, 150px); color: var(--ink); font-variation-settings: 'wght' 900, 'wdth' 100; }
 .cta-underline { position: absolute; left: 2%; bottom: -4px; width: 96%; height: 22px; }
@@ -319,7 +319,7 @@
 .hz-sec { position: relative; background: var(--bone); }
 .hz-pin { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 .hz-head { padding: 12vh 3.2vw 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.hz-head .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); text-decoration: line-through; }
+.hz-head .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--red); }
 .hz-head h2 { font-family: var(--arch); font-weight: 900; letter-spacing: -.03em; line-height: .92; font-size: clamp(30px, 5vw, 60px); margin-top: 14px; }
 .hz-note { font-family: var(--mono); font-size: 12px; line-height: 1.7; color: rgba(22, 21, 19, .55); max-width: 34ch; text-align: right; }
 .hz-track { display: flex; align-items: stretch; gap: clamp(16px, 2vw, 30px); padding: 0 3.2vw; will-change: transform; margin: 5vh 0 auto; }
