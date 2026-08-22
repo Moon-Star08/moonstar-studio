@@ -127,3 +127,12 @@ legend { font-family: var(--mono) !important; font-size: 10px !important; letter
   .field-row { grid-template-columns: 1fr; }
   .admin-topbar { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── settings: tabbed page sections ───────────────────────────────────── */
+.set-tabs { position: sticky; top: 58px; z-index: 20; display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0; margin: 6px 0 26px; background: var(--bone); border-bottom: 1px solid var(--admin-hair); }
+.set-tab { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; padding: 9px 15px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .2s, color .2s; }
+.set-tab:hover { background: rgba(22, 21, 19, .06); }
+.set-tab.active { background: var(--ink); color: var(--bone); }
+.set-panel { display: none; }
+.set-panel.active { display: block; }
+@media (max-width: 620px) { .set-tabs { top: 0; } }

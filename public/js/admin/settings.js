@@ -224,6 +224,7 @@
   function renderForm(content) {
     var html = '';
     SCHEMA.forEach(function (section) {
+      html += '<div class="set-panel" id="panel-' + section.key + '" data-tab="' + section.key + '">';
       html += '<fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 4px; margin-bottom: 22px;">';
       html += '<legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">' + escapeHtml(section.label) + '</legend>';
       section.fields.forEach(function (field) {
@@ -239,10 +240,36 @@
         html += '</div>';
       });
       html += '</fieldset>';
+      html += '</div>';
     });
     container.innerHTML = html;
+    buildTabs();
     renderHeroImage((content.home || {}).hero_image);
     renderFavicon((content.site || {}).favicon);
+  }
+
+  // Build the top tab menu (Media + one per content section) and wire switching
+  // so only one page's fields show at a time instead of one long scroll.
+  function buildTabs() {
+    var tabsEl = document.getElementById('set-tabs');
+    if (!tabsEl) return;
+    var items = [{ key: 'media', label: 'Media' }].concat(SCHEMA.map(function (s) {
+      return { key: s.key, label: s.label.replace(/ page$/, '').replace(/ \(.*\)$/, '') };
+    }));
+    tabsEl.innerHTML = items.map(function (it) {
+      return '<button type="button" class="set-tab" data-target="' + it.key + '">' + escapeHtml(it.label) + '</button>';
+    }).join('');
+    var tabs = [].slice.call(tabsEl.querySelectorAll('.set-tab'));
+    function activate(key) {
+      tabs.forEach(function (t) { t.classList.toggle('active', t.dataset.target === key); });
+      [].slice.call(document.querySelectorAll('.set-panel')).forEach(function (p) {
+        p.classList.toggle('active', p.dataset.tab === key);
+      });
+    }
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () { activate(t.dataset.target); });
+    });
+    activate('media');
   }
 
   function renderHeroImage(src) {

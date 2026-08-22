@@ -24,35 +24,39 @@
 
   <main class="admin-main">
     <h1 style="margin-bottom: 6px;">Site Content</h1>
-    <p class="login-card__sub" style="text-align:left; margin-bottom: 24px;">Edit the text used on Home, About, Services, and Contact. Changes go live immediately — no code needed.</p>
+    <p class="login-card__sub" style="text-align:left; margin-bottom: 24px;">Pick a page from the tabs below to edit its text and media. Changes go live immediately — no code needed.</p>
 
     <div id="settings-alert"></div>
 
-    <fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 22px; margin-bottom: 22px;">
-      <legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">Hero image (Home page)</legend>
-      <p class="hint" style="margin: 0 0 12px;">Replaces the pixel-art scene next to the hero text. Images only, max 5MB.</p>
-      <div id="hero-image-current" class="current-image"></div>
-      <div class="field" style="margin-top: 12px;">
-        <input type="file" id="hero-image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
-      </div>
-      <div class="form-actions" style="margin-top: 0;">
-        <button class="btn btn--sm" type="button" id="hero-image-upload-btn">Upload image</button>
-        <button class="btn btn--sm" type="button" id="hero-image-remove-btn">Remove image</button>
-      </div>
-    </fieldset>
+    <nav id="set-tabs" class="set-tabs" aria-label="Content sections"></nav>
 
-    <fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 22px; margin-bottom: 22px;">
-      <legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">Favicon (browser tab icon)</legend>
-      <p class="hint" style="margin: 0 0 12px;">Shows in the browser tab and bookmarks. Square images work best. Images only, max 5MB.</p>
-      <div id="favicon-current" class="current-image"></div>
-      <div class="field" style="margin-top: 12px;">
-        <input type="file" id="favicon-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
-      </div>
-      <div class="form-actions" style="margin-top: 0;">
-        <button class="btn btn--sm" type="button" id="favicon-upload-btn">Upload icon</button>
-        <button class="btn btn--sm" type="button" id="favicon-remove-btn">Reset to default</button>
-      </div>
-    </fieldset>
+    <div class="set-panel" id="panel-media" data-tab="media">
+      <fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 22px; margin-bottom: 22px;">
+        <legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">Hero image (Home page)</legend>
+        <p class="hint" style="margin: 0 0 12px;">Replaces the pixel-art scene next to the hero text. Images only, max 5MB.</p>
+        <div id="hero-image-current" class="current-image"></div>
+        <div class="field" style="margin-top: 12px;">
+          <input type="file" id="hero-image-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+        </div>
+        <div class="form-actions" style="margin-top: 0;">
+          <button class="btn btn--sm" type="button" id="hero-image-upload-btn">Upload image</button>
+          <button class="btn btn--sm" type="button" id="hero-image-remove-btn">Remove image</button>
+        </div>
+      </fieldset>
+
+      <fieldset style="border: 2px solid var(--ink); border-radius: var(--radius-md); padding: 20px 20px 22px; margin-bottom: 22px;">
+        <legend style="font-family: var(--font-display); font-size: 0.7rem; padding: 0 8px;">Favicon (browser tab icon)</legend>
+        <p class="hint" style="margin: 0 0 12px;">Shows in the browser tab and bookmarks. Square images work best. Images only, max 5MB.</p>
+        <div id="favicon-current" class="current-image"></div>
+        <div class="field" style="margin-top: 12px;">
+          <input type="file" id="favicon-file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+        </div>
+        <div class="form-actions" style="margin-top: 0;">
+          <button class="btn btn--sm" type="button" id="favicon-upload-btn">Upload icon</button>
+          <button class="btn btn--sm" type="button" id="favicon-remove-btn">Reset to default</button>
+        </div>
+      </fieldset>
+    </div>
 
     <form id="settings-form">
       <div id="settings-sections">Loading…</div>
