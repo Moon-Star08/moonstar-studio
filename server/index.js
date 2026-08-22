@@ -94,18 +94,20 @@ for (const [from, to] of Object.entries(CLEAN_URL_REDIRECTS)) {
   app.get(from, (req, res) => res.redirect(301, to));
 }
 
-// Protect admin HTML pages (everything except the login page itself).
-// These must be registered BEFORE express.static so auth is checked
-// before any file is served from public/admin.
-app.get('/admin', (req, res) => res.redirect('/admin/dashboard.html'));
-app.get('/admin/dashboard.html', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'dashboard.html'));
+// Admin pages — clean URLs (no ".html"), all auth-protected except login.
+// Registered BEFORE express.static so the clean paths can't bypass the auth
+// check. Old ".html" paths 301-redirect to the clean URL, preserving any query
+// string (so /admin/project-form.html?id=5 still lands on the edit form).
+const ADMIN_DIR = path.join(__dirname, '..', 'public', 'admin');
+app.get('/admin', (req, res) => res.redirect('/admin/dashboard'));
+app.get('/admin/login', (req, res) => res.sendFile(path.join(ADMIN_DIR, 'login.html')));
+['dashboard', 'project-form', 'settings'].forEach((name) => {
+  app.get('/admin/' + name, requireAuth, (req, res) => res.sendFile(path.join(ADMIN_DIR, name + '.html')));
 });
-app.get('/admin/project-form.html', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'project-form.html'));
-});
-app.get('/admin/settings.html', requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'settings.html'));
+app.get(/^\/admin\/([a-z-]+)\.html$/, (req, res) => {
+  const q = req.originalUrl.indexOf('?');
+  const suffix = q >= 0 ? req.originalUrl.slice(q) : '';
+  res.redirect(301, '/admin/' + req.params[0] + suffix);
 });
 
 // Uploaded images live on the persistent disk (data/uploads), not in the

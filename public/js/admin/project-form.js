@@ -45,7 +45,7 @@
     try {
       var res = await fetch('/api/admin/projects/' + editId, { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       if (!res.ok) throw new Error('Not found');
@@ -115,7 +115,7 @@
       var res = await fetch(url, { method: method, body: formData, credentials: 'same-origin' });
 
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
 
@@ -127,7 +127,7 @@
         return;
       }
 
-      window.location.href = '/admin/dashboard.html';
+      window.location.href = '/admin/dashboard';
     } catch (err) {
       showError('Something went wrong. Please try again.');
       submitBtn.disabled = false;

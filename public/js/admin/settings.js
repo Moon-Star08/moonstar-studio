@@ -302,7 +302,7 @@
     try {
       var res = await fetch('/api/admin/settings', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var content = await res.json();
@@ -325,7 +325,7 @@
         body: JSON.stringify(collectForm()),
       });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       if (!res.ok) throw new Error('Save failed');
@@ -345,7 +345,7 @@
     try {
       var res = await fetch('/api/admin/settings/reset', { method: 'POST', credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var content = await res.json();
@@ -382,7 +382,7 @@
           body: formData,
         });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         var data = await res.json();
@@ -407,7 +407,7 @@
       try {
         var res = await fetch('/api/admin/settings/hero-image', { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         var data = await res.json();
@@ -448,7 +448,7 @@
           body: formData,
         });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         var data = await res.json();
@@ -473,7 +473,7 @@
       try {
         var res = await fetch('/api/admin/settings/favicon', { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         var data = await res.json();

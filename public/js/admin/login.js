@@ -26,7 +26,7 @@
       });
 
       if (res.ok) {
-        window.location.href = '/admin/dashboard.html';
+        window.location.href = '/admin/dashboard';
         return;
       }
 

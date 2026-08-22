@@ -44,7 +44,7 @@
         '<td>' + escapeHtml(updated) + '</td>' +
         '<td>' +
           '<div class="row-actions">' +
-            '<a class="btn btn--sm" href="/admin/project-form.html?id=' + p.id + '">Edit</a>' +
+            '<a class="btn btn--sm" href="/admin/project-form?id=' + p.id + '">Edit</a>' +
             '<button class="btn btn--sm toggle-publish-btn" type="button" data-id="' + p.id + '" data-published="' + (p.published ? '1' : '0') + '" data-title="' + escapeHtml(p.title) + '">' + toggleLabel + '</button>' +
             '<button class="btn btn--sm delete-btn" type="button" data-id="' + p.id + '" data-title="' + escapeHtml(p.title) + '">Delete</button>' +
           '</div>' +
@@ -58,7 +58,7 @@
     try {
       var res = await fetch('/api/admin/projects', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var projects = await res.json();
@@ -83,7 +83,7 @@
       try {
         var res = await fetch('/api/admin/projects/' + id, { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         if (!res.ok) throw new Error('Delete failed');
@@ -112,7 +112,7 @@
           body: JSON.stringify({ published: nextPublished }),
         });
         if (tRes.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         if (!tRes.ok) throw new Error('Update failed');
@@ -159,7 +159,7 @@
     try {
       var res = await fetch('/api/admin/messages', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var messages = await res.json();
@@ -184,7 +184,7 @@
       try {
         var res = await fetch('/api/admin/messages/' + id, { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         if (!res.ok) throw new Error('Delete failed');
@@ -223,7 +223,7 @@
     try {
       var res = await fetch('/api/admin/login-attempts', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var rows = await res.json();
@@ -244,7 +244,7 @@
       try {
         var res = await fetch('/api/admin/login-attempts', { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         if (!res.ok) throw new Error('Clear failed');
@@ -262,7 +262,7 @@
     try {
       var res = await fetch('/api/admin/analytics', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var data = await res.json();
@@ -300,7 +300,7 @@
     try {
       var res = await fetch('/api/admin/users', { credentials: 'same-origin' });
       if (res.status === 401) {
-        window.location.href = '/admin/login.html';
+        window.location.href = '/admin/login';
         return;
       }
       var rows = await res.json();
@@ -326,7 +326,7 @@
       try {
         var res = await fetch('/api/admin/users/' + id, { method: 'DELETE', credentials: 'same-origin' });
         if (res.status === 401) {
-          window.location.href = '/admin/login.html';
+          window.location.href = '/admin/login';
           return;
         }
         if (!res.ok) throw new Error('Delete failed');
