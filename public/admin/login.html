@@ -43,6 +43,10 @@
   #form-alert { margin-bottom: 16px; }
   .adm-card .v2-field { margin-bottom: 18px; }
   .adm-card .v2-btn { width: 100%; justify-content: center; margin-top: 6px; cursor: pointer; }
+  /* red LOG IN button with ink expansion-fill on hover */
+  .adm-card .v2-btn--primary { background: var(--red); border-color: var(--red); color: #fff; }
+  .adm-card .v2-btn--primary::before { background: var(--ink); }
+  .adm-card .v2-btn--primary:hover { color: #fff; border-color: var(--ink); }
   .adm-foot {
     margin-top: 22px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em;
     text-transform: uppercase; color: rgba(22, 21, 19, .4);
