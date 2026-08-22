@@ -159,7 +159,10 @@
 .v2-sec--ink .v2-field label { color: rgba(244, 241, 234, .55); }
 .v2-sec--ink .v2-field input, .v2-sec--ink .v2-field select, .v2-sec--ink .v2-field textarea { color: var(--bone); border-bottom-color: var(--hair-bone); }
 .v2-sec--ink .v2-field input:focus, .v2-sec--ink .v2-field select:focus, .v2-sec--ink .v2-field textarea:focus { border-color: var(--red); }
-.v2-sec--ink .v2-field select option { color: #161513; }
+/* dark dropdown list: ink background, bone text, red highlight (instead of the OS white/blue) */
+.v2-sec--ink .v2-field select { accent-color: var(--red); }
+.v2-sec--ink .v2-field select option { background: #1c1b18; color: var(--bone); }
+.v2-sec--ink .v2-field select option:checked { background: var(--red); color: #fff; }
 .v2-sec--ink .v2-form .v2-btn--primary { background: var(--bone); color: var(--ink); }
 .v2-sec--ink .v2-form .v2-btn--primary:hover { background: var(--red); color: var(--bone); }
 .v2-sec--ink .alert--success { background: rgba(244, 241, 234, .06); border-color: var(--hair-bone); color: var(--bone); }
