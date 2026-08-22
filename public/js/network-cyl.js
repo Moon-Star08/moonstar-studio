@@ -9,7 +9,7 @@
   var sec = document.getElementById('beyond');
   var cyl = document.getElementById('netCyl');
   if (!sec || !cyl) return;
-  if (reduce) return; // static stacked layout handled by CSS
+  if (reduce || innerWidth <= 760) return; // static stacked layout handled by CSS (also on phones)
 
   var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
   var lerp = function (a, b, t) { return a + (b - a) * t; };

@@ -9,6 +9,9 @@
   if (!section || !track) return;
 
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // On phones (or reduced motion) skip the horizontal pin — CSS lays the cards
+  // out as a simple vertical stack instead.
+  if (reduced || innerWidth <= 760) { section.style.height = ''; track.style.transform = ''; return; }
   var distance = 0, current = 0, target = 0, lastW = 0, lastH = 0;
   var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
 

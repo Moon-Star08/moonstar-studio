@@ -355,3 +355,29 @@
   .phase { width: 100%; max-width: 440px; }
   .hz-note { text-align: left; }
 }
+
+/* ── phone fallbacks: drop the 3D/pinned mechanics for simple stacked layouts ── */
+@media (max-width: 760px) {
+  /* services cylinder → plain stacked list */
+  .cyl-sec { height: auto !important; }
+  .cyl-pin { position: static; height: auto; display: block; padding: 12vh 6vw 8vh; }
+  .cyl-wrap { height: auto; perspective: none; overflow: visible; }
+  .cyl { width: 100%; height: auto; transform: none !important; display: flex; flex-direction: column; gap: 2.6vh; align-items: flex-start; }
+  .cyl-row { position: static; transform: none !important; opacity: 1 !important; gap: 14px; }
+  .cyl-row h3 { color: var(--ink); font-size: clamp(28px, 8vw, 40px); }
+  .cyl-wrap::before, .cyl-wrap::after { display: none; }
+  .cyl-foot { padding-bottom: 2vh; text-align: left; }
+  .cyl-intro { text-align: left; }
+
+  /* detail cards → wrapped vertical stack */
+  .hz-sec { height: auto !important; }
+  .hz-pin { position: static; height: auto; display: block; padding: 10vh 0; }
+  .hz-head { padding: 0 6vw; }
+  .hz-note { text-align: left; }
+  .hz-track { transform: none !important; flex-wrap: wrap; padding: 0 6vw; margin: 4vh 0 0; gap: 16px; }
+  .phase { width: 100%; max-width: none; }
+
+  /* legal accordion + CTA breathing room on phones */
+  .legal-faq-sec { padding: 4vh 6vw 12vh; }
+  .v2-cta-ghost { padding: 12vh 6vw; }
+}

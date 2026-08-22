@@ -82,7 +82,32 @@ body::after {
   border: 1px solid currentColor; padding: 9px 18px; font-family: var(--mono);
   font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
 }
-@media (max-width: 760px) { .v2-nav .links a:not(.buy) { display: none; } }
+/* ── mobile burger menu + drawer ──────────────────────────────────────── */
+.v2-burger {
+  display: none; position: fixed; top: 14px; right: 3.2vw; z-index: 90;
+  flex-direction: column; justify-content: center; gap: 6px; width: 42px; height: 42px;
+  background: none; border: 0; cursor: pointer; padding: 9px; color: var(--ink);
+}
+.v2-burger span { display: block; width: 100%; height: 2px; background: currentColor; transition: transform .4s var(--ease), opacity .3s; }
+.v2-burger.open { color: var(--bone); }
+.v2-burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.v2-burger.open span:nth-child(2) { opacity: 0; }
+.v2-burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+.v2-drawer {
+  position: fixed; inset: 0; z-index: 80; background: var(--ink); color: var(--bone);
+  display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 14vh 8vw;
+  transform: translateY(-100%); transition: transform .5s var(--ease); visibility: hidden;
+}
+.v2-drawer.open { transform: translateY(0); visibility: visible; }
+.v2-drawer a {
+  font-family: var(--arch); font-weight: 900; text-transform: uppercase; text-decoration: none;
+  font-size: clamp(30px, 10vw, 56px); letter-spacing: -.02em; line-height: 1.05; color: var(--bone);
+  padding: 10px 0; border-bottom: 1px solid rgba(244, 241, 234, .12);
+}
+.v2-drawer a:hover { color: var(--red); }
+body.v2-drawer-open { overflow: hidden; }
+@media (max-width: 760px) { .v2-nav .links { display: none; } .v2-burger { display: flex; } }
+@media (min-width: 761px) { .v2-drawer { display: none; } }
 
 section { position: relative; }
 .v2-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
