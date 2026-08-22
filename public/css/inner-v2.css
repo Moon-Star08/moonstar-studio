@@ -163,6 +163,17 @@
 .v2-sec--ink .v2-field select { accent-color: var(--red); }
 .v2-sec--ink .v2-field select option { background: #1c1b18; color: var(--bone); }
 .v2-sec--ink .v2-field select option:checked { background: var(--red); color: #fff; }
+/* stop the browser autofill from painting fields light blue on the dark form */
+.v2-sec--ink .v2-field input:-webkit-autofill,
+.v2-sec--ink .v2-field input:-webkit-autofill:hover,
+.v2-sec--ink .v2-field input:-webkit-autofill:focus,
+.v2-sec--ink .v2-field input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--bone);
+  -webkit-box-shadow: 0 0 0 1000px #161513 inset;
+  box-shadow: 0 0 0 1000px #161513 inset;
+  caret-color: var(--bone);
+  transition: background-color 9999s ease-in-out 0s;
+}
 .v2-sec--ink .v2-form .v2-btn--primary { background: var(--bone); color: var(--ink); }
 .v2-sec--ink .v2-form .v2-btn--primary:hover { background: var(--red); color: var(--bone); }
 .v2-sec--ink .alert--success { background: rgba(244, 241, 234, .06); border-color: var(--hair-bone); color: var(--bone); }
