@@ -74,10 +74,27 @@
 
   function show(i) { idx = (i + messages.length) % messages.length; build(messages[idx]); }
 
+  function autoStart() {
+    if (reduce) return;
+    clearInterval(auto);
+    auto = setInterval(function () { show(idx + 1); }, 6000);
+  }
+
   function start() {
     messages = buildMessages();
     show(0);
-    if (!reduce) { clearInterval(auto); auto = setInterval(function () { show(idx + 1); }, 6000); }
+    autoStart();
+  }
+
+  // Manual "Flip" button: advance now, then restart the auto timer so it
+  // doesn't jump again immediately.
+  var nextBtn = document.getElementById('boardNext');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function () {
+      if (!messages.length) return;
+      show(idx + 1);
+      autoStart();
+    });
   }
 
   // Build once now, and rebuild if site-content updates the contact values.

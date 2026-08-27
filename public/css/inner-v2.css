@@ -390,3 +390,5 @@
 .reach-links a, .reach-links span { color: rgba(22, 21, 19, .68); text-decoration: none; }
 .reach-links a:hover { color: var(--red); }
 @media (max-width: 640px) { .flap-board { padding: 14px; } }
+
+.board-next { margin-top: 22px; }
