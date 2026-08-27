@@ -381,3 +381,12 @@
   .legal-faq-sec { padding: 4vh 6vw 12vh; }
   .v2-cta-ghost { padding: 12vh 6vw; }
 }
+
+/* ── split-flap contact board (Contact "reach me") ────────────────────── */
+.flap-board { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; width: max-content; max-width: 100%; background: var(--ink); padding: 20px; border-radius: 4px; margin-top: 5vh; overflow: hidden; }
+.flap-board .fb-row { display: flex; gap: 3px; }
+.flap-board .fb-cell { flex: 0 0 auto; width: 1.1em; height: 1.5em; line-height: 1.5em; text-align: center; font-family: var(--mono); font-weight: 500; background: #0d0d0d; color: var(--bone); border-radius: 3px; box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .06); }
+.reach-links { margin-top: 3.4vh; display: flex; flex-wrap: wrap; gap: 10px 26px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; }
+.reach-links a, .reach-links span { color: rgba(22, 21, 19, .68); text-decoration: none; }
+.reach-links a:hover { color: var(--red); }
+@media (max-width: 640px) { .flap-board { padding: 14px; } }
