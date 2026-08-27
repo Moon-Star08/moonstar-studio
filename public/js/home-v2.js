@@ -311,11 +311,16 @@
       n.style.left = (i / (steps.length - 1) * 100) + '%';
       rail.appendChild(n);
     }
+    // Big display word per step (falls back to the step number if the list
+    // doesn't line up). Sized to fit since the phrases vary in length.
+    var bigWords = ['THE BEST', 'OF THE BEST', 'OF THE BEST', 'SIR'];
     var detent = -1;
     function apply(idx) {
       if (idx === detent) return;
       detent = idx;
-      title.textContent = String(idx + 1).padStart(2, '0');
+      var bw = bigWords[idx] || String(idx + 1).padStart(2, '0');
+      title.textContent = bw;
+      title.style.fontSize = Math.max(40, Math.min(220, Math.floor((innerWidth * 0.9) / (bw.length * 0.62)))) + 'px';
       num.textContent = 'step ' + (idx + 1) + ' / ' + steps.length;
       name.textContent = steps[idx].title;
       name.classList.remove('stamped'); void name.offsetWidth; name.classList.add('stamped');

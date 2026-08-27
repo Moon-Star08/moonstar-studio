@@ -250,7 +250,7 @@ section { position: relative; }
 }
 .v2-proc-mask { overflow: hidden; line-height: .92; text-align: center; }
 #v2ProcTitle {
-  display: block; font-size: clamp(64px, 15vw, 220px); letter-spacing: -.02em;
+  display: block; font-size: clamp(64px, 15vw, 220px); letter-spacing: -.02em; white-space: nowrap;
   font-variation-settings: 'wght' 100; will-change: transform; transform: translateY(115%);
 }
 .v2-proc-hud { position: absolute; left: 6vw; bottom: 9vh; opacity: 0; max-width: 60vw; }
