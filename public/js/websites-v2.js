@@ -65,7 +65,6 @@
       var titleSpan = proj.querySelector('.wk-proj__title span');
       var idx = proj.querySelector('.wk-proj__idx');
       var rest = [proj.querySelector('.wk-proj__desc'), proj.querySelector('.wk-proj__tags')].filter(Boolean);
-      if (media) reg(gsap.fromTo(media, { scale: .9 }, { scale: 1.02, ease: 'none', scrollTrigger: { trigger: proj, start: 'top bottom', end: 'bottom top', scrub: true } }));
       if (img) reg(gsap.fromTo(img, { yPercent: -6, scale: 1.1 }, { yPercent: 6, scale: 1, ease: 'none', scrollTrigger: { trigger: proj, start: 'top bottom', end: 'bottom top', scrub: true } }));
       if (titleSpan) reg(gsap.from(titleSpan, { yPercent: 115, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: proj, start: 'top 74%' } }));
       if (idx) reg(gsap.from(idx, { y: 18, opacity: 0, duration: .7, scrollTrigger: { trigger: proj, start: 'top 72%' } }));
@@ -89,7 +88,7 @@
         (p.short_description ? '<p class="wk-proj__desc">' + esc(p.short_description) + '</p>' : '') +
         (tags ? '<div class="wk-proj__tags">' + tags + '</div>' : '') +
       '</div>' +
-      '<div class="wk-proj__media">' + media + go + '</div>' +
+      '<div class="wk-proj__media">' + media + '<span class="wk-proj__glare" aria-hidden="true"></span>' + go + '</div>' +
     '</article>';
   }
 
@@ -100,6 +99,39 @@
     if (!projects.length) { gallery.innerHTML = '<p class="v2-state" style="padding:6vh 0">No projects match that filter yet.</p>'; return; }
     gallery.innerHTML = projects.map(function (p, i) { return rowHtml(p, i, projects.length); }).join('');
     animateRows();
+    initTilt();
+  }
+
+  // Spring-smoothed 3D tilt on each project frame (comet-card style): the frame
+  // leans toward the cursor and a glare drifts across, settling back on leave.
+  var tilts = [], tiltRAF = null;
+  function initTilt() {
+    if (reduce) return;
+    tilts = [];
+    gsap.utils.toArray('.wk-proj__media').forEach(function (media) {
+      var s = { tx: 0, ty: 0, cx: 0, cy: 0, vx: 0, vy: 0, th: 0, ch: 0, vh: 0, over: false, media: media, glare: media.querySelector('.wk-proj__glare') };
+      media.addEventListener('pointermove', function (e) { var r = media.getBoundingClientRect(); s.tx = (e.clientX - r.left) / r.width - 0.5; s.ty = (e.clientY - r.top) / r.height - 0.5; });
+      media.addEventListener('pointerenter', function () { s.over = true; });
+      media.addEventListener('pointerleave', function () { s.over = false; s.tx = 0; s.ty = 0; });
+      tilts.push(s);
+    });
+    if (!tiltRAF) loopTilt();
+  }
+  function loopTilt() {
+    var dt = 1 / 60, K = 90, D = 14;
+    for (var i = 0; i < tilts.length; i++) {
+      var s = tilts[i];
+      s.vx += ((s.tx - s.cx) * K - s.vx * D) * dt; s.cx += s.vx * dt;
+      s.vy += ((s.ty - s.cy) * K - s.vy * D) * dt; s.cy += s.vy * dt;
+      s.th = s.over ? 1 : 0; s.vh += ((s.th - s.ch) * K - s.vh * D) * dt; s.ch += s.vh * dt;
+      var rotX = (s.cy * 11).toFixed(2), rotY = (-s.cx * 11).toFixed(2), sc = (1 + s.ch * 0.03).toFixed(3), z = (s.ch * 34).toFixed(1);
+      s.media.style.transform = 'perspective(1100px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(' + z + 'px) scale(' + sc + ')';
+      if (s.glare) {
+        s.glare.style.opacity = (s.ch * 0.5).toFixed(2);
+        s.glare.style.background = 'radial-gradient(circle at ' + ((s.cx * 100) + 50).toFixed(0) + '% ' + ((s.cy * 100) + 50).toFixed(0) + '%, rgba(255,255,255,.75) 8%, rgba(255,255,255,0) 60%)';
+      }
+    }
+    tiltRAF = requestAnimationFrame(loopTilt);
   }
 
   PortfolioAPI.fetchProjects()
