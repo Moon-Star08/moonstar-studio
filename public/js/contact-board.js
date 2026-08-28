@@ -21,7 +21,9 @@
     var em = email.toUpperCase();
     var at = em.indexOf('@');
     if (at > 0 && em.length > 16) em = em.slice(0, at) + '\n' + em.slice(at);
-    return ['SAY HI', em, phone, loc.toUpperCase()];
+    // Phone → strip spaces so the digits sit as one solid run (no blank tiles).
+    var ph = phone.replace(/\s+/g, '');
+    return ['SAY HI', em, ph, loc.toUpperCase()];
   }
 
   function cellSize(cols) {
