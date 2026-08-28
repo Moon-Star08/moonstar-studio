@@ -274,7 +274,7 @@ section { position: relative; }
 .v2-svcband-row .idx { font-family: var(--mono); font-size: 11px; color: rgba(22, 21, 19, .45); letter-spacing: .14em; }
 .v2-svcband-row h3 { font-weight: 700; font-size: clamp(18px, 2.2vw, 26px); letter-spacing: -.01em; }
 .v2-svcband-row p { font-size: 14px; line-height: 1.55; color: rgba(22, 21, 19, .65); max-width: 56ch; }
-@media (max-width: 760px) { .v2-svcband-row { grid-template-columns: 32px 1fr; } .v2-svcband-row p { grid-column: 1 / -1; margin-top: 6px; } }
+@media (max-width: 760px) { .v2-svcband-row { grid-template-columns: 32px 1fr; } .v2-svcband-row > p, .v2-svcband-row .svc-copy { grid-column: 1 / -1; margin-top: 6px; } }
 
 /* tester */
 .v2-tester { background: var(--bone); padding: 16vh 3.2vw; position: relative; }
@@ -313,6 +313,7 @@ section { position: relative; }
 }
 .v2-presets button:hover, .v2-presets button.on { background: var(--ink); color: var(--bone); border-color: var(--ink); }
 @media (max-width: 900px) { .v2-tester-controls { grid-template-columns: 1fr 1fr; gap: 26px; } }
+@media (max-width: 560px) { .v2-tester-controls { grid-template-columns: 1fr; } }
 
 /* features */
 .v2-features { background: var(--bone); padding: 4vh 3.2vw 16vh; }

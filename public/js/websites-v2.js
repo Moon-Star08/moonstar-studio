@@ -4,6 +4,7 @@
   'use strict';
 
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var coarse = matchMedia('(pointer: coarse)').matches; // touch devices: no tilt
   var gallery = document.getElementById('v2WorkGallery');
   var filterBar = document.getElementById('v2Filters');
   var esc = window.PortfolioAPI && PortfolioAPI.escapeHtml;
@@ -107,7 +108,7 @@
   // and to the pricing plan cards (tilt only, to keep the copy crisp).
   var tilts = [], tiltRAF = null;
   function addTilt(el, depth) {
-    if (reduce || el.__tilt) return;
+    if (reduce || coarse || el.__tilt) return;
     el.__tilt = true;
     var s = { tx: 0, ty: 0, cx: 0, cy: 0, vx: 0, vy: 0, th: 0, ch: 0, vh: 0, over: false, el: el, d: depth || 11, glare: el.querySelector('.wk-proj__glare') };
     el.addEventListener('pointermove', function (e) { var r = el.getBoundingClientRect(); s.tx = (e.clientX - r.left) / r.width - 0.5; s.ty = (e.clientY - r.top) / r.height - 0.5; });
