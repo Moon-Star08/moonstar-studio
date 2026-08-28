@@ -106,7 +106,14 @@ body::after {
 }
 .v2-drawer a:hover { color: var(--red); }
 body.v2-drawer-open { overflow: hidden; }
-@media (max-width: 760px) { .v2-nav .links { display: none; } .v2-burger { display: flex; } }
+@media (max-width: 760px) {
+  .v2-nav .links { display: none; }
+  .v2-burger { display: flex; }
+  /* Drop the mix-blend nav + animated grain on phones — both repaint on scroll
+     and cause a white flash at the top. Use a frosted bar instead. */
+  .v2-nav { mix-blend-mode: normal; color: var(--ink); background: rgba(244, 241, 234, .9); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--hair-ink); }
+  body::after { display: none; }
+}
 @media (min-width: 761px) { .v2-drawer { display: none; } }
 
 section { position: relative; }
