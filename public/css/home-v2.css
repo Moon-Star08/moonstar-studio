@@ -388,9 +388,11 @@ section { position: relative; }
 }
 .v2-frame { position: relative; height: 58vh; flex: none; width: 40vw; overflow: hidden; background: #dedacf; }
 @media (max-width: 760px) {
-  .v2-frame { width: 78vw; height: 46vh; }
-  #v2WorkPin { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
-  .v2-track { transform: none !important; height: auto; padding: 2vh 3.2vw 4vh; }
+  /* stack the recent-work frames vertically on phones — no horizontal scroll
+     container to hijack the vertical swipe (which caused scroll jumping). */
+  #v2WorkPin { overflow: visible; }
+  .v2-track { transform: none !important; flex-direction: column; align-items: stretch; width: auto; height: auto; gap: 14px; padding: 2vh 3.2vw 4vh; }
+  .v2-frame { width: 100%; height: 44vh; }
 }
 .v2-frame img { width: 112%; height: 112%; object-fit: cover; filter: grayscale(.25) contrast(1.04); will-change: transform; }
 .v2-frame .cap {
