@@ -102,20 +102,22 @@
     initTilt();
   }
 
-  // Spring-smoothed 3D tilt on each project frame (comet-card style): the frame
-  // leans toward the cursor and a glare drifts across, settling back on leave.
+  // Spring-smoothed 3D tilt (comet-card style): an element leans toward the
+  // cursor and settles back on leave. Applied to project frames (with glare)
+  // and to the pricing plan cards (tilt only, to keep the copy crisp).
   var tilts = [], tiltRAF = null;
-  function initTilt() {
-    if (reduce) return;
-    tilts = [];
-    gsap.utils.toArray('.wk-proj__media').forEach(function (media) {
-      var s = { tx: 0, ty: 0, cx: 0, cy: 0, vx: 0, vy: 0, th: 0, ch: 0, vh: 0, over: false, media: media, glare: media.querySelector('.wk-proj__glare') };
-      media.addEventListener('pointermove', function (e) { var r = media.getBoundingClientRect(); s.tx = (e.clientX - r.left) / r.width - 0.5; s.ty = (e.clientY - r.top) / r.height - 0.5; });
-      media.addEventListener('pointerenter', function () { s.over = true; });
-      media.addEventListener('pointerleave', function () { s.over = false; s.tx = 0; s.ty = 0; });
-      tilts.push(s);
-    });
+  function addTilt(el, depth) {
+    if (reduce || el.__tilt) return;
+    el.__tilt = true;
+    var s = { tx: 0, ty: 0, cx: 0, cy: 0, vx: 0, vy: 0, th: 0, ch: 0, vh: 0, over: false, el: el, d: depth || 11, glare: el.querySelector('.wk-proj__glare') };
+    el.addEventListener('pointermove', function (e) { var r = el.getBoundingClientRect(); s.tx = (e.clientX - r.left) / r.width - 0.5; s.ty = (e.clientY - r.top) / r.height - 0.5; });
+    el.addEventListener('pointerenter', function () { s.over = true; });
+    el.addEventListener('pointerleave', function () { s.over = false; s.tx = 0; s.ty = 0; });
+    tilts.push(s);
     if (!tiltRAF) loopTilt();
+  }
+  function initTilt() {
+    [].forEach.call(document.querySelectorAll('.wk-proj__media'), function (el) { addTilt(el, 11); });
   }
   function loopTilt() {
     var dt = 1 / 60, K = 90, D = 14;
@@ -124,8 +126,8 @@
       s.vx += ((s.tx - s.cx) * K - s.vx * D) * dt; s.cx += s.vx * dt;
       s.vy += ((s.ty - s.cy) * K - s.vy * D) * dt; s.cy += s.vy * dt;
       s.th = s.over ? 1 : 0; s.vh += ((s.th - s.ch) * K - s.vh * D) * dt; s.ch += s.vh * dt;
-      var rotX = (s.cy * 11).toFixed(2), rotY = (-s.cx * 11).toFixed(2), sc = (1 + s.ch * 0.03).toFixed(3), z = (s.ch * 34).toFixed(1);
-      s.media.style.transform = 'perspective(1100px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(' + z + 'px) scale(' + sc + ')';
+      var rotX = (s.cy * s.d).toFixed(2), rotY = (-s.cx * s.d).toFixed(2), sc = (1 + s.ch * 0.03).toFixed(3), z = (s.ch * 34).toFixed(1);
+      s.el.style.transform = 'perspective(1100px) rotateX(' + rotX + 'deg) rotateY(' + rotY + 'deg) translateZ(' + z + 'px) scale(' + sc + ')';
       if (s.glare) {
         s.glare.style.opacity = (s.ch * 0.5).toFixed(2);
         s.glare.style.background = 'radial-gradient(circle at ' + ((s.cx * 100) + 50).toFixed(0) + '% ' + ((s.cy * 100) + 50).toFixed(0) + '%, rgba(255,255,255,.75) 8%, rgba(255,255,255,0) 60%)';
@@ -133,6 +135,8 @@
     }
     tiltRAF = requestAnimationFrame(loopTilt);
   }
+  // Pricing plan cards are static in the HTML — wire them once, with a gentler tilt.
+  [].forEach.call(document.querySelectorAll('.wk-plan'), function (el) { addTilt(el, 8); });
 
   PortfolioAPI.fetchProjects()
     .then(function (projects) {
