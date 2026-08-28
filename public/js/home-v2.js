@@ -392,7 +392,9 @@
   }
 
   function initWorkScroll(track) {
-    if (reduce) return;
+    // On phones the pinned horizontal scroll pops out over other sections and
+    // leaves a gap — skip it and let the strip scroll natively (CSS handles it).
+    if (reduce || innerWidth <= 760) return;
     var dist = function () { return Math.max(0, track.scrollWidth - innerWidth); };
     gsap.to(track, {
       x: function () { return -dist(); }, ease: 'none',

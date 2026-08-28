@@ -17,7 +17,11 @@
     var email = (nodes[0] && nodes[0].textContent.trim()) || 'moonstarstudio.co@gmail.com';
     var phone = (nodes[1] && nodes[1].textContent.trim()) || '+855 85 887 688';
     var loc = (nodes[2] && nodes[2].textContent.trim()) || 'Cambodia';
-    return ['SAY HI', email.toUpperCase(), phone, loc.toUpperCase()];
+    // Long email → break onto two rows at the "@" so it fits the board.
+    var em = email.toUpperCase();
+    var at = em.indexOf('@');
+    if (at > 0 && em.length > 16) em = em.slice(0, at) + '\n' + em.slice(at);
+    return ['SAY HI', em, phone, loc.toUpperCase()];
   }
 
   function cellSize(cols) {

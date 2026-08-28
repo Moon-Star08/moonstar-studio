@@ -358,16 +358,16 @@
 
 /* ── phone fallbacks: drop the 3D/pinned mechanics for simple stacked layouts ── */
 @media (max-width: 760px) {
-  /* services cylinder → plain stacked list */
+  /* services cylinder → plain stacked list (flat block flow, no 3D/grid) */
   .cyl-sec { height: auto !important; }
-  .cyl-pin { position: static; height: auto; display: block; padding: 12vh 6vw 8vh; }
-  .cyl-wrap { height: auto; perspective: none; overflow: visible; }
-  .cyl { width: 100%; height: auto; transform: none !important; display: flex; flex-direction: column; gap: 2.6vh; align-items: flex-start; }
-  .cyl-row { position: static; transform: none !important; opacity: 1 !important; gap: 14px; }
-  .cyl-row h3 { color: var(--ink); font-size: clamp(28px, 8vw, 40px); }
-  .cyl-wrap::before, .cyl-wrap::after { display: none; }
-  .cyl-foot { padding-bottom: 2vh; text-align: left; }
+  .cyl-pin { position: static; height: auto; display: block; padding: 10vh 6vw 6vh; }
   .cyl-intro { text-align: left; }
+  .cyl-wrap { display: block; height: auto; perspective: none; overflow: visible; margin: 3vh 0 0; }
+  .cyl { position: static; width: 100%; height: auto; transform: none !important; display: flex; flex-direction: column; gap: 2.4vh; align-items: flex-start; }
+  .cyl-row { position: static; transform: none !important; opacity: 1 !important; gap: 14px; width: 100%; }
+  .cyl-row h3 { color: var(--ink); font-size: clamp(26px, 7.5vw, 38px); }
+  .cyl-wrap::before, .cyl-wrap::after { display: none; }
+  .cyl-foot { margin-top: 4vh; padding-bottom: 0; text-align: left; }
 
   /* detail cards → wrapped vertical stack */
   .hz-sec { height: auto !important; }
