@@ -329,7 +329,7 @@ section { position: relative; }
 }
 .v2-feat-row:hover .demo { color: var(--red); }
 .v2-feat-row .demo .tnum { font-variant-numeric: tabular-nums; }
-@media (max-width: 760px) { .v2-feat-row { grid-template-columns: 40px 1fr; } .v2-feat-row .demo { grid-column: 1 / -1; text-align: left; } }
+@media (max-width: 760px) { .v2-feat-row { grid-template-columns: 40px 1fr; } .v2-feat-row .demo { display: none; } }
 
 /* interlude */
 .v2-interlude { position: relative; height: 90vh; overflow: clip; background: var(--ink); }

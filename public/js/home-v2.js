@@ -17,7 +17,9 @@
   var $$ = function (s) { return [].slice.call(document.querySelectorAll(s)); };
 
   // ---------- substrate (smooth scroll) ----------
-  if (!reduce) {
+  // Skip Lenis on touch devices — native mobile scrolling is smoother than
+  // JS-driven smoothing, which feels laggy on phones.
+  if (!reduce && !touch) {
     var lenis = new Lenis({ duration: 1.1, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
