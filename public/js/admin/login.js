@@ -26,7 +26,8 @@
       });
 
       if (res.ok) {
-        window.location.href = '/admin/dashboard';
+        var next = new URLSearchParams(window.location.search).get('next');
+        window.location.href = (next && next.charAt(0) === '/') ? next : '/admin/dashboard';
         return;
       }
 

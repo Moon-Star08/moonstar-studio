@@ -110,6 +110,11 @@ app.get(/^\/admin\/([a-z-]+)\.html$/, (req, res) => {
   res.redirect(301, '/admin/' + req.params[0] + suffix);
 });
 
+// Private workout tracker — same admin auth. Not indexed.
+app.get('/workout', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'workout', 'index.html'));
+});
+
 // Uploaded images live on the persistent disk (data/uploads), not in the
 // public/ folder, so they survive redeploys alongside the database.
 app.use('/uploads', express.static(uploadDir));
