@@ -10,10 +10,14 @@
   var drawer = $('#wkDrawer'), panel = $('#wkPanel');
   var videoModal = $('#wkVideo'), videoFrame = $('#wkVideoFrame'), videoTitle = $('#wkVideoTitle');
   var PKEY = 'wk_progress_v1';
+  var EKEY = 'wk_ex_v1';
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function getProgress() { try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
   function setProgress(p) { try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {} }
+  function getEx() { try { return JSON.parse(localStorage.getItem(EKEY)) || {}; } catch (e) { return {}; } }
+  function setEx(o) { try { localStorage.setItem(EKEY, JSON.stringify(o)); } catch (e) {} }
+  function shortDate(iso) { var p = String(iso).split('-'); return p.length === 3 ? (parseInt(p[1], 10) + '/' + parseInt(p[2], 10)) : iso; }
 
   // today's day number from the plan start date
   var todayNum = null;
@@ -28,7 +32,12 @@
     var done = plan.days.filter(function (d) { return p[d.day]; }).length;
     $('#wkProgress').textContent = done + ' / ' + plan.days.length;
     var t = $('#wkTitle');
-    if (todayNum) t.innerHTML = 'Day ' + todayNum + ' <span style="color:var(--red)">· today</span>';
+    if (todayNum) {
+      var td = plan.days[todayNum - 1];
+      t.innerHTML = 'Day ' + todayNum + ' <span style="color:var(--red)">· today</span>';
+      var sub = document.querySelector('.wk-sub');
+      if (sub && td) sub.textContent = 'Today is ' + td.dayName + ', ' + fmtDate(td.date) + ' — day ' + todayNum + ' of ' + plan.days.length + '. Tap a day for the workout and food; tap an exercise for the how-to.';
+    }
   }
 
   function renderCalendar() {
@@ -38,7 +47,10 @@
       if (p[d.day]) cls.push('wk-cell--done');
       if (d.day === todayNum) cls.push('wk-cell--today');
       var check = p[d.day] ? '<span class="wk-cell__check">✓</span>' : (d.checkin ? '<span class="wk-cell__check">📏</span>' : '');
-      return '<button type="button" class="' + cls.join(' ') + '" data-day="' + d.day + '" aria-label="Day ' + d.day + '">' + d.day + check + '</button>';
+      return '<button type="button" class="' + cls.join(' ') + '" data-day="' + d.day + '" aria-label="Day ' + d.day + '">' +
+        '<span class="wk-cell__n">' + d.day + '</span>' +
+        (d.date ? '<span class="wk-cell__d">' + shortDate(d.date) + '</span>' : '') +
+        check + '</button>';
     }).join('');
   }
 
@@ -53,14 +65,18 @@
   }
 
   function exercisesHtml(d) {
+    var done = getEx()[d.day] || {};
     return d.exercises.map(function (ex, i) {
-      return '<button type="button" class="wk-ex" data-day="' + d.day + '" data-ex="' + i + '">' +
-        '<span class="wk-ex__play">▶</span>' +
-        '<span class="wk-ex__name">' + esc(ex.name) +
-        (ex.muscles ? '<span style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:rgba(22,21,19,.5);font-weight:400;margin-top:3px">' + esc(ex.muscles) + '</span>' : '') +
-        '</span>' +
-        '<span class="wk-ex__sets">' + ex.sets + ' × ' + esc(ex.reps) + '</span>' +
-        '</button>';
+      return '<div class="wk-ex ' + (done[i] ? 'is-done' : '') + '">' +
+        '<button type="button" class="wk-ex__main" data-day="' + d.day + '" data-ex="' + i + '">' +
+          '<span class="wk-ex__play">▶</span>' +
+          '<span class="wk-ex__name">' + esc(ex.name) +
+          (ex.muscles ? '<span style="display:block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:rgba(22,21,19,.5);font-weight:400;margin-top:3px">' + esc(ex.muscles) + '</span>' : '') +
+          '</span>' +
+          '<span class="wk-ex__sets">' + ex.sets + ' × ' + esc(ex.reps) + '</span>' +
+        '</button>' +
+        '<button type="button" class="wk-ex__check" data-exdone="' + i + '" data-day="' + d.day + '" aria-label="Mark exercise done">✓</button>' +
+        '</div>';
     }).join('');
   }
 
@@ -81,7 +97,9 @@
       body = '<div class="wk-sec"><div class="wk-sec__label">// today</div>' +
         '<p class="wk-rest-note">Rest day — take it easy. A 15–30 minute walk and some light stretching keeps you moving without taxing recovery. Still hit your food and protein.</p></div>';
     } else {
-      body = '<div class="wk-sec"><div class="wk-sec__label">// workout · tap an exercise for the video</div>' + exercisesHtml(d) + '</div>';
+      var exDone = getEx()[d.day] || {};
+      var doneCount = d.exercises.filter(function (_, i) { return exDone[i]; }).length;
+      body = '<div class="wk-sec"><div class="wk-sec__label">// workout · ' + doneCount + '/' + d.exercises.length + ' done · tap name for video, ✓ to log</div>' + exercisesHtml(d) + '</div>';
     }
 
     panel.innerHTML =
@@ -136,7 +154,16 @@
   });
   drawer.addEventListener('click', function (e) {
     if (e.target.dataset.close) { closeDrawer(); return; }
-    var ex = e.target.closest('.wk-ex');
+    var chk = e.target.closest('.wk-ex__check');
+    if (chk) {
+      var cd = parseInt(chk.dataset.day, 10), idx = parseInt(chk.dataset.exdone, 10);
+      var all = getEx(), dd = all[cd] || {};
+      if (dd[idx]) delete dd[idx]; else dd[idx] = true;
+      all[cd] = dd; setEx(all);
+      openDay(cd);
+      return;
+    }
+    var ex = e.target.closest('.wk-ex__main');
     if (ex) {
       var d = plan.days.filter(function (x) { return x.day === parseInt(ex.dataset.day, 10); })[0];
       openVideo(d.exercises[parseInt(ex.dataset.ex, 10)]);
