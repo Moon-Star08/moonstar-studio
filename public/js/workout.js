@@ -31,6 +31,11 @@
   function setEx(o) { try { localStorage.setItem(EKEY, JSON.stringify(o)); } catch (e) {} }
   function shortDate(iso) { var p = String(iso).split('-'); return p.length === 3 ? (parseInt(p[1], 10) + '/' + parseInt(p[2], 10)) : iso; }
 
+  // Freeze the page behind an open sheet so scrolling the sheet never drags the background.
+  var lockY = 0, locked = false;
+  function lockScroll() { if (locked) return; lockY = window.scrollY || 0; document.body.style.top = -lockY + 'px'; document.body.classList.add('wk-locked'); locked = true; }
+  function unlockScroll() { if (!locked) return; document.body.classList.remove('wk-locked'); document.body.style.top = ''; window.scrollTo(0, lockY); locked = false; }
+
   // today's day number from the plan start date
   var todayNum = null;
   if (plan.start) {
@@ -95,6 +100,8 @@
   function openDay(day) {
     var d = plan.days.filter(function (x) { return x.day === day; })[0];
     if (!d) return;
+    var wasOpen = !drawer.hidden;
+    var keepScroll = wasOpen ? panel.scrollTop : 0;
     var p = getProgress();
     var isDone = !!p[d.day];
     var chips = '<div class="wk-nutri">' +
@@ -126,8 +133,8 @@
       '<button type="button" class="wk-done-btn ' + (isDone ? 'is-done' : '') + '" id="wkDone" data-day="' + d.day + '">' + (isDone ? '✓ Done — tap to undo' : 'Mark day ' + d.day + ' done') + '</button>';
 
     drawer.hidden = false;
-    document.body.style.overflow = 'hidden';
-    panel.scrollTop = 0;
+    if (!wasOpen) lockScroll();
+    panel.scrollTop = keepScroll;
   }
 
   function fmtDate(iso) {
@@ -136,7 +143,7 @@
     return mo + ' ' + parseInt(parts[2], 10);
   }
 
-  function closeDrawer() { drawer.hidden = true; document.body.style.overflow = ''; }
+  function closeDrawer() { drawer.hidden = true; unlockScroll(); }
 
   function ytId(url) {
     if (!url) return null;
@@ -196,6 +203,11 @@
   videoModal.addEventListener('click', function (e) { if (e.target.dataset.close) closeVideo(); });
   $('#wkVideoClose').addEventListener('click', closeVideo);
   addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!videoModal.hidden) closeVideo(); else if (!drawer.hidden) closeDrawer(); } });
+
+  // Block pinch / double-tap zoom (iOS ignores user-scalable=no)
+  document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+  document.addEventListener('gesturechange', function (e) { e.preventDefault(); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
 
   $('#wkLogout').addEventListener('click', function () {
     fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' }).finally(function () { window.location.href = '/admin/login'; });
