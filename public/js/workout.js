@@ -12,6 +12,18 @@
   var PKEY = 'wk_progress_v1';
   var EKEY = 'wk_ex_v1';
 
+  // Hand-picked how-to video for each exercise (plays inside the app).
+  var VID = {
+    'Cable Crunch': 'QR3vANGukK8', 'Cable Curl': '2MUEL4nL6hA', 'Calf Raise': 'k8ipHzKeAkQ',
+    'Dead Bug': 'o4GKiEoYClI', 'Dumbbell Bench Press': 'O7ECGhZj_Hc', 'Dumbbell Curl': 'XE_pHwbst04',
+    'Dumbbell Lateral Raise': 'PzsMitRdI_8', 'Dumbbell Shoulder Press': '0JfYxMRsUCQ', 'Goblet Squat': 'meJSJEG_sT0',
+    'Hammer Curl': '8XLxfXROrTo', 'Incline Dumbbell Press': 'IP4oeKh1Sd4', 'Lat Pulldown': 'AOpi-p0cJkc',
+    'Leg Curl': 'q1cKTmaeQWo', 'Leg Extension': 'qYxo9ZFvHQE', 'Leg Press': 'K5n2vg3oZa4',
+    'Machine Chest Press': 'xUm0BiZCWlQ', 'Machine Shoulder Press': '3R14MnZbcpw', 'Overhead Triceps Extension': 'fYqswDVbJDg',
+    'Plank': 'pvIjsG5Svck', 'Romanian Deadlift (RDL)': 'hQgFixeXdZo', 'Seated Cable Row': 'vwHG9Jfu4sw',
+    'Triceps Pushdown': '-zLyUAo1gMw'
+  };
+
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function getProgress() { try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } }
   function setProgress(p) { try { localStorage.setItem(PKEY, JSON.stringify(p)); } catch (e) {} }
@@ -134,15 +146,18 @@
 
   function openVideo(ex) {
     videoTitle.textContent = ex.name;
-    var id = ytId(ex.yt);
+    var id = ytId(ex.yt) || VID[ex.name] || null;
+    var out = $('#wkVideoOut');
     if (id) {
-      videoFrame.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="' + esc(ex.name) +
-        '" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+      videoFrame.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1&modestbranding=1" title="' + esc(ex.name) +
+        '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+      if (out) { out.href = 'https://www.youtube.com/watch?v=' + id; out.hidden = false; }
     } else {
       var url = ex.yt || 'https://www.youtube.com/results?search_query=' + encodeURIComponent('how to ' + ex.name + ' proper form beginner');
       videoFrame.innerHTML = '<div class="wk-modal__search">' +
         '<p>' + esc(ex.muscles || '') + '<br>Tap below to watch the how-to on YouTube. Start light and learn the movement — don\'t copy the weight from the video.</p>' +
         '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">▶ Watch how-to</a></div>';
+      if (out) out.hidden = true;
     }
     videoModal.hidden = false;
   }
