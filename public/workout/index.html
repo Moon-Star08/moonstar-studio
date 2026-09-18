@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Workout — MoonStar</title>
+<title>Fitness — MoonStar</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#161513">
 <link rel="icon" type="image/png" href="/favicon.png">
@@ -11,56 +11,157 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/home-v2.css">
 <link rel="stylesheet" href="/css/workout.css">
 </head>
 <body class="wk-body">
 
-<header class="wk-top">
-  <div class="wk-top__brand"><span class="wk-dot"></span> MOONSTAR &middot; WORKOUT</div>
-  <div class="wk-top__right">
-    <span id="wkProgress" class="wk-progress">0 / 100</span>
-    <a class="wk-btn" href="/">Site</a>
-    <button class="wk-btn" id="wkLogout" type="button">Log out</button>
-  </div>
-</header>
+<!-- ══ Loading ══ -->
+<div class="wk-boot" id="wkBoot"><span class="wk-dot"></span> Loading…</div>
 
-<main class="wk-main">
-  <div class="wk-head">
-    <span class="wk-kicker">// 100-day plan</span>
-    <h1 id="wkTitle">Let's go.</h1>
-    <p class="wk-sub">Tap a day for the workout and food. Tap an exercise for a how-to video.</p>
-    <div class="wk-legend">
-      <span><i class="wk-lg wk-lg--work"></i> Workout</span>
-      <span><i class="wk-lg wk-lg--rest"></i> Rest</span>
-      <span><i class="wk-lg wk-lg--done"></i> Done</span>
-      <span><i class="wk-lg wk-lg--today"></i> Today</span>
+<!-- ══ Auth screen ══ -->
+<section class="wk-gate" id="wkAuth" hidden>
+  <div class="wk-gate__card">
+    <div class="wk-gate__brand"><span class="wk-dot"></span> MOONSTAR &middot; FITNESS</div>
+    <div class="wk-tabs">
+      <button class="wk-tab is-active" id="tabLogin" type="button">Log in</button>
+      <button class="wk-tab" id="tabSignup" type="button">Sign up</button>
+    </div>
+
+    <form id="loginForm" class="wk-form">
+      <label class="wk-field"><span>Email</span><input type="email" id="liEmail" autocomplete="email" required></label>
+      <label class="wk-field"><span>Password</span><input type="password" id="liPass" autocomplete="current-password" required></label>
+      <div class="wk-formerr" id="liErr"></div>
+      <button class="wk-cta" id="liBtn" type="submit">Log in</button>
+    </form>
+
+    <form id="signupForm" class="wk-form" hidden>
+      <label class="wk-field"><span>Name</span><input type="text" id="suName" autocomplete="name"></label>
+      <label class="wk-field"><span>Email</span><input type="email" id="suEmail" autocomplete="email" required></label>
+      <label class="wk-field"><span>Password <em>(8+ characters)</em></span><input type="password" id="suPass" autocomplete="new-password" required></label>
+      <label class="wk-field"><span>Invite code</span><input type="text" id="suInvite" required></label>
+      <div class="wk-formerr" id="suErr"></div>
+      <button class="wk-cta" id="suBtn" type="submit">Create account</button>
+    </form>
+  </div>
+  <a class="wk-gate__back" href="/">&larr; Back to site</a>
+</section>
+
+<!-- ══ Questionnaire ══ -->
+<section class="wk-gate wk-gate--wide" id="wkOnboard" hidden>
+  <form class="wk-gate__card wk-onboard" id="onboardForm">
+    <div class="wk-gate__brand"><span class="wk-dot"></span> BUILD YOUR PLAN</div>
+    <p class="wk-onboard__sub">A few quick answers and we'll build your 12-week workout + food plan.</p>
+
+    <label class="wk-field"><span>Name</span><input type="text" id="obName"></label>
+
+    <div class="wk-grid2">
+      <label class="wk-field"><span>Age</span><input type="number" id="obAge" min="14" max="90" inputmode="numeric" required></label>
+      <div class="wk-field"><span>Sex</span>
+        <div class="wk-seg" id="obSex" data-val="male">
+          <button type="button" data-v="male" class="is-active">Male</button>
+          <button type="button" data-v="female">Female</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wk-grid2">
+      <label class="wk-field"><span>Weight (kg)</span><input type="number" id="obKg" min="35" max="250" inputmode="decimal" required></label>
+      <label class="wk-field"><span>Height (cm)</span><input type="number" id="obCm" min="120" max="230" inputmode="numeric" required></label>
+    </div>
+
+    <div class="wk-field"><span>Goal</span>
+      <div class="wk-seg" id="obGoal" data-val="maintain">
+        <button type="button" data-v="lose">Lose fat</button>
+        <button type="button" data-v="maintain" class="is-active">Maintain</button>
+        <button type="button" data-v="gain">Build muscle</button>
+      </div>
+    </div>
+
+    <div class="wk-field"><span>Where do you train?</span>
+      <div class="wk-seg" id="obLoc" data-val="gym">
+        <button type="button" data-v="gym" class="is-active">Gym</button>
+        <button type="button" data-v="home">Home / walk</button>
+      </div>
+    </div>
+
+    <div class="wk-field"><span>Days per week</span>
+      <div class="wk-seg" id="obDays" data-val="3">
+        <button type="button" data-v="3" class="is-active">3</button>
+        <button type="button" data-v="4">4</button>
+        <button type="button" data-v="5">5</button>
+      </div>
+    </div>
+
+    <label class="wk-field"><span>Diet</span>
+      <select id="obDiet" class="wk-select">
+        <option value="none">No restriction</option>
+        <option value="vegetarian">Vegetarian</option>
+        <option value="vegan">Vegan</option>
+        <option value="no_pork">No pork</option>
+        <option value="no_beef">No beef</option>
+      </select>
+    </label>
+
+    <div class="wk-field"><span>Foods you like <em>(tap all that apply)</em></span>
+      <div class="wk-chips" id="obLikes"></div>
+    </div>
+
+    <div class="wk-field"><span>Allergies / avoid</span>
+      <div class="wk-chips" id="obAllergies"></div>
+    </div>
+
+    <div class="wk-formerr" id="obErr"></div>
+    <button class="wk-cta" id="obBtn" type="submit">Build my plan</button>
+    <button class="wk-textbtn" id="obLogout" type="button">Log out</button>
+  </form>
+</section>
+
+<!-- ══ Tracker app ══ -->
+<div id="wkApp" hidden>
+  <header class="wk-top">
+    <div class="wk-top__brand"><span class="wk-dot"></span> MOONSTAR &middot; FITNESS</div>
+    <div class="wk-top__right">
+      <span id="wkProgress" class="wk-progress">0 / 0</span>
+      <button class="wk-btn" id="wkEdit" type="button">Edit plan</button>
+      <button class="wk-btn" id="wkLogout" type="button">Log out</button>
+    </div>
+  </header>
+
+  <main class="wk-main">
+    <div class="wk-head">
+      <span class="wk-kicker">// your 12-week plan</span>
+      <h1 id="wkTitle">Let's go.</h1>
+      <p class="wk-sub">Tap a day for the workout and food. Tap an exercise for a how-to video.</p>
+      <div class="wk-legend">
+        <span><i class="wk-lg wk-lg--work"></i> Workout</span>
+        <span><i class="wk-lg wk-lg--rest"></i> Rest / walk</span>
+        <span><i class="wk-lg wk-lg--done"></i> Done</span>
+        <span><i class="wk-lg wk-lg--today"></i> Today</span>
+      </div>
+    </div>
+    <div class="wk-cal" id="wkCal"></div>
+  </main>
+
+  <!-- Day detail drawer -->
+  <div class="wk-drawer" id="wkDrawer" hidden>
+    <div class="wk-drawer__scrim" data-close="1"></div>
+    <div class="wk-drawer__panel" id="wkPanel" role="dialog" aria-label="Day detail"></div>
+  </div>
+
+  <!-- Video modal -->
+  <div class="wk-modal" id="wkVideo" hidden>
+    <div class="wk-modal__scrim" data-close="1"></div>
+    <div class="wk-modal__box" role="dialog" aria-label="How-to video">
+      <div class="wk-modal__bar">
+        <span class="wk-modal__title" id="wkVideoTitle"></span>
+        <a class="wk-modal__out" id="wkVideoOut" target="_blank" rel="noopener noreferrer" hidden>YouTube &#8599;</a>
+        <button class="wk-modal__close" id="wkVideoClose" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="wk-modal__frame" id="wkVideoFrame"></div>
     </div>
   </div>
-
-  <div class="wk-cal" id="wkCal"></div>
-</main>
-
-<!-- Day detail drawer -->
-<div class="wk-drawer" id="wkDrawer" hidden>
-  <div class="wk-drawer__scrim" data-close="1"></div>
-  <div class="wk-drawer__panel" id="wkPanel" role="dialog" aria-label="Day detail"></div>
 </div>
 
-<!-- Video modal -->
-<div class="wk-modal" id="wkVideo" hidden>
-  <div class="wk-modal__scrim" data-close="1"></div>
-  <div class="wk-modal__box" role="dialog" aria-label="How-to video">
-    <div class="wk-modal__bar">
-      <span class="wk-modal__title" id="wkVideoTitle"></span>
-      <a class="wk-modal__out" id="wkVideoOut" target="_blank" rel="noopener noreferrer" hidden>YouTube &#8599;</a>
-      <button class="wk-modal__close" id="wkVideoClose" type="button" aria-label="Close">&times;</button>
-    </div>
-    <div class="wk-modal__frame" id="wkVideoFrame"></div>
-  </div>
-</div>
-
-<script src="/js/workout-plan.js"></script>
 <script src="/js/workout.js"></script>
 </body>
 </html>

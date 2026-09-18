@@ -1,0 +1,27 @@
+# Reference Blueprint. Your existing Render service was set up manually, so
+# this file does NOT change it automatically — see WORKOUT-SETUP.md for the
+# dashboard steps. It documents the persistent disk + env the app expects.
+services:
+  - type: web
+    name: moonstar-site
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: WORKOUT_INVITE_CODE
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true

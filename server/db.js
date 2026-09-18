@@ -3,7 +3,10 @@ const fs = require('fs');
 const { DatabaseSync } = require('node:sqlite');
 const defaultContent = require('./defaultContent');
 
-const dataDir = path.join(__dirname, '..', 'data');
+// DATA_DIR lets us point the database at a Render persistent disk so that
+// accounts, plans and progress survive redeploys. Falls back to a local
+// ./data folder for development.
+const dataDir = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 const db = new DatabaseSync(path.join(dataDir, 'portfolio.db'));
@@ -90,6 +93,32 @@ db.exec(`
     visitor_id TEXT NOT NULL DEFAULT '',
     user_id INTEGER,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+// ── Workout tracker ─────────────────────────────────────────────────────
+// Completely separate from the site's admin auth AND from the `users` table
+// above. Friends who use the workout tracker live only here; a workout
+// account grants nothing on the rest of the site, and vice versa.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS workout_users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+// One row per workout user: their questionnaire answers (profile), the
+// generated plan, and their progress — all stored as JSON blobs.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS workout_data (
+    user_id INTEGER PRIMARY KEY REFERENCES workout_users(id) ON DELETE CASCADE,
+    profile TEXT NOT NULL DEFAULT '',
+    plan TEXT NOT NULL DEFAULT '',
+    progress TEXT NOT NULL DEFAULT '{}',
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
 

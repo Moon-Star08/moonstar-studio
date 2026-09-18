@@ -16,6 +16,7 @@ const analyticsRoutes = require('./routes/analytics');
 const projectRoutes = require('./routes/projects');
 const contactRoutes = require('./routes/contact');
 const settingsRoutes = require('./routes/settings');
+const workoutRoutes = require('./routes/workout');
 
 const REQUIRED_ENV = ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'SESSION_SECRET'];
 const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
@@ -81,6 +82,7 @@ app.use('/api', projectRoutes);
 app.use('/api', contactRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', analyticsRoutes);
+app.use('/api/workout', workoutRoutes);
 
 // Clean URLs: every public page is linked internally without ".html".
 // Anyone landing on the old *.html path (bookmarks, external links,
@@ -114,8 +116,11 @@ app.get(/^\/admin\/([a-z-]+)\.html$/, (req, res) => {
   res.redirect(301, '/admin/' + req.params[0] + suffix);
 });
 
-// Private workout tracker — same admin auth. Not indexed.
-app.get('/workout', requireAuth, (req, res) => {
+// Workout tracker — its own account system (invite-gated), completely
+// separate from the site's admin auth. The page is public; the client calls
+// /api/workout/me and shows the login/sign-up screen when not authenticated.
+// Not indexed.
+app.get('/workout', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'workout', 'index.html'));
 });
 
