@@ -142,9 +142,13 @@ function computeTargets(p) {
   const age = clampNum(Number(p.age) || 25, 14, 90);
   const male = p.sex !== 'female';
   const bmr = 10 * kg + 6.25 * cm - 5 * age + (male ? 5 : -161);
-  const dpw = [3, 4, 5].includes(Number(p.days_per_week)) ? Number(p.days_per_week) : 3;
+  const loc0 = p.location === 'home' ? 'home' : 'gym';
+  // Auto-pick training days per week (with rest days spread in between):
+  // gym gets a 4-day upper/lower split, home 3 full-body days + walks.
+  let dpw = Number(p.days_per_week);
+  if (![3, 4, 5].includes(dpw)) dpw = loc0 === 'home' ? 3 : 4;
   const factorTable = { gym: { 3: 1.45, 4: 1.55, 5: 1.65 }, home: { 3: 1.4, 4: 1.5, 5: 1.6 } };
-  const loc = p.location === 'home' ? 'home' : 'gym';
+  const loc = loc0;
   const tdee = bmr * factorTable[loc][dpw];
   let calories;
   if (p.goal === 'lose') calories = tdee * 0.8;
@@ -213,7 +217,7 @@ function buildCalendar(p, t, meals) {
   const lib = t.loc === 'home' ? HOME : GYM;
   const rota = (SCHED[t.loc][t.dpw] || SCHED[t.loc][3]).slice();
   const trainSet = new Set(TRAIN_DAYS[t.dpw] || TRAIN_DAYS[3]);
-  const TOTAL = 84; // 12 weeks
+  const TOTAL = 100; // 100-day plan
   let rotaIdx = 0;
 
   for (let i = 0; i < TOTAL; i++) {

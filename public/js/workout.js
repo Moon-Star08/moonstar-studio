@@ -87,7 +87,7 @@
       b.classList.add('is-active'); el.dataset.val = b.dataset.v;
     });
   }
-  ['obSex', 'obGoal', 'obLoc', 'obDays'].forEach(function (id) { wireSeg($('#' + id)); });
+  ['obSex', 'obGoal', 'obLoc'].forEach(function (id) { wireSeg($('#' + id)); });
 
   function buildChips(container, list) {
     container.innerHTML = list.map(function (x) { return '<button type="button" class="wk-chipbtn" data-v="' + x[0] + '">' + esc(x[1]) + '</button>'; }).join('');
@@ -107,7 +107,7 @@
     $('#obKg').value = p.weight_kg || '';
     $('#obCm').value = p.height_cm || '';
     setSeg('obSex', p.sex || 'male'); setSeg('obGoal', p.goal || 'maintain');
-    setSeg('obLoc', p.location || 'gym'); setSeg('obDays', p.days_per_week || 3);
+    setSeg('obLoc', p.location || 'gym');
     $('#obDiet').value = p.diet || 'none';
     setChips($('#obLikes'), p.likes); setChips($('#obAllergies'), p.allergies);
     show('wkOnboard');
@@ -123,7 +123,6 @@
       height_cm: parseFloat($('#obCm').value),
       goal: $('#obGoal').dataset.val,
       location: $('#obLoc').dataset.val,
-      days_per_week: parseInt($('#obDays').dataset.val, 10),
       diet: $('#obDiet').value,
       likes: chosenChips($('#obLikes')),
       allergies: chosenChips($('#obAllergies')),
