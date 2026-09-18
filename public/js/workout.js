@@ -157,7 +157,7 @@
     var out = $('#wkVideoOut');
     if (id) {
       videoFrame.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1&modestbranding=1" title="' + esc(ex.name) +
-        '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
+        '" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';
       if (out) { out.href = 'https://www.youtube.com/watch?v=' + id; out.hidden = false; }
     } else {
       var url = ex.yt || 'https://www.youtube.com/results?search_query=' + encodeURIComponent('how to ' + ex.name + ' proper form beginner');

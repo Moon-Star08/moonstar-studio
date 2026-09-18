@@ -39,10 +39,14 @@ app.use(
         styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         scriptSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'blob:', 'https://lh3.googleusercontent.com'],
+        imgSrc: ["'self'", 'data:', 'blob:', 'https://lh3.googleusercontent.com', 'https://i.ytimg.com'],
         connectSrc: ["'self'"],
+        // Allow the workout tracker to embed YouTube how-to videos.
+        frameSrc: ["'self'", 'https://www.youtube-nocookie.com', 'https://www.youtube.com'],
       },
     },
+    // Send the origin cross-site so YouTube embeds load (no-referrer breaks them with Error 153).
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   })
 );
 
