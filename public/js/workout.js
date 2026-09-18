@@ -61,7 +61,7 @@
     api('/login', 'POST', { email: $('#liEmail').value, password: $('#liPass').value }).then(function (r) {
       $('#liBtn').disabled = false;
       if (!r.ok) { $('#liErr').textContent = r.data.error || 'Could not log in'; return; }
-      state.user = r.data.user; state.profile = r.data.profile; state.plan = r.data.plan; state.progress = normalizeProgress(r.data.progress); route();
+      state.user = r.data.user; state.profile = r.data.profile; state.plan = r.data.plan; state.progress = normalizeProgress(r.data.progress); clearAuthForms(); route();
     });
   });
 
@@ -71,11 +71,15 @@
     api('/signup', 'POST', { name: $('#suName').value, email: $('#suEmail').value, password: $('#suPass').value, invite: $('#suInvite').value }).then(function (r) {
       $('#suBtn').disabled = false;
       if (!r.ok) { $('#suErr').textContent = r.data.error || 'Could not sign up'; return; }
-      state.user = r.data.user; state.profile = null; state.plan = null; state.progress = { days: {}, ex: {} }; route();
+      state.user = r.data.user; state.profile = null; state.plan = null; state.progress = { days: {}, ex: {} }; clearAuthForms(); route();
     });
   });
 
-  function logout() { api('/logout', 'POST').then(function () { state = { user: null, profile: null, plan: null, progress: { days: {}, ex: {} } }; showAuth(); }); }
+  function clearAuthForms() {
+    ['liEmail', 'liPass', 'suName', 'suEmail', 'suPass', 'suInvite'].forEach(function (id) { var el = $('#' + id); if (el) el.value = ''; });
+    $('#liErr').textContent = ''; $('#suErr').textContent = '';
+  }
+  function logout() { api('/logout', 'POST').then(function () { state = { user: null, profile: null, plan: null, progress: { days: {}, ex: {} } }; clearAuthForms(); showAuth(); }); }
   $('#wkLogout').addEventListener('click', logout);
   $('#obLogout').addEventListener('click', logout);
 
