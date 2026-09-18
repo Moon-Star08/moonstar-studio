@@ -101,6 +101,7 @@
 
   function showOnboard() {
     var p = state.profile || {};
+    $('#obOwner').hidden = !(state.user && state.user.isOwner);
     $('#obName').value = p.name || (state.user && state.user.name) || '';
     $('#obAge').value = p.age || '';
     $('#obKg').value = p.weight_kg || '';
@@ -133,6 +134,15 @@
     api('/profile', 'POST', { profile: profile }).then(function (r) {
       $('#obBtn').disabled = false; $('#obBtn').textContent = 'Build my plan';
       if (!r.ok) { $('#obErr').textContent = r.data.error || 'Could not build plan'; return; }
+      state.profile = r.data.profile; state.plan = r.data.plan; route();
+    });
+  });
+
+  $('#obRestore').addEventListener('click', function () {
+    $('#obRestore').disabled = true; $('#obErr').textContent = '';
+    api('/restore-original', 'POST').then(function (r) {
+      $('#obRestore').disabled = false;
+      if (!r.ok) { $('#obErr').textContent = r.data.error || 'Could not load your original plan'; return; }
       state.profile = r.data.profile; state.plan = r.data.plan; route();
     });
   });

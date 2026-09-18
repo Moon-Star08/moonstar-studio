@@ -7,11 +7,14 @@ const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
 const db = require('../db');
 const { generatePlan } = require('../lib/workoutPlan');
+const ORIGINAL_PLAN = require('../lib/originalPlan.json');
 
 const router = express.Router();
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INVITE_CODE = process.env.WORKOUT_INVITE_CODE || 'MOONSTAR-FIT';
+// The one account allowed to load Moon's original 100-day Excel plan.
+const OWNER_EMAIL = (process.env.OWNER_EMAIL || 'fengkong22@gmail.com').trim().toLowerCase();
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
 const loginLimiter = rateLimit({
@@ -29,7 +32,18 @@ function requireWorkoutUser(req, res, next) {
 }
 
 function publicUser(row) {
-  return row ? { id: row.id, name: row.name, email: row.email } : null;
+  return row ? { id: row.id, name: row.name, email: row.email, isOwner: row.email.toLowerCase() === OWNER_EMAIL } : null;
+}
+
+function upsertPlan(userId, profile, plan) {
+  const existing = db.prepare('SELECT user_id FROM workout_data WHERE user_id = ?').get(userId);
+  if (existing) {
+    db.prepare("UPDATE workout_data SET profile = ?, plan = ?, updated_at = datetime('now') WHERE user_id = ?")
+      .run(JSON.stringify(profile), JSON.stringify(plan), userId);
+  } else {
+    db.prepare('INSERT INTO workout_data (user_id, profile, plan, progress) VALUES (?, ?, ?, ?)')
+      .run(userId, JSON.stringify(profile), JSON.stringify(plan), '{}');
+  }
 }
 
 function loadData(userId) {
@@ -124,6 +138,17 @@ router.post('/profile', requireWorkoutUser, (req, res) => {
       .run(req.session.workoutUserId, profileJson, planJson, '{}');
   }
   res.json({ success: true, profile, plan });
+});
+
+// Owner-only: load Moon's original 100-day Excel plan into his account.
+router.post('/restore-original', requireWorkoutUser, (req, res) => {
+  const user = db.prepare('SELECT * FROM workout_users WHERE id = ?').get(req.session.workoutUserId);
+  if (!user || user.email.toLowerCase() !== OWNER_EMAIL) {
+    return res.status(403).json({ error: 'Not available for this account' });
+  }
+  const profile = { original: true, name: user.name || 'Moon' };
+  upsertPlan(user.id, profile, ORIGINAL_PLAN);
+  res.json({ success: true, profile, plan: ORIGINAL_PLAN });
 });
 
 router.post('/progress', requireWorkoutUser, (req, res) => {
