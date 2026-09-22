@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 const { sendContactNotification } = require('../mailer');
+const { sendContactThankYou } = require('../lib/email');
 
 const router = express.Router();
 
@@ -55,6 +56,14 @@ router.post('/contact', contactLimiter, (req, res) => {
   // Email me a notification (non-blocking — never fails the visitor's request).
   sendContactNotification(data).catch(function (err) {
     console.error('Contact email failed:', err && err.message);
+  });
+
+  // Auto-reply "thanks for reaching out" to the visitor via Resend (also
+  // non-blocking — a mail hiccup must never break the form submission).
+  // NOTE: with the Resend sandbox sender this only delivers to your own Resend
+  // account email; it reaches real visitors once your domain is verified.
+  sendContactThankYou({ to: data.email, name: data.name, projectType: data.project_type }).catch(function (err) {
+    console.error('Thank-you email failed:', err && err.message);
   });
 
   res.status(201).json({ success: true });
