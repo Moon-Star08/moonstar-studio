@@ -7,10 +7,13 @@
 
 const express = require('express');
 const { sendContactThankYou } = require('../lib/email');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.post('/send-email', async (req, res) => {
+// Admin-only test trigger — protected so no one can burn your Resend quota.
+// (The real auto-reply fires from the contact form, not this route.)
+router.post('/send-email', requireAuth, async (req, res) => {
   const { to, name, projectType } = req.body || {};
   if (!to) return res.status(400).json({ error: '"to" (recipient email) is required' });
   try {
