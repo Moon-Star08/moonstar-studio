@@ -1,0 +1,63 @@
+<!--
+  PLACEHOLDER order email template.
+  ▸ Replace this whole file with your real email-template.html.
+  ▸ Keep the filename (order-email.html) and keep the {{name}} placeholder
+    somewhere in the body — sendOrderEmail() swaps {{name}} for the recipient.
+  ▸ Table-based layout + inline CSS is exactly what email clients want; the
+    sender does NOT restructure your HTML, it only does a text replace of {{name}}.
+
+  IMAGES: email clients need absolute, publicly reachable URLs (no relative
+  paths, no localhost). Swap each placeholder below for a real URL — either a
+  file in this project's /public folder served over https
+  (e.g. https://moonstarstudio.site/img/email/logo.png) or an image hosted in
+  Resend. Look for the  <!-- SWAP IMAGE URL -->  comments.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your order is in</title>
+</head>
+<body style="margin:0; padding:0; background:#f4f1ea; font-family:Arial,Helvetica,sans-serif; color:#161513;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f1ea;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:600px; background:#ffffff; border-radius:12px; overflow:hidden;">
+          <!-- header / logo -->
+          <tr>
+            <td align="center" style="padding:28px 24px; background:#161513;">
+              <!-- SWAP IMAGE URL: replace src with your hosted logo URL -->
+              <img src="https://REPLACE-WITH-YOUR-DOMAIN/img/email/logo.png" alt="MoonStar" width="150" style="display:block; border:0; outline:none; text-decoration:none;">
+            </td>
+          </tr>
+          <!-- hero -->
+          <tr>
+            <td style="padding:32px 32px 8px;">
+              <h1 style="margin:0; font-size:24px; line-height:1.2; color:#161513;">Your order is in</h1>
+              <p style="margin:16px 0 0; font-size:16px; line-height:1.6; color:#333;">
+                Hi {{name}}, thanks for your order — we're on it. You'll get another note when it ships.
+              </p>
+            </td>
+          </tr>
+          <!-- optional product image -->
+          <tr>
+            <td align="center" style="padding:24px 32px;">
+              <!-- SWAP IMAGE URL: replace src with your hosted image URL -->
+              <img src="https://REPLACE-WITH-YOUR-DOMAIN/img/email/order.png" alt="" width="536" style="display:block; width:100%; max-width:536px; border:0; border-radius:8px;">
+            </td>
+          </tr>
+          <!-- footer -->
+          <tr>
+            <td style="padding:8px 32px 36px;">
+              <p style="margin:0; font-size:13px; line-height:1.6; color:#888;">
+                MoonStar Studio · moonstarstudio.site
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

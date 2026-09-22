@@ -17,6 +17,7 @@ const projectRoutes = require('./routes/projects');
 const contactRoutes = require('./routes/contact');
 const settingsRoutes = require('./routes/settings');
 const workoutRoutes = require('./routes/workout');
+const emailRoutes = require('./routes/email');
 
 const REQUIRED_ENV = ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'SESSION_SECRET'];
 const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
@@ -83,6 +84,7 @@ app.use('/api', contactRoutes);
 app.use('/api', settingsRoutes);
 app.use('/api', analyticsRoutes);
 app.use('/api/workout', workoutRoutes);
+app.use('/api', emailRoutes);
 
 // Clean URLs: every public page is linked internally without ".html".
 // Anyone landing on the old *.html path (bookmarks, external links,
