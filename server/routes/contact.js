@@ -45,6 +45,12 @@ function validateContactInput(body) {
 }
 
 router.post('/contact', contactLimiter, (req, res) => {
+  // Honeypot: real users never see or fill the hidden "website" field, so any
+  // value means a bot. Pretend it succeeded, but drop it — no save, no emails.
+  if (req.body && typeof req.body.website === 'string' && req.body.website.trim() !== '') {
+    return res.status(201).json({ success: true });
+  }
+
   const { errors, data } = validateContactInput(req.body || {});
   if (errors.length) return res.status(400).json({ error: errors.join('; ') });
 

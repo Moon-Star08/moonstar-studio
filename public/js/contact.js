@@ -51,6 +51,7 @@
       phone: document.getElementById('cf-phone').value.trim(),
       project_type: document.getElementById('cf-project-type').value,
       message: document.getElementById('cf-message').value.trim(),
+      website: (document.getElementById('cf-website') || {}).value || '',
     };
 
     try {
