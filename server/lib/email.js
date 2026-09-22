@@ -11,8 +11,10 @@ const EMAILS_DIR = path.join(__dirname, '..', 'emails');
 // Verified domain sender (moonstarstudio.site is verified in Resend), so this
 // delivers to any visitor, straight to their inbox.
 const FROM_ADDRESS = 'MoonStar Studio <contact@moonstarstudio.site>';
-// Where replies go (so a visitor hitting "reply" reaches you):
-const REPLY_TO = process.env.CONTACT_NOTIFY_TO || process.env.SMTP_USER || undefined;
+// Where replies go (so a visitor hitting "reply" reaches a real inbox you
+// check, since contact@moonstarstudio.site is send-only unless you add mail
+// hosting/forwarding for it). Override with CONTACT_NOTIFY_TO on Render.
+const REPLY_TO = process.env.CONTACT_NOTIFY_TO || process.env.SMTP_USER || 'moonstarstudio.co@gmail.com';
 
 // Cache templates in memory (they don't change at runtime).
 const cache = {};
