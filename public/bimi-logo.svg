@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <title>MoonStar Studio</title>
+  <rect x="0" y="0" width="400" height="400" fill="#a3161b"/>
+  <path d="M200 64 L229 171 336 200 229 229 200 336 171 229 64 200 171 171 Z" fill="#f4f1ea"/>
+</svg>
