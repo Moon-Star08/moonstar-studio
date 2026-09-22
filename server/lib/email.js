@@ -15,6 +15,8 @@ const FROM_ADDRESS = 'MoonStar Studio <contact@moonstarstudio.site>';
 // check, since contact@moonstarstudio.site is send-only unless you add mail
 // hosting/forwarding for it). Override with CONTACT_NOTIFY_TO on Render.
 const REPLY_TO = process.env.CONTACT_NOTIFY_TO || process.env.SMTP_USER || 'moonstarstudio.co@gmail.com';
+// Your own inbox that receives the "new lead" notification.
+const NOTIFY_TO = process.env.CONTACT_NOTIFY_TO || 'moonstarstudio.co@gmail.com';
 
 // Cache templates in memory (they don't change at runtime).
 const cache = {};
@@ -30,15 +32,18 @@ function esc(s) {
   });
 }
 
-// Replace every {{key}} in the template with the (escaped) matching data value.
+// Replace every {{key}} in the template with the matching data value.
+// Values are HTML-escaped, EXCEPT keys ending in "_html" which the caller has
+// already sanitized (used for the message body where we keep line breaks).
 function render(file, data) {
   const values = Object.assign({ year: new Date().getFullYear() }, data || {});
   return loadTemplate(file).replace(/\{\{\s*(\w+)\s*\}\}/g, function (_, key) {
-    return key in values ? esc(values[key]) : '';
+    if (!(key in values)) return '';
+    return /_html$/.test(key) ? String(values[key]) : esc(values[key]);
   });
 }
 
-async function sendEmail({ to, subject, templateFile, data }) {
+async function sendEmail({ to, subject, templateFile, data, replyTo }) {
   if (!to) throw new Error('sendEmail: "to" is required');
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set');
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -47,7 +52,7 @@ async function sendEmail({ to, subject, templateFile, data }) {
     to: to,
     subject: subject,
     html: render(templateFile, data),
-    reply_to: REPLY_TO,
+    reply_to: replyTo || REPLY_TO,
   });
   if (error) throw new Error(error.message || 'Resend failed to send');
   return result;
@@ -63,6 +68,23 @@ function sendContactThankYou({ to, name, projectType }) {
   });
 }
 
+// Notify YOU when a visitor submits the contact form — with their details and
+// a reply-to set to their address, so hitting "reply" emails the lead directly.
+function sendLeadNotification({ name, email, phone, projectType, message }) {
+  const messageHtml = esc(message || '').replace(/\r?\n/g, '<br>');
+  const date = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Phnom_Penh' });
+  return sendEmail({
+    to: NOTIFY_TO,
+    subject: 'New enquiry — ' + (projectType || 'General') + ' from ' + (name || 'someone'),
+    templateFile: 'contact-notification.html',
+    replyTo: email || undefined,
+    data: {
+      name: name || '—', email: email || '—', phone: phone || '—',
+      project_type: projectType || '—', message_html: messageHtml || '—', date: date,
+    },
+  });
+}
+
 // Kept from the earlier setup (order confirmation) — uses order-email.html.
 function sendOrderEmail({ to, name }) {
   return sendEmail({
@@ -73,4 +95,4 @@ function sendOrderEmail({ to, name }) {
   });
 }
 
-module.exports = { sendEmail, sendContactThankYou, sendOrderEmail };
+module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendOrderEmail };

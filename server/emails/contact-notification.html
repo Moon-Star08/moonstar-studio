@@ -1,0 +1,105 @@
+<!--
+  Internal "new lead" notification, sent to you when someone submits the
+  contact form. Placeholders: {{name}} {{email}} {{phone}} {{project_type}}
+  {{message_html}} {{date}} {{year}}. Same brand style as the thank-you email.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <title>New enquiry</title>
+</head>
+<body style="margin:0; padding:0; background:#e9e5dc; font-family:Arial,Helvetica,sans-serif; color:#161513;">
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">New enquiry from {{name}} — {{project_type}}.</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9e5dc;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px; max-width:600px; background:#f4f1ea; border-radius:16px; overflow:hidden; border:1px solid rgba(22,21,19,0.12);">
+
+          <!-- HEADER banner -->
+          <tr>
+            <td align="center" style="background:#a3161b; padding:0; line-height:0; font-size:0;">
+              <img src="https://moonstarstudio.site/img/email/header.jpg" alt="MoonStar Studio" width="600" style="display:block; width:100%; max-width:600px; height:auto; border:0;">
+            </td>
+          </tr>
+
+          <!-- BODY -->
+          <tr>
+            <td style="padding:40px 32px 8px;">
+              <p style="margin:0 0 10px; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#d9333f;">New enquiry</p>
+              <h1 style="margin:0; font-family:'Arial Black',Arial,Helvetica,sans-serif; font-size:30px; line-height:1.15; letter-spacing:-0.5px; color:#161513;">
+                You've got a new lead.
+              </h1>
+              <p style="margin:16px 0 0; font-size:14px; line-height:1.6; color:#666666;">Submitted {{date}}</p>
+            </td>
+          </tr>
+
+          <!-- DETAILS -->
+          <tr>
+            <td style="padding:20px 32px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid rgba(22,21,19,0.12);">
+                <tr>
+                  <td width="120" style="padding:14px 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#888888; vertical-align:top;">Name</td>
+                  <td style="padding:14px 0; font-size:16px; color:#161513; font-weight:bold; vertical-align:top;">{{name}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#888888; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);">Email</td>
+                  <td style="padding:14px 0; font-size:16px; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);"><a href="mailto:{{email}}" style="color:#d9333f; text-decoration:none;">{{email}}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#888888; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);">Phone</td>
+                  <td style="padding:14px 0; font-size:16px; color:#161513; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);">{{phone}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#888888; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);">Project</td>
+                  <td style="padding:14px 0; font-size:16px; color:#161513; vertical-align:top; border-top:1px solid rgba(22,21,19,0.08);">{{project_type}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- MESSAGE -->
+          <tr>
+            <td style="padding:20px 32px 0;">
+              <p style="margin:0 0 8px; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#888888;">Message</p>
+              <div style="background:#ffffff; border-left:3px solid #d9333f; border-radius:0 8px 8px 0; padding:16px 18px; font-size:15px; line-height:1.7; color:#333333;">
+                {{message_html}}
+              </div>
+            </td>
+          </tr>
+
+          <!-- REPLY button -->
+          <tr>
+            <td style="padding:28px 32px 8px;">
+              <table role="presentation" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="background:#161513; border-radius:999px;">
+                    <a href="mailto:{{email}}?subject=Re:%20your%20enquiry%20with%20MoonStar%20Studio" style="display:inline-block; padding:13px 28px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#ffffff; text-decoration:none; font-weight:bold;">
+                      Reply to {{name}}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="padding:28px 32px 32px;">
+              <div style="height:1px; background:rgba(22,21,19,0.12);"></div>
+              <p style="margin:16px 0 0; font-size:11px; line-height:1.6; color:#8a8a8a;">
+                Sent automatically from the contact form on moonstarstudio.site · {{year}} &copy; MoonStar Studio
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

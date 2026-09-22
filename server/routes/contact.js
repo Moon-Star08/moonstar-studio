@@ -2,8 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
-const { sendContactNotification } = require('../mailer');
-const { sendContactThankYou } = require('../lib/email');
+const { sendContactThankYou, sendLeadNotification } = require('../lib/email');
 
 const router = express.Router();
 
@@ -53,9 +52,12 @@ router.post('/contact', contactLimiter, (req, res) => {
     'INSERT INTO messages (name, email, phone, project_type, message) VALUES (?, ?, ?, ?, ?)'
   ).run(data.name, data.email, data.phone, data.project_type, data.message);
 
-  // Email me a notification (non-blocking — never fails the visitor's request).
-  sendContactNotification(data).catch(function (err) {
-    console.error('Contact email failed:', err && err.message);
+  // Email me the lead details (non-blocking — never fails the visitor's request).
+  sendLeadNotification({
+    name: data.name, email: data.email, phone: data.phone,
+    projectType: data.project_type, message: data.message,
+  }).catch(function (err) {
+    console.error('Lead notification failed:', err && err.message);
   });
 
   // Auto-reply "thanks for reaching out" to the visitor via Resend (also
