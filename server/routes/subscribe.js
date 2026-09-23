@@ -221,4 +221,18 @@ router.post('/api/admin/subscriptions/:id/cancel', requireAuth, (req, res) => {
   res.json({ success: true });
 });
 
+// Hard-delete a subscription and its payment rows (for clearing test data).
+router.delete('/api/admin/subscriptions/:id', requireAuth, (req, res) => {
+  db.prepare('DELETE FROM subscription_payments WHERE subscription_id = ?').run(req.params.id);
+  db.prepare('DELETE FROM subscriptions WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// Clear ALL subscriptions + payments (test cleanup).
+router.delete('/api/admin/subscriptions', requireAuth, (req, res) => {
+  db.prepare('DELETE FROM subscription_payments').run();
+  db.prepare('DELETE FROM subscriptions').run();
+  res.json({ success: true });
+});
+
 module.exports = router;

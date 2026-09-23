@@ -28,7 +28,10 @@
         + '<td>' + badge(r.status) + '</td>'
         + '<td style="font-family:var(--mono);font-size:12px">' + (esc(r.payment_method_masked) || '—') + '</td>'
         + '<td>' + fmtDate(r.next_billing_date) + '</td>'
-        + '<td>' + (cancellable ? '<button class="btn btn--sm" data-cancel="' + esc(r.id) + '" type="button">Cancel</button>' : '') + '</td>'
+        + '<td style="white-space:nowrap">'
+          + (cancellable ? '<button class="btn btn--sm" data-cancel="' + esc(r.id) + '" type="button">Cancel</button> ' : '')
+          + '<button class="btn btn--sm" data-del="' + esc(r.id) + '" type="button" style="border-color:rgba(217,51,63,.5);color:#a32d2d">Delete</button>'
+        + '</td>'
         + '</tr>';
     }).join('');
   }
@@ -41,12 +44,28 @@
   }
 
   tbody.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-cancel]');
-    if (!btn) return;
-    if (!confirm('Cancel this subscription? This stops future billing.')) return;
-    fetch('/api/admin/subscriptions/' + btn.dataset.cancel + '/cancel', { method: 'POST', credentials: 'same-origin' })
+    var cancelBtn = e.target.closest('[data-cancel]');
+    if (cancelBtn) {
+      if (!confirm('Cancel this subscription? This stops future billing.')) return;
+      fetch('/api/admin/subscriptions/' + cancelBtn.dataset.cancel + '/cancel', { method: 'POST', credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function () { alertBox.innerHTML = '<div class="alert alert--success">Subscription cancelled.</div>'; setTimeout(function () { alertBox.innerHTML = ''; }, 5000); load(); });
+      return;
+    }
+    var delBtn = e.target.closest('[data-del]');
+    if (delBtn) {
+      if (!confirm('Permanently delete this subscription and its payment records? This cannot be undone.')) return;
+      fetch('/api/admin/subscriptions/' + delBtn.dataset.del, { method: 'DELETE', credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function () { load(); });
+    }
+  });
+
+  document.getElementById('clear-subs-btn').addEventListener('click', function () {
+    if (!confirm('Delete ALL subscriptions and payment records? Use this only to clear test data — it cannot be undone.')) return;
+    fetch('/api/admin/subscriptions', { method: 'DELETE', credentials: 'same-origin' })
       .then(function (r) { return r.json(); })
-      .then(function () { alertBox.innerHTML = '<div class="alert alert--success">Subscription cancelled.</div>'; setTimeout(function () { alertBox.innerHTML = ''; }, 5000); load(); });
+      .then(function () { alertBox.innerHTML = '<div class="alert alert--success">All subscriptions cleared.</div>'; setTimeout(function () { alertBox.innerHTML = ''; }, 5000); load(); });
   });
 
   $('logout-btn').addEventListener('click', function () {
