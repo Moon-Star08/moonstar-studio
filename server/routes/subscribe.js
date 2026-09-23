@@ -201,6 +201,7 @@ router.get('/api/admin/payway-status', requireAuth, (req, res) => {
     merchant_id: c.merchantId,
     api_key_length: (c.apiKey || '').length,
     api_key_has_whitespace: /\s/.test(c.apiKey || ''),
+    api_key_fingerprint: require('crypto').createHash('sha256').update(c.apiKey || '').digest('hex').slice(0, 12),
     hmac_key_length: (c.hmacKey || '').length,
     base64_return_url: c.base64ReturnUrl,
     public_base_url: process.env.PUBLIC_BASE_URL || '(not set)',
