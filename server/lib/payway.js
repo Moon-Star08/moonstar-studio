@@ -29,14 +29,14 @@ const CHECK_TXN_PATH = 'api/payment-gateway/v1/payments/check-transaction-2';
 const TOKEN_FLAG_REGISTER = 'CITR_FIX'; // first-time sign-up (creates the token)
 const TOKEN_FLAG_CHARGE = 'MITR_FIX';   // recurring charge with the stored token
 
-// Order of fields concatenated for the Purchase hash (per ABA docs).
-// ctid is intentionally NOT part of the hash.
+// Exact Purchase hash order per ABA docs (developer.payway.com.kh, 01-purchase).
+// Note: token_flag/frequency and ctid/view_type/payment_gate are NOT hashed.
 const PURCHASE_HASH_FIELDS = [
   'req_time', 'merchant_id', 'tran_id', 'amount', 'items', 'shipping',
   'firstname', 'lastname', 'email', 'phone', 'type', 'payment_option',
   'return_url', 'cancel_url', 'continue_success_url', 'return_deeplink',
   'currency', 'custom_fields', 'return_params', 'payout', 'lifetime',
-  'additional_params', 'skip_success_page', 'token_flag', 'frequency',
+  'additional_params', 'google_pay_token', 'skip_success_page',
 ];
 
 // Order for the recurring Payment (payment-credential) hash.
@@ -130,11 +130,14 @@ function buildSubscriptionCheckout(opts) {
     payout: '',
     lifetime: opts.lifetime ? String(opts.lifetime) : '',
     additional_params: '',
+    google_pay_token: '',
     skip_success_page: '',
-    token_flag: TOKEN_FLAG_REGISTER,
-    frequency: opts.frequency || '1M',
   };
   fields.hash = sign(PURCHASE_HASH_FIELDS.map((k) => fields[k]), c.apiKey);
+  // Recurring token sign-up (CITR_FIX) can be enabled once ABA approves
+  // Credential-on-File for the account — it uses ABA's Schedule Payment hash
+  // and would otherwise fail with error 30 (COF not enabled).
+  if (opts.recurring) { fields.token_flag = TOKEN_FLAG_REGISTER; fields.frequency = opts.frequency || '1M'; }
   fields.ctid = opts.ctid; // sent but not part of the hash
   // Drop empty optional fields (they were signed as "").
   const form = {};
