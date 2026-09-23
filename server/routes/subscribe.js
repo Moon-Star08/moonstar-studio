@@ -207,6 +207,21 @@ router.get('/api/admin/payway-status', requireAuth, (req, res) => {
   });
 });
 
+// ── admin: inspect exactly what gets signed (no secret key shown) ───────────
+router.get('/api/admin/payway-debug', requireAuth, (req, res) => {
+  const base = (process.env.PUBLIC_BASE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
+  try {
+    const d = payway.inspectHash({
+      tranId: 'TESTTRAN000000000001', ctid: 'MSTEST0000000000000001', amount: 50, currency: 'USD', frequency: '1M',
+      fullName: 'Test User', email: 'test@example.com', phone: '012345678',
+      paymentOption: process.env.ABA_PAYMENT_OPTION || 'cards',
+      returnUrl: `${base}/api/payway/callback`, continueSuccessUrl: base, cancelUrl: base,
+      returnParams: 'test', items: [{ name: 'Essential Care', quantity: 1, price: '50' }],
+    });
+    res.json(d);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // ── admin ───────────────────────────────────────────────────────────────────
 router.get('/api/admin/subscriptions', requireAuth, (req, res) => {
   const rows = db.prepare(`SELECT id, plan_name, name, email, phone, amount, currency, status, token_status,

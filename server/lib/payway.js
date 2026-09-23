@@ -212,9 +212,17 @@ async function checkTransaction(tranId) {
   return data;
 }
 
+// Admin-only inspection: shows the exact fields + concatenation being signed
+// (no secret key is included) so hash mismatches can be diagnosed.
+function inspectHash(opts) {
+  const built = buildSubscriptionCheckout(opts);
+  const pairs = PURCHASE_HASH_FIELDS.map((k) => ({ field: k, value: built.fields[k] == null ? '' : String(built.fields[k]) }));
+  return { actionUrl: built.actionUrl, hashOrder: PURCHASE_HASH_FIELDS, pairs, concat: pairs.map((p) => p.value).join(''), hash: built.fields.hash };
+}
+
 module.exports = {
   config, isConfigured,
   buildSubscriptionCheckout, verifyCallbackSignature, chargeToken, checkTransaction,
-  generateCtid, generateTranId, formatAmount, splitName, sign, requestTime,
+  generateCtid, generateTranId, formatAmount, splitName, sign, requestTime, inspectHash,
   TOKEN_FLAG_REGISTER, TOKEN_FLAG_CHARGE,
 };
