@@ -53,9 +53,11 @@ function config() {
   return {
     environment,
     baseUrl,
-    merchantId: process.env.ABA_MERCHANT_ID || '',
-    apiKey: process.env.ABA_API_KEY || '',
-    hmacKey: process.env.ABA_HMAC_KEY || process.env.ABA_API_KEY || '',
+    // .trim() guards against a stray space/newline pasted into the env value,
+    // which would otherwise corrupt every HMAC signature ("Wrong Hash").
+    merchantId: (process.env.ABA_MERCHANT_ID || '').trim(),
+    apiKey: (process.env.ABA_API_KEY || '').trim(),
+    hmacKey: (process.env.ABA_HMAC_KEY || process.env.ABA_API_KEY || '').trim(),
     base64ReturnUrl: String(process.env.ABA_BASE64_RETURN_URL || 'true') === 'true',
   };
 }
