@@ -122,7 +122,7 @@ h1{font-size:20px;margin:16px 0 6px}p{color:#555;font-size:14px}.amt{margin:14px
   <h1>Taking you to secure payment…</h1>
   <p>Redirecting to ABA PayWay to set up your subscription.</p>
   <div class="amt">${esc(sub.plan_name)} — $${esc(sub.amount)} ${esc(sub.currency)}/month</div>
-  <form id="payway-form" method="post" action="${esc(form.actionUrl)}">
+  <form id="payway-form" method="post" enctype="multipart/form-data" action="${esc(form.actionUrl)}">
       ${inputs}
       <noscript><button type="submit">Continue to payment</button></noscript>
   </form>
