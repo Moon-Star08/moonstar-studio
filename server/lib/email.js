@@ -43,17 +43,20 @@ function render(file, data) {
   });
 }
 
-async function sendEmail({ to, subject, templateFile, data, replyTo }) {
+async function sendEmail({ to, subject, templateFile, data, replyTo, bcc, attachments }) {
   if (!to) throw new Error('sendEmail: "to" is required');
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set');
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const { data: result, error } = await resend.emails.send({
+  const payload = {
     from: FROM_ADDRESS,
     to: to,
     subject: subject,
     html: render(templateFile, data),
     reply_to: replyTo || REPLY_TO,
-  });
+  };
+  if (bcc) payload.bcc = bcc;
+  if (attachments && attachments.length) payload.attachments = attachments;
+  const { data: result, error } = await resend.emails.send(payload);
   if (error) throw new Error(error.message || 'Resend failed to send');
   return result;
 }
@@ -85,6 +88,21 @@ function sendLeadNotification({ name, email, phone, projectType, message }) {
   });
 }
 
+// Send an invoice to a client with file attachment(s). BCC + custom message
+// are optional. Used by the admin "Send Invoice" page.
+function sendInvoiceEmail({ to, clientName, title, message, attachments, bcc }) {
+  const defaultMsg = 'Please find your invoice attached below. Let me know if you have any questions — thank you for your business!';
+  const messageHtml = esc(message && message.trim() ? message : defaultMsg).replace(/\r?\n/g, '<br>');
+  return sendEmail({
+    to: to,
+    subject: 'Your invoice from MoonStar Studio' + (title ? ' — ' + title : ''),
+    templateFile: 'invoice-email.html',
+    bcc: bcc,
+    attachments: attachments,
+    data: { name: clientName || 'there', title: title || 'Invoice', message_html: messageHtml },
+  });
+}
+
 // Kept from the earlier setup (order confirmation) — uses order-email.html.
 function sendOrderEmail({ to, name }) {
   return sendEmail({
@@ -95,4 +113,4 @@ function sendOrderEmail({ to, name }) {
   });
 }
 
-module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendOrderEmail };
+module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendInvoiceEmail, sendOrderEmail };

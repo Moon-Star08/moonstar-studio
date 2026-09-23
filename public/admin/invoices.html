@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send Invoice — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/home-v2.css">
+<link rel="stylesheet" href="/css/admin-v2.css">
+</head>
+<body>
+<div class="admin-shell">
+  <div class="admin-topbar">
+    <span class="admin-topbar__title"><span class="dot"></span>MOONSTAR STUDIO — Admin</span>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a class="btn btn--sm" href="/admin/dashboard">Dashboard</a>
+      <a class="btn btn--sm" href="/admin/settings">Site content</a>
+      <a class="btn btn--sm" href="/">View site</a>
+      <button class="btn btn--sm" id="logout-btn" type="button">Log out</button>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <h1 style="margin-bottom:6px;">Send invoice</h1>
+    <p style="margin:0 0 24px; font-family:var(--mono); font-size:13px; color:rgba(22,21,19,.6);">
+      Email an invoice to a client. A branded email is sent with your file(s) attached, and a copy is BCC'd to you.
+    </p>
+
+    <div id="inv-alert"></div>
+
+    <form id="invoice-form" novalidate>
+      <div class="field-row">
+        <div class="field">
+          <label for="invoice_date">Invoice date</label>
+          <input type="date" id="invoice_date" name="invoice_date">
+        </div>
+        <div class="field">
+          <label for="title">Invoice title *</label>
+          <input type="text" id="title" name="title" maxlength="200" placeholder="e.g. LaunchPad — 50% Deposit" required>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="client_name">Client name *</label>
+          <input type="text" id="client_name" name="client_name" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" maxlength="160" placeholder="Optional">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="client_email">Client email *</label>
+        <input type="email" id="client_email" name="client_email" maxlength="180" required placeholder="client@example.com">
+      </div>
+
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" maxlength="4000" placeholder="Optional — a short note to the client. Leave blank to use the default message."></textarea>
+        <span class="hint">Leave blank and a friendly default message is used.</span>
+      </div>
+
+      <div class="field">
+        <label for="files">Invoice file(s) *</label>
+        <input type="file" id="files" name="files" multiple>
+        <span class="hint">Attach one or more files (PDF, Word, images…). Up to 10 files, 15 MB each.</span>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn--primary" type="submit" id="send-btn">Send invoice</button>
+        <button class="btn" type="reset" id="reset-btn">Clear form</button>
+      </div>
+    </form>
+
+    <div class="admin-header-row" style="margin-top:48px;">
+      <h1 style="margin:0;">Sent history</h1>
+      <button class="btn btn--sm" id="clear-history-btn" type="button">Clear all history</button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Sent</th>
+            <th>Title</th>
+            <th>Client</th>
+            <th>Email</th>
+            <th>Files</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="history-tbody">
+          <tr><td colspan="7">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/admin/invoices.js"></script>
+</body>
+</html>

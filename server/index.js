@@ -18,6 +18,7 @@ const contactRoutes = require('./routes/contact');
 const settingsRoutes = require('./routes/settings');
 const workoutRoutes = require('./routes/workout');
 const emailRoutes = require('./routes/email');
+const invoiceAdminRoutes = require('./routes/invoice-admin');
 
 const REQUIRED_ENV = ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'SESSION_SECRET'];
 const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
@@ -85,6 +86,7 @@ app.use('/api', settingsRoutes);
 app.use('/api', analyticsRoutes);
 app.use('/api/workout', workoutRoutes);
 app.use('/api', emailRoutes);
+app.use('/api/admin', invoiceAdminRoutes);
 
 // Clean URLs: every public page is linked internally without ".html".
 // Anyone landing on the old *.html path (bookmarks, external links,
@@ -109,7 +111,7 @@ for (const [from, to] of Object.entries(CLEAN_URL_REDIRECTS)) {
 const ADMIN_DIR = path.join(__dirname, '..', 'public', 'admin');
 app.get('/admin', (req, res) => res.redirect('/admin/dashboard'));
 app.get('/admin/login', (req, res) => res.sendFile(path.join(ADMIN_DIR, 'login.html')));
-['dashboard', 'project-form', 'settings'].forEach((name) => {
+['dashboard', 'project-form', 'settings', 'invoices'].forEach((name) => {
   app.get('/admin/' + name, requireAuth, (req, res) => res.sendFile(path.join(ADMIN_DIR, name + '.html')));
 });
 app.get(/^\/admin\/([a-z-]+)\.html$/, (req, res) => {
