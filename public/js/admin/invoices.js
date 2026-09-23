@@ -22,11 +22,29 @@
     return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   }
 
-  // default the date to today
-  (function () {
-    var t = new Date();
-    $('invoice_date').value = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
-  })();
+  // default the date to today + nicer date picker
+  function todayStr() { var t = new Date(); return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); }
+  $('invoice_date').value = todayStr();
+  var fp = window.flatpickr ? window.flatpickr('#invoice_date', { dateFormat: 'Y-m-d', altInput: true, altFormat: 'D, d M Y', defaultDate: 'today', disableMobile: true }) : null;
+  function resetDate() { if (fp) fp.setDate('today', true); else $('invoice_date').value = todayStr(); }
+
+  // show selected files clearly so it's obvious what's attached
+  var filesInput = $('files'), fileList = $('file-list');
+  function human(b) { if (b < 1024) return b + ' B'; if (b < 1048576) return (b / 1024).toFixed(0) + ' KB'; return (b / 1048576).toFixed(1) + ' MB'; }
+  function renderFiles() {
+    var fs = filesInput.files;
+    if (!fs || !fs.length) { fileList.innerHTML = ''; return; }
+    var out = '';
+    for (var i = 0; i < fs.length; i++) {
+      out += '<li style="display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);border-radius:8px;padding:9px 12px;">'
+        + '<span style="color:#0f6e56;font-weight:700">✓</span>'
+        + '<span style="flex:1;color:var(--ink);word-break:break-all">' + esc(fs[i].name) + '</span>'
+        + '<span style="color:rgba(22,21,19,.5);white-space:nowrap">' + human(fs[i].size) + '</span></li>';
+    }
+    fileList.innerHTML = out;
+  }
+  filesInput.addEventListener('change', renderFiles);
+  form.addEventListener('reset', function () { setTimeout(function () { renderFiles(); resetDate(); }, 0); });
 
   function renderHistory(rows) {
     if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" style="color:rgba(22,21,19,.5)">No invoices sent yet.</td></tr>'; return; }
@@ -80,7 +98,7 @@
         if (!res.ok) { showAlert('error', res.d.error || 'Could not send the invoice.'); loadHistory(); return; }
         showAlert('success', 'Invoice sent to ' + email + ' ✓');
         form.reset();
-        (function () { var t = new Date(); $('invoice_date').value = t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); })();
+        renderFiles(); resetDate();
         loadHistory();
       })
       .catch(function () { sendBtn.disabled = false; sendBtn.textContent = 'Send invoice'; showAlert('error', 'Something went wrong. Please try again.'); });

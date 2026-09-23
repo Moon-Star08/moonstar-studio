@@ -11,6 +11,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/home-v2.css">
 <link rel="stylesheet" href="/css/admin-v2.css">
+<link rel="stylesheet" href="/css/vendor/flatpickr.min.css">
+<style>
+  .flatpickr-day.selected, .flatpickr-day.selected:hover { background: var(--red); border-color: var(--red); }
+  .flatpickr-day.today { border-color: var(--red); }
+  .flatpickr-day.today:hover { background: var(--red); border-color: var(--red); color: #fff; }
+  .flatpickr-day:hover { background: rgba(217,51,63,.12); border-color: transparent; }
+  .flatpickr-months .flatpickr-month, .flatpickr-current-month input.cur-year, .flatpickr-monthDropdown-months { color: var(--ink); }
+  .flatpickr-calendar { border-radius: 12px; box-shadow: 0 18px 50px -20px rgba(22,21,19,.5); }
+</style>
 </head>
 <body>
 <div class="admin-shell">
@@ -70,6 +79,7 @@
         <label for="files">Invoice file(s) *</label>
         <input type="file" id="files" name="files" multiple>
         <span class="hint">Attach one or more files (PDF, Word, images…). Up to 10 files, 15 MB each.</span>
+        <ul id="file-list" style="list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:8px;"></ul>
       </div>
 
       <div class="form-actions">
@@ -103,6 +113,7 @@
     </div>
   </main>
 </div>
+<script src="/js/vendor/flatpickr.min.js"></script>
 <script src="/js/admin/invoices.js"></script>
 </body>
 </html>
