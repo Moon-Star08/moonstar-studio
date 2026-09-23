@@ -11,15 +11,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/home-v2.css">
 <style>
-  .sub-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:6vh 5vw; background:var(--bone); }
-  .sub-card { width:100%; max-width:460px; background:#fff; border:1px solid var(--hair-ink); border-radius:18px; padding:30px 26px;
-    box-shadow:0 24px 60px -30px rgba(22,21,19,.4);
-    transition:transform .55s var(--ease), box-shadow .55s var(--ease), border-color .35s var(--ease); will-change:transform; }
-  .sub-card:hover { transform:translateY(-8px); box-shadow:0 46px 90px -38px rgba(22,21,19,.55); border-color:rgba(217,51,63,.45); }
+  .sub-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:6vh 5vw;
+    background:linear-gradient(rgba(217,51,63,.58), rgba(138,18,23,.84)), url('/images/subscribe-bg.jpg') center/cover no-repeat fixed; }
+  .sub-card { width:100%; max-width:460px; background:#fff; border:1px solid rgba(22,21,19,.14); border-radius:0; padding:34px 28px;
+    box-shadow:0 44px 100px -30px rgba(0,0,0,.6);
+    transition:transform .55s var(--ease), box-shadow .55s var(--ease); will-change:transform; }
+  .sub-card:hover { transform:translateY(-10px); box-shadow:0 64px 130px -40px rgba(0,0,0,.72); }
   .sub-brand { font-family:var(--mono); font-size:11px; letter-spacing:.16em; display:inline-flex; align-items:center; gap:9px; color:var(--ink); }
   .sub-brand i { width:7px; height:7px; border-radius:50%; background:var(--red); display:inline-block; animation:pulse 2.2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(217,51,63,.5); } 50% { box-shadow:0 0 0 6px rgba(217,51,63,0); } }
-  .sub-plan { position:relative; overflow:hidden; margin:18px 0 22px; padding:16px 16px 16px 18px; border:1px solid var(--hair-ink); border-radius:12px; background:var(--bone); transition:background .4s var(--ease); }
+  .sub-plan { position:relative; overflow:hidden; margin:18px 0 22px; padding:16px 16px 16px 18px; border:1px solid var(--hair-ink); border-radius:0; background:var(--bone); transition:background .4s var(--ease); }
   .sub-plan::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--red); transform:scaleY(0); transform-origin:top; transition:transform .55s var(--ease); }
   .sub-card:hover .sub-plan { background:#fff; }
   .sub-card:hover .sub-plan::before { transform:scaleY(1); }
@@ -31,11 +32,11 @@
   .sub-card:hover .sub-plan li { color:var(--ink); }
   .sub-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
   .sub-field label { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:rgba(22,21,19,.6); }
-  .sub-field input { font-family:var(--arch); font-size:16px; padding:12px 14px; border:1px solid var(--hair-ink); border-radius:10px; transition:border-color .25s, box-shadow .25s, transform .25s; }
+  .sub-field input { font-family:var(--arch); font-size:16px; padding:12px 14px; border:1px solid var(--hair-ink); border-radius:0; transition:border-color .25s, box-shadow .25s, transform .25s; }
   .sub-field input:focus { outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(217,51,63,.12); transform:translateY(-1px); }
   .sub-err { font-family:var(--mono); font-size:12px; color:var(--red); min-height:0; margin-bottom:10px; }
   .sub-err:empty { display:none; }
-  .sub-btn { position:relative; overflow:hidden; isolation:isolate; width:100%; padding:15px; border:1px solid var(--ink); background:var(--ink); color:var(--bone); font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; border-radius:10px; cursor:pointer; transition:border-color .3s; }
+  .sub-btn { position:relative; overflow:hidden; isolation:isolate; width:100%; padding:15px; border:1px solid var(--ink); background:var(--ink); color:var(--bone); font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; border-radius:0; cursor:pointer; transition:border-color .3s; }
   .sub-btn::before { content:""; position:absolute; inset:0; z-index:-1; background:var(--red); transform:scaleX(0); transform-origin:right; transition:transform .5s var(--ease); }
   .sub-btn:hover { border-color:var(--red); }
   .sub-btn:hover::before { transform:scaleX(1); transform-origin:left; }
