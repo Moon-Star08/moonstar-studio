@@ -91,15 +91,40 @@ function sendLeadNotification({ name, email, phone, projectType, message }) {
 // Send an invoice to a client with file attachment(s). BCC + custom message
 // are optional. Used by the admin "Send Invoice" page.
 function sendInvoiceEmail({ to, clientName, title, message, attachments, bcc }) {
-  const defaultMsg = 'Please find your invoice attached below. Let me know if you have any questions — thank you for your business!';
+  const defaultMsg = 'Please find your invoice below. Let me know if you have any questions — thank you for your business!';
   const messageHtml = esc(message && message.trim() ? message : defaultMsg).replace(/\r?\n/g, '<br>');
+
+  // Image attachments are embedded inline in the body (via CID) so they show
+  // right under the info. Non-image files (PDF, Word) can't render inside an
+  // email body anywhere, so they ride as normal attachments and are listed.
+  const atts = attachments || [];
+  const resendAtts = [];
+  let chips = '';
+  let inlineImgs = '';
+  atts.forEach(function (a, i) {
+    if (/^image\//.test(a.mimetype || '')) {
+      const cid = 'inv-img-' + i;
+      resendAtts.push({ filename: a.filename, content: a.content, content_id: cid });
+      inlineImgs += '<img src="cid:' + cid + '" alt="' + esc(a.filename) + '" style="display:block; width:100%; max-width:536px; margin:16px auto 0; border:1px solid rgba(22,21,19,.12); border-radius:8px;">';
+    } else {
+      resendAtts.push({ filename: a.filename, content: a.content });
+      chips += '<p style="margin:8px 0 0; font-size:15px; font-weight:bold; color:#161513;">📎 ' + esc(a.filename) + '</p>';
+    }
+  });
+  let box = '<div style="margin:22px 0 0; background:#ffffff; border-left:3px solid #d9333f; border-radius:0 8px 8px 0; padding:14px 18px;">'
+    + '<p style="margin:0; font-size:12px; letter-spacing:1px; text-transform:uppercase; color:#888888;">Attached — ' + esc(title || 'Invoice') + '</p>'
+    + chips
+    + (chips ? '<p style="margin:6px 0 0; font-size:13px; color:#888888;">Download from the attachment(s) at the bottom of this email.</p>' : '')
+    + '</div>';
+  const attachmentsHtml = box + inlineImgs;
+
   return sendEmail({
     to: to,
     subject: 'Your invoice from MoonStar Studio' + (title ? ' — ' + title : ''),
     templateFile: 'invoice-email.html',
     bcc: bcc,
-    attachments: attachments,
-    data: { name: clientName || 'there', title: title || 'Invoice', message_html: messageHtml },
+    attachments: resendAtts,
+    data: { name: clientName || 'there', title: title || 'Invoice', message_html: messageHtml, attachments_html: attachmentsHtml },
   });
 }
 

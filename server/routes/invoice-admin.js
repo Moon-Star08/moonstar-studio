@@ -29,7 +29,7 @@ router.post('/send-invoice', requireAuth, upload.array('files', 10), async (req,
   if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid client email is required' });
   if (!files.length) return res.status(400).json({ error: 'Attach at least one file to send' });
 
-  const attachments = files.map((f) => ({ filename: f.originalname, content: f.buffer.toString('base64') }));
+  const attachments = files.map((f) => ({ filename: f.originalname, content: f.buffer.toString('base64'), mimetype: f.mimetype }));
   const fileNames = files.map((f) => f.originalname);
 
   let status = 'sent', errMsg = '';
