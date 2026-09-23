@@ -139,10 +139,9 @@ function buildSubscriptionCheckout(opts) {
   // and would otherwise fail with error 30 (COF not enabled).
   if (opts.recurring) { fields.token_flag = TOKEN_FLAG_REGISTER; fields.frequency = opts.frequency || '1M'; }
   fields.ctid = opts.ctid; // sent but not part of the hash
-  // Drop empty optional fields (they were signed as "").
-  const form = {};
-  Object.keys(fields).forEach((k) => { if (fields[k] !== '') form[k] = fields[k]; });
-  return { actionUrl: c.baseUrl + PURCHASE_PATH, fields: form };
+  // Send ALL signed fields (even empty ones) so ABA recomputes the hash over
+  // the exact same set — avoids any missing-field mismatch.
+  return { actionUrl: c.baseUrl + PURCHASE_PATH, fields };
 }
 
 // -- 2. Verify an incoming callback signature ------------------------------

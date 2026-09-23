@@ -191,6 +191,22 @@ router.get('/subscribe/return', (req, res) => {
 <body><div class="card"><h1>${esc(title)}</h1><p>${msg}</p><a href="/">Back to MoonStar Studio</a></div></body></html>`);
 });
 
+// ── admin: PayWay config check (never reveals the key itself) ───────────────
+router.get('/api/admin/payway-status', requireAuth, (req, res) => {
+  const c = payway.config();
+  res.json({
+    configured: payway.isConfigured(),
+    environment: c.environment,
+    base_url: c.baseUrl,
+    merchant_id: c.merchantId,
+    api_key_length: (c.apiKey || '').length,
+    api_key_has_whitespace: /\s/.test(c.apiKey || ''),
+    hmac_key_length: (c.hmacKey || '').length,
+    base64_return_url: c.base64ReturnUrl,
+    public_base_url: process.env.PUBLIC_BASE_URL || '(not set)',
+  });
+});
+
 // ── admin ───────────────────────────────────────────────────────────────────
 router.get('/api/admin/subscriptions', requireAuth, (req, res) => {
   const rows = db.prepare(`SELECT id, plan_name, name, email, phone, amount, currency, status, token_status,
