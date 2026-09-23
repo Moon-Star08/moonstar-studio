@@ -139,6 +139,51 @@ db.exec(`
   );
 `);
 
+// ── Subscriptions (ABA PayWay care-plan billing) ─────────────────────────
+// Prices/plans are defined in server/lib/subPlans.js; only per-customer state
+// lives here. Card numbers/CVV are never stored — only the ABA token (pwt),
+// which is never returned to the browser or logged.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS subscriptions (
+    id TEXT PRIMARY KEY,
+    plan_slug TEXT NOT NULL,
+    plan_name TEXT NOT NULL DEFAULT '',
+    name TEXT NOT NULL DEFAULT '',
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL DEFAULT '',
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'USD',
+    frequency TEXT NOT NULL DEFAULT '1M',
+    status TEXT NOT NULL DEFAULT 'pending',
+    ctid TEXT NOT NULL UNIQUE,
+    pwt TEXT NOT NULL DEFAULT '',
+    token_status INTEGER,
+    payment_method_masked TEXT NOT NULL DEFAULT '',
+    first_tran_id TEXT NOT NULL DEFAULT '',
+    last_tran_id TEXT NOT NULL DEFAULT '',
+    next_billing_date TEXT,
+    started_at TEXT,
+    cancelled_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS subscription_payments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subscription_id TEXT NOT NULL REFERENCES subscriptions(id) ON DELETE CASCADE,
+    tran_id TEXT NOT NULL UNIQUE,
+    kind TEXT NOT NULL DEFAULT 'registration',
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'USD',
+    status TEXT NOT NULL DEFAULT 'initiated',
+    apv TEXT NOT NULL DEFAULT '',
+    note TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
 const settingsRow = db.prepare('SELECT id FROM settings WHERE id = 1').get();
 if (!settingsRow) {
   db.prepare('INSERT INTO settings (id, content) VALUES (1, ?)').run(JSON.stringify(defaultContent));

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscriptions — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/home-v2.css">
+<link rel="stylesheet" href="/css/admin-v2.css">
+</head>
+<body>
+<div class="admin-shell">
+  <div class="admin-topbar">
+    <span class="admin-topbar__title"><span class="dot"></span>MOONSTAR STUDIO — Admin</span>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a class="btn btn--sm" href="/admin/dashboard">Dashboard</a>
+      <a class="btn btn--sm" href="/admin/invoices">Send invoice</a>
+      <a class="btn btn--sm" href="/">View site</a>
+      <button class="btn btn--sm" id="logout-btn" type="button">Log out</button>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <h1 style="margin-bottom:6px;">Subscriptions</h1>
+    <p style="margin:0 0 24px; font-family:var(--mono); font-size:13px; color:rgba(22,21,19,.6);">
+      Care-plan subscribers via ABA PayWay.
+    </p>
+
+    <div class="stats" id="sub-stats" style="margin-bottom:36px;">
+      <div class="stat"><div class="stat__value" id="s-active">—</div><div class="stat__label">active</div></div>
+      <div class="stat"><div class="stat__value" id="s-pending">—</div><div class="stat__label">pending</div></div>
+      <div class="stat"><div class="stat__value" id="s-mrr">—</div><div class="stat__label">MRR (USD)</div></div>
+      <div class="stat"><div class="stat__value" id="s-total">—</div><div class="stat__label">total</div></div>
+    </div>
+
+    <div id="sub-alert"></div>
+
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Plan</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Card</th>
+            <th>Next billing</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="sub-tbody"><tr><td colspan="7">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/admin/subscriptions.js"></script>
+</body>
+</html>
