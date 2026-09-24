@@ -3,7 +3,12 @@ const fs = require('fs');
 const crypto = require('crypto');
 const multer = require('multer');
 
-const uploadDir = path.join(__dirname, '..', '..', 'data', 'uploads');
+// Uploads must live on the SAME persistent disk as the database, otherwise
+// images vanish on every redeploy even when the DB survives. So we derive the
+// folder from DATA_DIR (the Render disk mount) exactly like server/db.js, and
+// only fall back to a local ./data folder for development.
+const dataDir = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
+const uploadDir = path.join(dataDir, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']);
