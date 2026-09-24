@@ -1184,6 +1184,33 @@ section {
 
 .profile-widget__link:hover { background: var(--gray-100); color: var(--red); }
 
+/* Subscription section inside the profile dropdown */
+.profile-widget__sub {
+  border-top: 1.5px solid var(--gray-200);
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.profile-widget__plan {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+}
+
+.profile-widget__plan-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a7f37;
+  margin-top: 5px;
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 3px rgba(26, 127, 55, 0.15);
+}
+
+.profile-widget__plan strong { display: block; font-size: 0.85rem; line-height: 1.2; }
+.profile-widget__plan span { display: block; font-size: 0.72rem; color: #1a7f37; margin-top: 2px; }
+
 @media (max-width: 760px) {
   .profile-widget__menu {
     right: auto;

@@ -41,6 +41,20 @@ function addMonthISO(fromISO, months) {
   return d.toISOString().slice(0, 10);
 }
 
+// The email whose subscriptions the current visitor may see/manage. Two ways
+// in: (a) they're logged into a site account (users table) — their account
+// email is used; or (b) they used a magic-link sign-in (portalEmail on the
+// session). A logged-in account takes priority, so subscribers who already
+// have a site account never need the magic-link email.
+function actingPortalEmail(req) {
+  if (req.session && req.session.userId) {
+    const u = db.prepare('SELECT email FROM users WHERE id = ?').get(req.session.userId);
+    if (u && u.email) return String(u.email).toLowerCase();
+  }
+  if (req.session && req.session.portalEmail) return String(req.session.portalEmail).toLowerCase();
+  return null;
+}
+
 // Fire-and-forget cancellation confirmation email — never let an email hiccup
 // break the cancel request or the admin response.
 function sendCancellationEmailSafe(sub) {
@@ -254,7 +268,7 @@ router.get('/account/verify', (req, res) => {
 });
 
 router.get('/api/portal/me', (req, res) => {
-  const email = req.session && req.session.portalEmail;
+  const email = actingPortalEmail(req);
   if (!email) return res.status(401).json({ error: 'Not signed in.' });
   const subs = db.prepare(`SELECT id, plan_name, amount, currency, status, next_billing_date, started_at, created_at
     FROM subscriptions WHERE lower(email) = ? ORDER BY created_at DESC`).all(email);
@@ -262,7 +276,7 @@ router.get('/api/portal/me', (req, res) => {
 });
 
 router.post('/api/portal/cancel/:id', (req, res) => {
-  const email = req.session && req.session.portalEmail;
+  const email = actingPortalEmail(req);
   if (!email) return res.status(401).json({ error: 'Not signed in.' });
   const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(req.params.id);
   if (!sub || String(sub.email).toLowerCase() !== email) return res.status(404).json({ error: 'Not found.' });

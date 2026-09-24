@@ -155,6 +155,10 @@
       html += '<div class="profile-widget__info"><strong>' + escapeHtml(me.name || (me.role === 'admin' ? 'Admin' : 'Account')) + '</strong>' + (me.email ? '<span>' + escapeHtml(me.email) + '</span>' : '') + '</div>';
       if (me.role === 'admin') {
         html += '<a class="profile-widget__link" href="/admin/dashboard.html">Admin Dashboard</a>';
+      } else {
+        // Subscription section — filled in by loadProfileSubscription() once the
+        // menu exists, so the customer sees their plan right here on login.
+        html += '<div id="profile-sub-slot"></div>';
       }
       html += '<button class="profile-widget__link" id="profile-logout-btn" type="button">Log out</button>';
       html += '</div>';
@@ -195,6 +199,43 @@
         if (!menu.hidden && !e.target.closest('.profile-widget')) menu.hidden = true;
       });
     }
+
+    if (me.authenticated && me.role !== 'admin') {
+      loadProfileSubscription();
+    }
+  }
+
+  // Pull the logged-in customer's subscription(s) and show the active plan
+  // right in the profile dropdown, with a link to the full manage page.
+  function loadProfileSubscription() {
+    var slot = document.getElementById('profile-sub-slot');
+    if (!slot) return;
+    fetch('/api/portal/me', { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data) return;
+        var subs = (data.subscriptions || []);
+        var active = subs.filter(function (s) { return s.status === 'active'; });
+        var html = '<div class="profile-widget__sub">';
+        if (active.length) {
+          active.forEach(function (s) {
+            html += '<div class="profile-widget__plan">'
+              + '<span class="profile-widget__plan-dot"></span>'
+              + '<div><strong>' + escapeHtml(s.plan_name) + '</strong>'
+              + '<span>Active · $' + escapeHtml(String(s.amount)) + '/mo</span></div>'
+              + '</div>';
+          });
+          html += '<a class="profile-widget__link" href="/account">Manage subscription</a>';
+        } else if (subs.length) {
+          // has a subscription record but not active (pending / cancelled)
+          html += '<a class="profile-widget__link" href="/account">View subscription</a>';
+        } else {
+          html += '<a class="profile-widget__link" href="/services">Get a care plan</a>';
+        }
+        html += '</div>';
+        slot.innerHTML = html;
+      })
+      .catch(function () { /* leave the slot empty on error */ });
   }
 
   function updateFabVisibility(me) {
