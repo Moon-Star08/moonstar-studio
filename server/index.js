@@ -134,7 +134,18 @@ app.get('/workout', (req, res) => {
 
 // Uploaded images live on the persistent disk (data/uploads), not in the
 // public/ folder, so they survive redeploys alongside the database.
-app.use('/uploads', express.static(uploadDir));
+// Security: these are user-supplied files served from our own origin, so we
+// lock them down — nosniff stops MIME confusion, and a restrictive CSP +
+// sandbox neutralises any script inside an uploaded SVG (stored-XSS defence).
+app.use(
+  '/uploads',
+  (req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+    next();
+  },
+  express.static(uploadDir)
+);
 
 // Static assets (css/js/public html, including admin/login.html).
 // extensions: ['html'] lets a request for "/about" resolve to

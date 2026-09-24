@@ -239,6 +239,10 @@ router.post('/api/portal/login', portalLoginLimiter, async (req, res) => {
 
   // Only email a link if this address actually has a subscription — but always
   // return the same response so we never reveal whether an email is on file.
+  // Housekeeping: drop tokens that are already used or expired so the table
+  // never grows unbounded.
+  try { db.prepare("DELETE FROM sub_login_tokens WHERE used_at IS NOT NULL OR expires_at < datetime('now')").run(); } catch (e) { /* non-fatal */ }
+
   const has = db.prepare('SELECT 1 FROM subscriptions WHERE lower(email) = ? LIMIT 1').get(email);
   if (has) {
     try {
@@ -307,21 +311,6 @@ router.get('/api/admin/payway-status', requireAuth, (req, res) => {
     base64_return_url: c.base64ReturnUrl,
     public_base_url: process.env.PUBLIC_BASE_URL || '(not set)',
   });
-});
-
-// ── admin: inspect exactly what gets signed (no secret key shown) ───────────
-router.get('/api/admin/payway-debug', requireAuth, (req, res) => {
-  const base = (process.env.PUBLIC_BASE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
-  try {
-    const d = payway.inspectHash({
-      tranId: 'TESTTRAN000000000001', ctid: 'MSTEST0000000000000001', amount: 50, currency: 'USD', frequency: '1M',
-      fullName: 'Test User', email: 'test@example.com', phone: '012345678',
-      paymentOption: process.env.ABA_PAYMENT_OPTION || 'cards',
-      returnUrl: `${base}/api/payway/callback`, continueSuccessUrl: base, cancelUrl: base,
-      returnParams: 'test', items: [{ name: 'Essential Care', quantity: 1, price: '50' }],
-    });
-    res.json(d);
-  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // ── admin ───────────────────────────────────────────────────────────────────
