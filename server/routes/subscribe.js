@@ -41,6 +41,15 @@ function addMonthISO(fromISO, months) {
   return d.toISOString().slice(0, 10);
 }
 
+// Fire-and-forget cancellation confirmation email — never let an email hiccup
+// break the cancel request or the admin response.
+function sendCancellationEmailSafe(sub) {
+  if (!sub || !sub.email) return;
+  Promise.resolve()
+    .then(() => emailLib.sendCancellationEmail({ to: sub.email, name: sub.name, planName: sub.plan_name }))
+    .catch((e) => console.error('cancellation email failed:', e.message));
+}
+
 const subscribeLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 15, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many attempts. Please try again later.' } });
 
 // ── public plans ──────────────────────────────────────────────────────────
@@ -260,6 +269,7 @@ router.post('/api/portal/cancel/:id', (req, res) => {
   if (sub.status === 'cancelled') return res.json({ success: true });
   db.prepare("UPDATE subscriptions SET status = 'cancelled', cancelled_at = datetime('now'), updated_at = datetime('now') WHERE id = ?").run(sub.id);
   // NOTE: once ABA COF is live, also call payway.removeToken(ctid, pwt) here.
+  sendCancellationEmailSafe(sub);
   res.json({ success: true });
 });
 
@@ -309,8 +319,10 @@ router.get('/api/admin/subscriptions', requireAuth, (req, res) => {
 router.post('/api/admin/subscriptions/:id/cancel', requireAuth, (req, res) => {
   const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(req.params.id);
   if (!sub) return res.status(404).json({ error: 'Not found' });
+  const wasCancelled = sub.status === 'cancelled';
   db.prepare("UPDATE subscriptions SET status = 'cancelled', cancelled_at = datetime('now'), updated_at = datetime('now') WHERE id = ?").run(sub.id);
   // NOTE: once ABA COF is live, also call payway.removeToken(ctid, pwt) here.
+  if (!wasCancelled) sendCancellationEmailSafe(sub);
   res.json({ success: true });
 });
 

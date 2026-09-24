@@ -144,6 +144,17 @@ function sendSubscriptionEmail({ to, name, planName, amount, nextBilling }) {
   });
 }
 
+// Sent to a customer when their subscription is cancelled (from the customer
+// portal or the admin panel).
+function sendCancellationEmail({ to, name, planName }) {
+  return sendEmail({
+    to: to,
+    subject: 'Your ' + (planName || 'MoonStar Studio') + ' subscription is cancelled',
+    templateFile: 'subscribe-cancelled.html',
+    data: { name: name || 'there', plan: planName || 'Care plan' },
+  });
+}
+
 // Magic-link sign-in for the customer subscription portal.
 function sendPortalLoginEmail({ to, link }) {
   return sendEmail({
@@ -164,4 +175,4 @@ function sendOrderEmail({ to, name }) {
   });
 }
 
-module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendInvoiceEmail, sendSubscriptionEmail, sendPortalLoginEmail, sendOrderEmail };
+module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendInvoiceEmail, sendSubscriptionEmail, sendCancellationEmail, sendPortalLoginEmail, sendOrderEmail };
