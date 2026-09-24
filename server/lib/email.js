@@ -128,6 +128,32 @@ function sendInvoiceEmail({ to, clientName, title, message, attachments, bcc }) 
   });
 }
 
+// Sent to a customer once their care-plan subscription is verified active
+// (fired from the ABA PayWay payment callback).
+function sendSubscriptionEmail({ to, name, planName, amount, nextBilling }) {
+  return sendEmail({
+    to: to,
+    subject: 'You\'re subscribed — ' + (planName || 'MoonStar Studio Care') + ' is active',
+    templateFile: 'subscribe-thankyou.html',
+    data: {
+      name: name || 'there',
+      plan: planName || 'Care plan',
+      amount: amount != null ? amount : '',
+      next_billing: nextBilling || '—',
+    },
+  });
+}
+
+// Magic-link sign-in for the customer subscription portal.
+function sendPortalLoginEmail({ to, link }) {
+  return sendEmail({
+    to: to,
+    subject: 'Your MoonStar Studio sign-in link',
+    templateFile: 'portal-login.html',
+    data: { link_html: link },
+  });
+}
+
 // Kept from the earlier setup (order confirmation) — uses order-email.html.
 function sendOrderEmail({ to, name }) {
   return sendEmail({
@@ -138,4 +164,4 @@ function sendOrderEmail({ to, name }) {
   });
 }
 
-module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendInvoiceEmail, sendOrderEmail };
+module.exports = { sendEmail, sendContactThankYou, sendLeadNotification, sendInvoiceEmail, sendSubscriptionEmail, sendPortalLoginEmail, sendOrderEmail };

@@ -184,6 +184,21 @@ db.exec(`
   );
 `);
 
+// Magic-link tokens for the customer subscription portal. A customer enters
+// their email, we email them a one-time link; the token is a SHA-256 hash of
+// the random value in the link (so the raw token is never stored). Short-lived
+// and single-use.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS sub_login_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    token_hash TEXT NOT NULL UNIQUE,
+    expires_at TEXT NOT NULL,
+    used_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
 const settingsRow = db.prepare('SELECT id FROM settings WHERE id = 1').get();
 if (!settingsRow) {
   db.prepare('INSERT INTO settings (id, content) VALUES (1, ?)').run(JSON.stringify(defaultContent));

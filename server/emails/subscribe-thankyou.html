@@ -1,8 +1,6 @@
 <!--
-  Invoice delivery email (sent from the admin Send Invoice page).
-  Placeholders: {{name}} {{title}} {{message_html}} {{year}}.
-  The invoice file(s) ride along as real email attachments.
-  Same brand style as the thank-you email.
+  Sent to a customer when their care-plan subscription goes active.
+  Placeholders: {{name}} {{plan}} {{amount}} {{next_billing}} {{year}}.
 -->
 <!doctype html>
 <html lang="en">
@@ -11,42 +9,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <title>Your invoice</title>
+  <title>You're subscribed</title>
 </head>
 <body style="margin:0; padding:0; background:#e9e5dc; font-family:Arial,Helvetica,sans-serif; color:#161513;">
-  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">Your invoice from MoonStar Studio is attached.</div>
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0;">Your {{plan}} plan is active — thank you for subscribing.</div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#e9e5dc;">
     <tr>
       <td align="center" style="padding:32px 16px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%; max-width:600px; background:#f4f1ea; border-radius:16px; overflow:hidden; border:1px solid rgba(22,21,19,0.12);">
 
-          <!-- HEADER banner -->
           <tr>
             <td align="center" style="background:#a3161b; padding:0; line-height:0; font-size:0;">
               <img src="https://moonstarstudio.site/img/email/header.jpg" alt="MoonStar Studio" width="600" style="display:block; width:100%; max-width:600px; height:auto; border:0;">
             </td>
           </tr>
 
-          <!-- BODY -->
           <tr>
             <td style="padding:40px 32px 8px;">
-              <p style="margin:0 0 10px; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#d9333f;">Invoice</p>
+              <p style="margin:0 0 10px; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#d9333f;">Subscription active</p>
               <h1 style="margin:0; font-family:'Arial Black',Arial,Helvetica,sans-serif; font-size:30px; line-height:1.15; letter-spacing:-0.5px; color:#161513;">
-                Hi {{name}}, here's your invoice.
+                You're all set, {{name}} 🎉
               </h1>
-              <p style="margin:22px 0 0; font-size:16px; line-height:1.7; color:#333333;">{{message_html}}</p>
-              {{attachments_html}}
+              <p style="margin:20px 0 0; font-size:16px; line-height:1.7; color:#333333;">
+                Thank you for subscribing! Your <strong>{{plan}}</strong> plan is now active and we're already looking after your website.
+              </p>
+              <div style="margin:22px 0 0; background:#ffffff; border-left:3px solid #d9333f; border-radius:0 8px 8px 0; padding:16px 18px;">
+                <p style="margin:0; font-size:12px; letter-spacing:1px; text-transform:uppercase; color:#888888;">Your plan</p>
+                <p style="margin:6px 0 0; font-size:18px; font-weight:bold; color:#161513;">{{plan}} — ${{amount}}/month</p>
+                <p style="margin:6px 0 0; font-size:13px; color:#888888;">Next billing: {{next_billing}}</p>
+              </div>
             </td>
           </tr>
 
-          <!-- divider -->
-          <tr><td style="padding:30px 32px 0;"><div style="height:1px; background:rgba(22,21,19,0.12);"></div></td></tr>
+          <tr>
+            <td style="padding:26px 32px 8px;">
+              <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+                <td align="center" style="background:#161513; border-radius:0;">
+                  <a href="https://moonstarstudio.site/account" style="display:inline-block; padding:13px 28px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#ffffff; text-decoration:none; font-weight:bold;">Manage my plan</a>
+                </td>
+              </tr></table>
+            </td>
+          </tr>
 
-          <!-- FOOTER -->
+          <tr><td style="padding:28px 32px 0;"><div style="height:1px; background:rgba(22,21,19,0.12);"></div></td></tr>
+
           <tr>
             <td align="center" style="padding:24px 32px 34px;">
-              <img src="https://moonstarstudio.site/img/email/torii.png" alt="" width="340" style="display:block; margin:0 auto 2px; width:340px; max-width:100%; height:auto; border:0;">
+              <img src="https://moonstarstudio.site/img/email/torii.png" alt="" width="300" style="display:block; margin:0 auto 8px; width:300px; max-width:100%; height:auto; border:0;">
               <p style="margin:0 0 10px; font-size:13px; color:#161513;">
                 <a href="https://moonstarstudio.site" style="color:#161513; text-decoration:none;">moonstarstudio.site</a>
                 &nbsp;|&nbsp;

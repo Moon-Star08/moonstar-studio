@@ -20,6 +20,7 @@ const db = require('../db');
 const { requireAuth } = require('../middleware/auth');
 const payway = require('../lib/payway');
 const { publicPlans, getPlan } = require('../lib/subPlans');
+const emailLib = require('../lib/email');
 
 const router = express.Router();
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -151,9 +152,21 @@ router.post('/api/payway/callback', (req, res) => {
   const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(pay.subscription_id);
   if (sub && ok) {
     const today = new Date().toISOString().slice(0, 10);
+    const nextBilling = addMonthISO(today, 1);
+    const wasActive = sub.status === 'active';
     db.prepare(`UPDATE subscriptions SET status = 'active', started_at = COALESCE(started_at, datetime('now')),
                 next_billing_date = ?, last_tran_id = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(addMonthISO(today, 1), tranId, sub.id);
+      .run(nextBilling, tranId, sub.id);
+    // Branded "thanks for subscribing" email — only on first activation, and
+    // never let an email hiccup break the callback ABA is waiting on.
+    if (!wasActive) {
+      Promise.resolve()
+        .then(() => emailLib.sendSubscriptionEmail({
+          to: sub.email, name: sub.name, planName: sub.plan_name,
+          amount: sub.amount, nextBilling: nextBilling,
+        }))
+        .catch((e) => console.error('subscription email failed:', e.message));
+    }
   } else if (sub) {
     db.prepare("UPDATE subscriptions SET status = 'payment_failed', updated_at = datetime('now') WHERE id = ?").run(sub.id);
   }
@@ -189,6 +202,70 @@ router.get('/subscribe/return', (req, res) => {
 <title>${esc(title)}</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f4f1ea;color:#161513;font-family:Arial,Helvetica,sans-serif;text-align:center}
 .card{max-width:440px;padding:44px 28px}h1{font-size:22px;margin:0 0 10px}p{color:#555;line-height:1.6}a{display:inline-block;margin-top:22px;padding:12px 26px;background:#161513;color:#f4f1ea;border-radius:999px;text-decoration:none}</style></head>
 <body><div class="card"><h1>${esc(title)}</h1><p>${msg}</p><a href="/">Back to MoonStar Studio</a></div></body></html>`);
+});
+
+// ── customer portal (magic-link sign-in) ───────────────────────────────────
+// A customer enters their email, we email a one-time link. Following it sets a
+// session tied to that email; they can then see their plan(s) and cancel.
+// No password. Tokens are stored hashed, single-use, and expire in 30 min.
+const portalLoginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 8, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many attempts. Please try again in a little while.' } });
+
+router.post('/api/portal/login', portalLoginLimiter, async (req, res) => {
+  const email = String((req.body || {}).email || '').trim().toLowerCase();
+  if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Please enter a valid email.' });
+
+  // Only email a link if this address actually has a subscription — but always
+  // return the same response so we never reveal whether an email is on file.
+  const has = db.prepare('SELECT 1 FROM subscriptions WHERE lower(email) = ? LIMIT 1').get(email);
+  if (has) {
+    try {
+      const raw = crypto.randomBytes(32).toString('hex');
+      const tokenHash = crypto.createHash('sha256').update(raw).digest('hex');
+      const expires = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+      db.prepare('INSERT INTO sub_login_tokens (email, token_hash, expires_at) VALUES (?, ?, ?)').run(email, tokenHash, expires);
+      const link = `${baseUrl(req)}/account/verify?token=${raw}`;
+      await emailLib.sendPortalLoginEmail({ to: email, link });
+    } catch (e) {
+      console.error('portal login email failed:', e.message);
+    }
+  }
+  res.json({ success: true });
+});
+
+router.get('/account/verify', (req, res) => {
+  const raw = String(req.query.token || '');
+  const redirect = (path) => res.redirect(path);
+  if (!raw) return redirect('/account?error=1');
+  const tokenHash = crypto.createHash('sha256').update(raw).digest('hex');
+  const row = db.prepare('SELECT * FROM sub_login_tokens WHERE token_hash = ?').get(tokenHash);
+  if (!row || row.used_at || new Date(row.expires_at) < new Date()) return redirect('/account?error=1');
+  db.prepare("UPDATE sub_login_tokens SET used_at = datetime('now') WHERE id = ?").run(row.id);
+  req.session.portalEmail = row.email;
+  redirect('/account');
+});
+
+router.get('/api/portal/me', (req, res) => {
+  const email = req.session && req.session.portalEmail;
+  if (!email) return res.status(401).json({ error: 'Not signed in.' });
+  const subs = db.prepare(`SELECT id, plan_name, amount, currency, status, next_billing_date, started_at, created_at
+    FROM subscriptions WHERE lower(email) = ? ORDER BY created_at DESC`).all(email);
+  res.json({ email, subscriptions: subs });
+});
+
+router.post('/api/portal/cancel/:id', (req, res) => {
+  const email = req.session && req.session.portalEmail;
+  if (!email) return res.status(401).json({ error: 'Not signed in.' });
+  const sub = db.prepare('SELECT * FROM subscriptions WHERE id = ?').get(req.params.id);
+  if (!sub || String(sub.email).toLowerCase() !== email) return res.status(404).json({ error: 'Not found.' });
+  if (sub.status === 'cancelled') return res.json({ success: true });
+  db.prepare("UPDATE subscriptions SET status = 'cancelled', cancelled_at = datetime('now'), updated_at = datetime('now') WHERE id = ?").run(sub.id);
+  // NOTE: once ABA COF is live, also call payway.removeToken(ctid, pwt) here.
+  res.json({ success: true });
+});
+
+router.post('/api/portal/logout', (req, res) => {
+  if (req.session) req.session.portalEmail = null;
+  res.json({ success: true });
 });
 
 // ── admin: PayWay config check (never reveals the key itself) ───────────────
