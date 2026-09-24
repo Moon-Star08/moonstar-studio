@@ -141,6 +141,12 @@ function buildSubscriptionCheckout(opts) {
   // and would otherwise fail with error 30 (COF not enabled).
   if (opts.recurring) { fields.token_flag = TOKEN_FLAG_REGISTER; fields.frequency = opts.frequency || '1M'; }
   fields.ctid = opts.ctid; // sent but not part of the hash
+  // Route to the Checkout service, not the QR Payment API. A merchant profile
+  // with the QR API enabled otherwise ignores payment_option and validates the
+  // hash on the QR path -> "Wrong Hash". payment_gate/view_type are body-only
+  // (NOT part of the hash).
+  fields.payment_gate = '0';
+  fields.view_type = 'hosted_view';
   // Send ALL signed fields (even empty ones) so ABA recomputes the hash over
   // the exact same set — avoids any missing-field mismatch.
   return { actionUrl: c.baseUrl + PURCHASE_PATH, fields };
