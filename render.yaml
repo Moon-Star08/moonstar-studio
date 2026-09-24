@@ -8,15 +8,19 @@ services:
     plan: starter
     buildCommand: npm install
     startCommand: npm start
+    # LIVE SETUP (confirmed in the dashboard): the disk is mounted at
+    # /opt/render/project/src/data, which is exactly where the app writes by
+    # default (server/db.js and server/middleware/upload.js fall back to
+    # <project>/data when DATA_DIR is unset). So DATA_DIR is intentionally NOT
+    # set — the default already points at the persistent disk. Do NOT set
+    # DATA_DIR to a different path, or data would move off the disk.
     disk:
       name: data
-      mountPath: /var/data
+      mountPath: /opt/render/project/src/data
       sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATA_DIR
-        value: /var/data
       - key: WORKOUT_INVITE_CODE
         sync: false
       - key: ADMIN_USERNAME
