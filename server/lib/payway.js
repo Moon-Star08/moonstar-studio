@@ -29,14 +29,15 @@ const CHECK_TXN_PATH = 'api/payment-gateway/v1/payments/check-transaction-2';
 const TOKEN_FLAG_REGISTER = 'CITR_FIX'; // first-time sign-up (creates the token)
 const TOKEN_FLAG_CHARGE = 'MITR_FIX';   // recurring charge with the stored token
 
-// Exact Purchase hash order per ABA docs (developer.payway.com.kh, 01-purchase).
-// Note: token_flag/frequency and ctid/view_type/payment_gate are NOT hashed.
+// Exact Purchase hash order that ABA's live checkout validates (verified against
+// the working aba-payway-sdk-unofficial). IMPORTANT: ctid + pwt ARE part of the
+// hash (right after shipping), and type is sent empty. payment_gate/view_type
+// are NOT hashed.
 const PURCHASE_HASH_FIELDS = [
   'req_time', 'merchant_id', 'tran_id', 'amount', 'items', 'shipping',
-  'firstname', 'lastname', 'email', 'phone', 'type', 'payment_option',
-  'return_url', 'cancel_url', 'continue_success_url', 'return_deeplink',
-  'currency', 'custom_fields', 'return_params', 'payout', 'lifetime',
-  'additional_params', 'google_pay_token', 'skip_success_page',
+  'ctid', 'pwt', 'firstname', 'lastname', 'email', 'phone', 'type',
+  'payment_option', 'return_url', 'cancel_url', 'continue_success_url',
+  'return_deeplink', 'currency', 'custom_fields', 'return_params',
 ];
 
 // Order for the recurring Payment (payment-credential) hash.
@@ -107,49 +108,47 @@ function buildSubscriptionCheckout(opts) {
   if (!c.merchantId) throw new Error('ABA_MERCHANT_ID is not configured.');
   const [firstname, lastname] = splitName(opts.fullName);
   const items = opts.items ? b64Json(opts.items) : '';
-  const returnUrl = opts.returnUrl ? (c.base64ReturnUrl ? b64(opts.returnUrl) : opts.returnUrl) : '';
 
-  const fields = {
+  // Values that go into the hash (ctid + pwt ARE hashed; type stays empty;
+  // return_url is plain, NOT base64 — matches ABA's live checkout).
+  const hv = {
     req_time: requestTime(),
     merchant_id: c.merchantId,
     tran_id: opts.tranId,
     amount: formatAmount(opts.amount, opts.currency),
     items,
     shipping: '',
+    ctid: opts.ctid || '',
+    pwt: '',
     firstname,
     lastname,
     email: (opts.email || '').slice(0, 50),
     phone: (opts.phone || '').slice(0, 20),
-    type: 'purchase',
+    type: '',
     payment_option: opts.paymentOption || 'cards',
-    return_url: returnUrl,
+    return_url: opts.returnUrl || '',
     cancel_url: opts.cancelUrl || '',
     continue_success_url: opts.continueSuccessUrl || '',
     return_deeplink: '',
     currency: opts.currency,
     custom_fields: opts.customFields ? b64Json(opts.customFields) : '',
     return_params: opts.returnParams || '',
-    payout: '',
-    lifetime: opts.lifetime ? String(opts.lifetime) : '',
-    additional_params: '',
-    google_pay_token: '',
-    skip_success_page: '',
   };
-  fields.hash = sign(PURCHASE_HASH_FIELDS.map((k) => fields[k]), c.apiKey);
-  // Recurring token sign-up (CITR_FIX) can be enabled once ABA approves
-  // Credential-on-File for the account — it uses ABA's Schedule Payment hash
-  // and would otherwise fail with error 30 (COF not enabled).
+  const hash = sign(PURCHASE_HASH_FIELDS.map((k) => hv[k]), c.apiKey);
+
+  // Fields actually POSTed (omit empty shipping/type/pwt like the working SDK;
+  // add ctid, and payment_gate/view_type which route to the Checkout service).
+  const fields = {
+    req_time: hv.req_time, merchant_id: hv.merchant_id, tran_id: hv.tran_id,
+    amount: hv.amount, items: hv.items, firstname: hv.firstname, lastname: hv.lastname,
+    email: hv.email, phone: hv.phone, payment_option: hv.payment_option,
+    return_url: hv.return_url, cancel_url: hv.cancel_url, continue_success_url: hv.continue_success_url,
+    return_deeplink: hv.return_deeplink, currency: hv.currency, custom_fields: hv.custom_fields,
+    return_params: hv.return_params, hash,
+    ctid: hv.ctid, payment_gate: '0', view_type: 'hosted_view',
+  };
   if (opts.recurring) { fields.token_flag = TOKEN_FLAG_REGISTER; fields.frequency = opts.frequency || '1M'; }
-  fields.ctid = opts.ctid; // sent but not part of the hash
-  // Route to the Checkout service, not the QR Payment API. A merchant profile
-  // with the QR API enabled otherwise ignores payment_option and validates the
-  // hash on the QR path -> "Wrong Hash". payment_gate/view_type are body-only
-  // (NOT part of the hash).
-  fields.payment_gate = '0';
-  fields.view_type = 'hosted_view';
-  // Send ALL signed fields (even empty ones) so ABA recomputes the hash over
-  // the exact same set — avoids any missing-field mismatch.
-  return { actionUrl: c.baseUrl + PURCHASE_PATH, fields };
+  return { actionUrl: c.baseUrl + PURCHASE_PATH, fields, hashedValues: hv };
 }
 
 // -- 2. Verify an incoming callback signature ------------------------------
@@ -224,7 +223,8 @@ async function checkTransaction(tranId) {
 // (no secret key is included) so hash mismatches can be diagnosed.
 function inspectHash(opts) {
   const built = buildSubscriptionCheckout(opts);
-  const pairs = PURCHASE_HASH_FIELDS.map((k) => ({ field: k, value: built.fields[k] == null ? '' : String(built.fields[k]) }));
+  const hv = built.hashedValues || {};
+  const pairs = PURCHASE_HASH_FIELDS.map((k) => ({ field: k, value: hv[k] == null ? '' : String(hv[k]) }));
   return { actionUrl: built.actionUrl, hashOrder: PURCHASE_HASH_FIELDS, pairs, concat: pairs.map((p) => p.value).join(''), hash: built.fields.hash };
 }
 
